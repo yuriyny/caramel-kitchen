@@ -58,7 +58,7 @@ public class UserController {
             return "redirect:login";
         }
         redirect.addFlashAttribute("userId", user.getUsername());
-        return "redirect:all";
+        return "redirect:home";
     }
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {

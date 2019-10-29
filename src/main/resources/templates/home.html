@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Caramel Kitchen Home</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet"/>
+</head>
+<body th:with="reason=${session.pageType}">
+    <header>
+        <img th:src="@{images/logo4.png}" class="logo">
+        <nav>
+            <ul>
+                <li><a th:href="@{/userprofile}">My Labs</a></li>
+                <li><a th:href="@{/createlab}">Create Lab</a></li>
+                <li><a th:href="@{/aboutus}">About Us</a></li>
+                <li><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="home_page">
+        <div id="recommendations">
+            <h2>Recommendations</h2><br>
+            <!-- USE THYMELEAF TO GET RECOMMENDATIONS -->
+            <ul>
+                <li>
+                    <button type="button" class="collapsible">Template output 1</button>
+                    <div class="collapsible_content">
+                        <p>Content</p>
+                        <a href="otheruserprofile.html">View Profile</a>
+                    </div>
+                </li>
+                <li>
+                    <button class="collapsible">Template output 2</button>
+                    <div class="collapsible_content">
+                        <p>Content</p>
+                        <a href="#">Play Lab</a>
+                    </div>
+                </li>
+                <li>
+                    <button class="collapsible">Template output 2</button>
+                    <div class="collapsible_content">
+                        <p>Content</p>
+                        <a href="#">View Profile</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <input id="search_input" type="text" placeholder="search for...">
+        <button id="search_enter">Search</button>
+        <select id="search_category">
+            <option value="lab">search for labs</option>
+            <option value="creator">search for creators</option>
+        </select>
+        <div id="search_results">
+            <ul id="search_results_ul">
+                <!-- <li>
+                    <button class="collapsible">Template output 1<p>Creator</p></button>
+                    <div class="collapsible_content">
+                        <p>Content</p>
+                        <a href="#">Play Lab</a>
+                    </div>
+                </li>
+                <li>
+                    <button class="collapsible">Template output 2<p>Creator</p></button>
+                    <div class="collapsible_content">
+                        <p>Content</p>
+                        <a href="#">Play Lab</a>
+                    </div>
+                </li>
+                <li>
+                    <button class="collapsible">Template output 3<p>Creator</p></button>
+                    <div class="collapsible_content">
+                        <p>Content</p>
+                        <a href="#">Play Lab</a>
+                    </div>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+
+    <script th:src="@{js/HomeSearch.js}"></script>
+    <script>
+        /* make interactive collapsibles */
+        let collapsibles = document.getElementsByClassName("collapsible");
+        for(let i = 0; i < collapsibles.length; i++){
+            collapsibles[i].addEventListener("click", function(){
+                this.classList.toggle("active");
+                let content = this.nextElementSibling;
+                content.style.display = content.style.display === "block" ? "none" : "block";
+            });
+        }
+
+        const search_input = document.getElementById("search_input");
+        const search_category = document.getElementById("search_category");
+        const search_input_ul = document.getElementById("search_results_ul");
+        const search_btn = document.getElementById("search_enter");
+        let homeSearch = new HomeSearch(search_input, search_category, search_input_ul, search_btn);
+
+    </script>
+</body>
+</html>

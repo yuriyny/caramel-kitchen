@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Caramel Kitchen User Profile</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet"/>
+</head>
+<body th:with="reason=${session.pageType}">
+    <header>
+        <img th:src="@{images/logo4.png}" class="logo">
+        <nav>
+            <ul>
+                <li><a th:href="@{/home}">Home</a></li>
+                <li><a th:href="@{/createlab}">Create Lab</a></li>
+                <li><a th:href="@{/aboutus}">About Us</a></li>
+                <li><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="userprofile_page">
+        <div id="user_created_recipes">
+            <h2>My Created Recipes</h2>
+            <ul>
+                <li>
+                    <div class="user_recipe">
+                        <div class="recipe_info">
+                            <p>User Recipe 1</p>
+                            <p>Rated _ stars</p>
+                        </div>
+                        <div class="recipe_actions">
+                            <a href="#">Remove</button></a>
+                            <a href="#">Modify</button></a>
+                            <a href="#">View Parents</button></a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                   <div class="user_recipe">
+                        <div class="recipe_info">
+                            <p>User Recipe 2</p>
+                            <p>Rated _ stars</p>
+                        </div>
+                        <div class="recipe_actions">
+                            <a href="#">Remove</button></a>
+                            <a href="#">Modify</button></a>
+                            <a href="#">View Parents</button></a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="user_completed_recipes">
+            <h2>My Completed Recipes</h2>
+            <ul>
+                <li>
+                    <div class="completed_recipe">
+                        <p>Recipe a</p>
+                        <p>Score: 1000</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="completed_recipe">
+                        <p>Recipe b</p>
+                        <p>Score: 500</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="user_requests_made">
+            <h2>My Requests</h2>
+            <ul>
+                <li>
+                    <div class="_resolved user_request">
+                        <p>Sample resolved request</p>
+                        <!-- <p onclick="closeDIV(event)">&#10003;</p> -->
+                    </div>
+                </li>
+                <li>
+                    <div class="user_request">
+                        <p>Sample request</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="user_request">
+                        <p>Sample request</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="_declined user_request">
+                        <p>Sample declined request</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Caramel Kitchen Lab Creation</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet"/>
+</head>
+<body th:with="reason=${session.pageType}">
+    <header>
+        <img th:src="@{images/logo4.png}" class="logo">
+        <nav>
+            <ul>
+                <li><a th:href="@{/home}">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="createlab_page">
+        <div id="item_search">
+            <h2>Ingredients and tools</h2>
+            <input id="item_search_input" type="text" placeholder="search for...">
+            <ul id = "item_search_ul">
+                <!-- <li>
+                    <div class="item_result" onclick="addItem(this)">
+                        Sample item 1
+                    </div>
+                </li>
+                <li>
+                    <div class="item_result" onclick="addItem(this)">
+                        Sample item 2
+                    </div>
+                </li> -->
+            </ul>
+        </div>
+        <div id="main_display">
+            <ul id="cooking_board">
+                <!-- <li>
+                    <div class="active_item">sample
+                        <div class="item_tag">&starf;
+                            <span class="item_tag_tooltip">boil</span>
+                        </div>
+                    </div>
+                </li> -->
+            </ul>
+        </div>
+        <div id="lab_instructions">
+            <ul id="lab_instructions_ul"></ul>
+            <input id="comment_input" type="text" placeholder="comment here">
+            <button id="comment_enter">Add</button>
+        </div>
+        <div id="make_request">
+            <p>Tool or ingredient not available? Make a request here.</p>
+            <input id="request_input" type="text" placeholder="Type here and then submit!"></textarea>
+            <button id="request_submit">Submit</button>
+        </div>
+        <button id="lab_discard" onclick="location.href='userprofile.html';">Discard</button>
+        <button id="lab_publish" onclick="confirmAction()">Publish</button>
+    </div>
+
+    <div id="screenShade"></div>
+    <div id="confirmNotice">
+        <button id="confirmAccept">Publish</button>
+        <button id="confirmDecline" onclick="declineAction()">Go Back</button>
+    </div>
+
+    <div id="menu">
+        <ul id="menu_ul"></ul>
+    </div>
+
+    <script th:src="@{js/ActionMenu.js}"></script>
+    <script th:src="@{js/CookingBoard.js}"></script>
+    <script th:src="@{js/ItemSelection.js}"></script>
+    <script th:src="@{js/Instructions.js}"></script>
+    <script type="text/javascript">
+        const instructions_list = document.getElementById("lab_instructions_ul");
+        let instructions = new Instructions(instructions_list, []);
+
+        const menu_element = document.getElementById("menu");
+        const menu_ul = document.getElementById("menu_ul");
+        let customMenu = new ActionMenu(menu_element, menu_ul, instructions);
+
+        const board_element = document.getElementById("cooking_board");
+        let cookingBoard = new CookingBoard(board_element, customMenu);
+        
+        const search_input = document.getElementById("item_search_input");
+        const search_ul = document.getElementById("item_search_ul");
+        let itemSelection = new ItemSelection(search_input, search_ul, cookingBoard);
+        
+        itemSelection.addSearchManual("blender");
+        itemSelection.addSearchManual("peeler");
+        itemSelection.addSearchManual("rolling pin");
+        itemSelection.addSearchManual("apple");
+        itemSelection.addSearchManual("knife");
+
+        function confirmAction(){
+            document.getElementById("screenShade").classList.add("fade-in");
+            document.getElementById("confirmNotice").classList.add("show");
+        }
+
+        function declineAction(){
+            document.getElementById("screenShade").classList.remove("fade-in");
+            document.getElementById("confirmNotice").classList.remove("show");
+        }
+    </script>
+</body>
+</html>

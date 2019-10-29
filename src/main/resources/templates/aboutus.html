@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Caramel Kitchen About Us</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet"/>
+</head>
+<body th:with="reason=${session.pageType}">
+    <header>
+        <img th:src="@{images/logo4.png}" class="logo">
+        <nav>
+            <ul>
+                <li><a th:href="@{/home}">Home</a></li>
+                <li><a th:href="@{/logout}">Logout</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <div id="aboutus_page">
+        <div id="aboutus">
+            <p>This is the CSE308 Section 2 
+                Web Application as designed by 
+                Team Caramel, consisting of:<br><br>
+                Lead Programmer - David Doo<br>
+                Project Manager - Teresa Wang<br>
+                Lead Designer - Allen Wang<br>
+                Data Designer - Yuri Burshtyko</p>
+        </div>
+        <h2>Have general feedback?<br>Let us know here.</h2>
+        <textarea id="feedback" type="text" placeholder="Type here and then send!"></textarea>
+        <button id="feedback_submit">Send</button>
+    </div>
+</body>
+</html>
