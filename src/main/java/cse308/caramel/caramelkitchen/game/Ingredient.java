@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Getter
@@ -15,7 +16,8 @@ public class Ingredient {
     private String id;
     private String ingredientName;
     private String unitOfMeasure;
+    private int quantity;
     //embedded document for ingredients, no need for referencing
-    private Collection<Procedure> procedures;
+    private Collection<Procedure> procedures = new ArrayList<>();
 
 }

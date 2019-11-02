@@ -10,11 +10,18 @@ import java.util.Collection;
 public class Recipe {
     @Id
     private String id;
-    private String name;
+    private String recipeName;
     private String creator;//creator/user id
     private double rating;
     @DBRef
     private Collection<Ingredient> ingredients;
     @DBRef
     private Collection<Equipment> equipments;
+    //unfinished recipe = true
+    //completed recipe sets this field to false
+    private Boolean isInProgress = true;
+
+/*    should we create a list of <instruction class>
+    which will have field like step_description,
+    step_number, equipment/ingredients needed?*/
 }
