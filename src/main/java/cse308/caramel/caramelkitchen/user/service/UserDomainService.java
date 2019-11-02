@@ -43,6 +43,11 @@ public class UserDomainService implements UserDetailsService { //removed id beca
         user.setEnabled(true);
         Role userRole = roleRepository.findByRole("USER");
         user.setRoles(new HashSet<>(Arrays.asList(userRole)));
+        user.setActive(1);
+        user.setGamesPlayed(new ArrayList());
+        user.setRecipesCreated(new ArrayList<>());
+        user.setFeedbacks(new ArrayList<>());
+        user.setRequests(new ArrayList<>());
         userRepository.save(user);
     }
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
