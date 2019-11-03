@@ -80,9 +80,9 @@ public class DbSeeder implements CommandLineRunner {
         mongoTemplate.insert(e1);
         mongoTemplate.insert(e2);
         mongoTemplate.insert(e3);
-
+        //query test
         /*Collection<Equipment> equipment = new ArrayList<>();
-        equipment = equipmentRepository.findAllEquipmentContainingString("ow");
+        equipment = equipmentRepository.findAllEquipmentContainingString("oW");
         for( Equipment ii1 : equipment){
             System.out.println("Ingredient -- " +ii1.getEquipmentName());
         }*/

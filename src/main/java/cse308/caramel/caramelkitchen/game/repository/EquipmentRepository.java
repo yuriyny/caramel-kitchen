@@ -10,8 +10,6 @@ import java.util.Collection;
 public interface EquipmentRepository extends MongoRepository<Equipment, String> {
     @Query("{}")
     Collection<Items> findAllEquipment();
-    @Query("{name : {$regex: ?0}}")
+    @Query("{equipmentName : {$regex: ?0, $options: 'i'}}")
     Collection<Items> findAllEquipmentContainingString(String name);
-
-
 }
