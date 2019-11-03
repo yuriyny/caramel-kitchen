@@ -10,11 +10,13 @@ import java.util.Collection;
 @Getter
 @Setter
 @Document(collection = "equipment")
-public class Equipment {
-    @Id
-    private String id;
-    private String equipmentName;
-    private String unitOfMeasure;
+public class Equipment extends Items{
+//    @Id
+//    private String id;
+//    private String equipmentName;
+//    private String unitOfMeasure;
     //embedded document for equipment, no need for referencing
     private Collection<Procedure> procedures = new ArrayList<>();
+
+
 }

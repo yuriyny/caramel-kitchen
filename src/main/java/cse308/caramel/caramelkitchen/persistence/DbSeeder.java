@@ -40,18 +40,18 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.dropCollection(Recipe.class);
 
         Ingredient i1 = new Ingredient();
-        i1.setIngredientName("salt");
+        i1.setName("salt");
         i1.setUnitOfMeasure("teaspoon");
         i1.setQuantity(1);
 
         Ingredient i2 = new Ingredient();
-        i2.setIngredientName("pepper");
+        i2.setName("pepper");
         i2.setUnitOfMeasure("teaspoon");
         i2.setQuantity(1);
 
 
         Ingredient i3 = new Ingredient();
-        i3.setIngredientName("olive oil");
+        i3.setName("olive oil");
         i3.setUnitOfMeasure("tablespoon");
         i3.setQuantity(3);
 
@@ -60,19 +60,19 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(i3);
 
         Equipment e1 = new Equipment();
-        e1.setEquipmentName("knife");
+        e1.setName("knife");
         Procedure p1 = new Procedure();
         p1.setProcedureName("chopping");
         e1.getProcedures().add(p1);
 
         Equipment e2 = new Equipment();
-        e2.setEquipmentName("oven");
+        e2.setName("oven");
         Procedure p2 = new Procedure();
         p2.setProcedureName("baking");
         e2.getProcedures().add(p2);
 
         Equipment e3 = new Equipment();
-        e3.setEquipmentName("bowl");
+        e3.setName("bowl");
         Procedure p3 = new Procedure();
         p3.setProcedureName("mixing");
         e3.getProcedures().add(p3);

@@ -60,8 +60,5 @@ public class UserController {
         redirect.addFlashAttribute("userId", user.getUsername());
         return "redirect:home";
     }
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+
 }
