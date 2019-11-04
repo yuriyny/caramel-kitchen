@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.persistence;
 
+import cse308.caramel.caramelkitchen.S3.services.S3Services;
 import cse308.caramel.caramelkitchen.game.Equipment;
 import cse308.caramel.caramelkitchen.game.Ingredient;
 import cse308.caramel.caramelkitchen.game.Procedure;
@@ -10,7 +11,9 @@ import cse308.caramel.caramelkitchen.user.Request;
 import cse308.caramel.caramelkitchen.user.Role;
 import cse308.caramel.caramelkitchen.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,15 @@ public class DbSeeder implements CommandLineRunner {
     public DbSeeder(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
     }
+
+    @Autowired
+    S3Services s3Services;
+
+    @Value("${jsa.s3.uploadfile}")
+    private String uploadFilePath;
+
+    @Value("${jsa.s3.key}")
+    private String downloadKey;
 
     @Override
     public void run(String... args) {
@@ -86,6 +98,15 @@ public class DbSeeder implements CommandLineRunner {
         for( Equipment ii1 : equipment){
             System.out.println("Ingredient -- " +ii1.getEquipmentName());
         }*/
+
+        //S3 Client Operations
+        //this command upload file: C:\\s3\\jsa-s3-upload-file.txt
+/*        System.out.println("---------------- START UPLOAD FILE ----------------");
+        s3Services.uploadFile("jsa-s3-upload-file.txt", uploadFilePath);
+        System.out.println("---------------- START DOWNLOAD FILE ----------------");
+        //this command download the previously uploaded file
+        s3Services.downloadFile(downloadKey);*/
+
 
 
 
