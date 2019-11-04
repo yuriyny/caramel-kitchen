@@ -69,8 +69,6 @@ public class RecipeController {
     @PostMapping(path={"/search-ingredient-tool-list"})
     public List<Items> searchIngredientTool(@RequestBody String search){
         List<Items> returnList=new ArrayList<>();
-        searchService.getIngredients(search).forEach(e->System.out.println(e.getName()));
-        System.out.println("HELLO");
         returnList.addAll(searchService.getIngredients(search));
         returnList.addAll(searchService.getKitchenTools(search));
         return returnList;
