@@ -1,24 +1,19 @@
-package cse308.caramel.caramelkitchen.persistence;
+package cse308.caramel.caramelkitchen.util;
 
-import cse308.caramel.caramelkitchen.S3.services.S3Services;
-import cse308.caramel.caramelkitchen.game.Equipment;
-import cse308.caramel.caramelkitchen.game.Ingredient;
-import cse308.caramel.caramelkitchen.game.Procedure;
-import cse308.caramel.caramelkitchen.game.Recipe;
+import cse308.caramel.caramelkitchen.s3client.services.S3Services;
+import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
+import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
+import cse308.caramel.caramelkitchen.game.persistence.Subprocedure;
+import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.repository.EquipmentRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
-import cse308.caramel.caramelkitchen.user.Request;
-import cse308.caramel.caramelkitchen.user.Role;
-import cse308.caramel.caramelkitchen.user.User;
+import cse308.caramel.caramelkitchen.user.persistence.Request;
+import cse308.caramel.caramelkitchen.user.persistence.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 
 @Service
@@ -48,7 +43,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.dropCollection(Request.class);
         //this.mongoTemplate.dropCollection(Role.class);
         this.mongoTemplate.dropCollection(Ingredient.class);
-        this.mongoTemplate.dropCollection(Equipment.class);
+        this.mongoTemplate.dropCollection(KitchenTool.class);
         this.mongoTemplate.dropCollection(Recipe.class);
 
         Ingredient i1 = new Ingredient();
@@ -71,23 +66,20 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(i2);
         this.mongoTemplate.insert(i3);
 
-        Equipment e1 = new Equipment();
+        KitchenTool e1 = new KitchenTool();
         e1.setName("knife");
-        Procedure p1 = new Procedure();
+        Subprocedure p1 = new Subprocedure();
         p1.setProcedureName("chopping");
-        e1.getProcedures().add(p1);
 
-        Equipment e2 = new Equipment();
+        KitchenTool e2 = new KitchenTool();
         e2.setName("oven");
-        Procedure p2 = new Procedure();
+        Subprocedure p2 = new Subprocedure();
         p2.setProcedureName("baking");
-        e2.getProcedures().add(p2);
 
-        Equipment e3 = new Equipment();
+        KitchenTool e3 = new KitchenTool();
         e3.setName("bowl");
-        Procedure p3 = new Procedure();
+        Subprocedure p3 = new Subprocedure();
         p3.setProcedureName("mixing");
-        e3.getProcedures().add(p3);
 
         mongoTemplate.insert(e1);
         mongoTemplate.insert(e2);

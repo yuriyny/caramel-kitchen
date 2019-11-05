@@ -1,4 +1,4 @@
-package cse308.caramel.caramelkitchen.user;
+package cse308.caramel.caramelkitchen.user.util;
 
 public enum RequestStatus {
     APPROVED,

@@ -1,7 +1,7 @@
 package cse308.caramel.caramelkitchen.game.repository;
 
-import cse308.caramel.caramelkitchen.game.Ingredient;
-import cse308.caramel.caramelkitchen.game.Items;
+import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
+import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public interface IngredientRepository extends MongoRepository<Ingredient, String> {
     @Query("{}")
-    Collection<Items> findAllIngredients();
+    Collection<KitchenTool> findAllIngredients();
     @Query("{name : {$regex: ?0, $options: 'i'}}")
-    Collection<Items> findAllIngredientsContainingString(String name);
+    Collection<KitchenTool> findAllIngredientsContainingString(String name);
 }

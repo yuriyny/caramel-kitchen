@@ -1,11 +1,13 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
-import cse308.caramel.caramelkitchen.game.Items;
-import cse308.caramel.caramelkitchen.game.Recipe;
+import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
+import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
+import cse308.caramel.caramelkitchen.game.persistence.Recipe;
+import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.repository.EquipmentRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
-import cse308.caramel.caramelkitchen.game.service.SearchService;
+import cse308.caramel.caramelkitchen.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,12 +45,13 @@ public class RecipeController {
      */
     @ResponseBody
     @GetMapping(path={"/ingredient-tool-list"})
-    public List<Items> getIngredientToolList(){
-        List<Items>returnList=new ArrayList<>();
+    public List<SubprocedureComponent> getIngredientToolList(){
+        List<SubprocedureComponent> returnList=new ArrayList<>();
         returnList.addAll(equipmentRepository.findAll());
         returnList.addAll(ingredientRepository.findAll());
         equipmentRepository.findAll().forEach(e->System.out.println(e.getName()));
-        java.util.Collections.sort(returnList);
+        // implement our own sort method
+        // java.util.Collections.sort(returnList);
         return returnList;
     }
     /**
@@ -67,8 +70,8 @@ public class RecipeController {
      */
     @ResponseBody
     @PostMapping(path={"/search-ingredient-tool-list"})
-    public List<Items> searchIngredientTool(@RequestBody String search){
-        List<Items> returnList=new ArrayList<>();
+    public List<KitchenTool> searchIngredientTool(@RequestBody String search){
+        List<KitchenTool> returnList=new ArrayList<>();
         returnList.addAll(searchService.getIngredients(search));
         returnList.addAll(searchService.getKitchenTools(search));
         return returnList;

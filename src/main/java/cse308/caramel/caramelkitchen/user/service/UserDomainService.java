@@ -1,7 +1,7 @@
 package cse308.caramel.caramelkitchen.user.service;
 
-import cse308.caramel.caramelkitchen.user.Role;
-import cse308.caramel.caramelkitchen.user.User;
+import cse308.caramel.caramelkitchen.user.persistence.Role;
+import cse308.caramel.caramelkitchen.user.persistence.User;
 import cse308.caramel.caramelkitchen.user.storage.RoleRepository;
 import cse308.caramel.caramelkitchen.user.storage.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class UserDomainService implements UserDetailsService { //removed id beca
         user.setActive(1);
         user.setGamesPlayed(new ArrayList());
         user.setRecipesCreated(new ArrayList<>());
-        user.setFeedbacks(new ArrayList<>());
+        user.setFeedback(new ArrayList<>());
         user.setRequests(new ArrayList<>());
         userRepository.save(user);
     }

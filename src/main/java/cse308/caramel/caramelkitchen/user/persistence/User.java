@@ -1,7 +1,7 @@
-package cse308.caramel.caramelkitchen.user;
+package cse308.caramel.caramelkitchen.user.persistence;
 
-import cse308.caramel.caramelkitchen.game.Game;
-import cse308.caramel.caramelkitchen.game.Recipe;
+import cse308.caramel.caramelkitchen.game.persistence.Game;
+import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -25,11 +25,12 @@ public class User {
     private boolean enabled;
     private int active;
     private Collection<Game> gamesPlayed;
+    private Collection<Game> gamesInProgress;
     @DBRef
     private Collection<Recipe> recipesCreated;
     @DBRef
     private Set<Role> roles;
-    private Collection<Feedback> feedbacks;
+    private Collection<Feedback> feedback;
     @DBRef
     private Collection<Request> requests;
 

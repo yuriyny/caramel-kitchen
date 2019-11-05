@@ -1,6 +1,6 @@
 package cse308.caramel.caramelkitchen.user.controller;
 
-import cse308.caramel.caramelkitchen.user.User;
+import cse308.caramel.caramelkitchen.user.persistence.User;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import cse308.caramel.caramelkitchen.user.storage.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

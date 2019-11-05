@@ -1,4 +1,4 @@
-package cse308.caramel.caramelkitchen.game;
+package cse308.caramel.caramelkitchen.game.persistence;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,13 +11,13 @@ import java.util.Collection;
 @Getter
 @Setter
 @Document(collection = "ingredient")
-public class Ingredient extends Items{
-//    @Id
-//    private String id;
-//    private String ingredientName;
-//    private String unitOfMeasure;
+public class Ingredient extends SubprocedureComponent {
+    @Id
+    private String id;
+    private String name;
+    private String unitOfMeasure;
     private int quantity;
     //embedded document for ingredients, no need for referencing
-    private Collection<Procedure> procedures = new ArrayList<>();
+    private Collection<Subprocedure> subprocedures = new ArrayList<>();
 
 }

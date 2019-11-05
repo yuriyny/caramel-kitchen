@@ -1,9 +1,9 @@
-package cse308.caramel.caramelkitchen.S3.services;
+package cse308.caramel.caramelkitchen.s3client.services;
 
 import java.io.File;
 import java.io.IOException;
 
-import cse308.caramel.caramelkitchen.S3.util.Utility;
+import cse308.caramel.caramelkitchen.s3client.util.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

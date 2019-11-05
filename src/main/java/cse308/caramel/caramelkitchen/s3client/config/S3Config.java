@@ -1,4 +1,4 @@
-package cse308.caramel.caramelkitchen.S3.config;
+package cse308.caramel.caramelkitchen.s3client.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

@@ -1,4 +1,4 @@
-package cse308.caramel.caramelkitchen.user;
+package cse308.caramel.caramelkitchen.user.persistence;
 
 import lombok.Getter;
 import lombok.Setter;

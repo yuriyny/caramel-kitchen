@@ -1,4 +1,4 @@
-package cse308.caramel.caramelkitchen.game;
+package cse308.caramel.caramelkitchen.game.persistence;
 
 import lombok.Getter;
 import lombok.Setter;

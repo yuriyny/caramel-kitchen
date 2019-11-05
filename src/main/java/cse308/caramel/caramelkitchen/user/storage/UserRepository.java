@@ -1,6 +1,6 @@
 package cse308.caramel.caramelkitchen.user.storage;
 
-import cse308.caramel.caramelkitchen.user.User;
+import cse308.caramel.caramelkitchen.user.persistence.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

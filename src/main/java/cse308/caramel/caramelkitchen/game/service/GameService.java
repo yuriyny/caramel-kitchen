@@ -1,6 +1,6 @@
 package cse308.caramel.caramelkitchen.game.service;
 
-import cse308.caramel.caramelkitchen.user.User;
+import cse308.caramel.caramelkitchen.user.persistence.User;
 import org.springframework.stereotype.Service;
 
 @Service

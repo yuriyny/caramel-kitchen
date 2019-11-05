@@ -1,4 +1,4 @@
-package cse308.caramel.caramelkitchen.game;
+package cse308.caramel.caramelkitchen.game.persistence;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class Recipe {
     @DBRef
     private Collection<Ingredient> ingredients;
     @DBRef
-    private Collection<Equipment> equipments;
+    private Collection<KitchenTool> equipment;
     //unfinished recipe = true
     //completed recipe sets this field to false
     private Boolean isInProgress = true;

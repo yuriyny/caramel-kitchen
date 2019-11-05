@@ -1,5 +1,6 @@
-package cse308.caramel.caramelkitchen.user;
+package cse308.caramel.caramelkitchen.user.persistence;
 
+import cse308.caramel.caramelkitchen.user.util.RequestStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;

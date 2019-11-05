@@ -1,4 +1,4 @@
-package cse308.caramel.caramelkitchen.S3.util;
+package cse308.caramel.caramelkitchen.s3client.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
