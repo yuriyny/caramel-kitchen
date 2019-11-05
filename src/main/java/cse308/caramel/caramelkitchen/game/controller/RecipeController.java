@@ -7,6 +7,7 @@ import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.repository.EquipmentRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
+import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,14 +21,11 @@ import java.util.List;
 
 @Controller
 public class RecipeController {
-    @Autowired
-    RecipeRepository recipeRepository;
-    @Autowired
-    IngredientRepository ingredientRepository;
-    @Autowired
-    EquipmentRepository equipmentRepository;
+
     @Autowired
     SearchService searchService;
+    @Autowired
+    RecipeService recipeService;
 
     /**
      *  (NEEDS TO BE CHANGED BECAUSE THERE ARE TWO RECIPE but the other wasn't implemented yet)
@@ -37,7 +35,7 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(path={"/recipe-list"})
     public List<Recipe> getRecipesList(){
-         return recipeRepository.findAll();              //USE THIS TO GET A LIST OF RECIPES
+        return recipeService.findAllRecipe();
     }
     /**
      *  Needed when you click on create lab
@@ -46,13 +44,7 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(path={"/ingredient-tool-list"})
     public List<SubprocedureComponent> getIngredientToolList(){
-        List<SubprocedureComponent> returnList=new ArrayList<>();
-        returnList.addAll(equipmentRepository.findAll());
-        returnList.addAll(ingredientRepository.findAll());
-        equipmentRepository.findAll().forEach(e->System.out.println(e.getName()));
-        // implement our own sort method
-        // java.util.Collections.sort(returnList);
-        return returnList;
+        return recipeService.findAllEquipmentTool();
     }
     /**
      * Search recipe
@@ -70,8 +62,8 @@ public class RecipeController {
      */
     @ResponseBody
     @PostMapping(path={"/search-ingredient-tool-list"})
-    public List<KitchenTool> searchIngredientTool(@RequestBody String search){
-        List<KitchenTool> returnList=new ArrayList<>();
+    public List<SubprocedureComponent> searchIngredientTool(@RequestBody String search){
+        List<SubprocedureComponent> returnList=new ArrayList<>();
         returnList.addAll(searchService.getIngredients(search));
         returnList.addAll(searchService.getKitchenTools(search));
         return returnList;
@@ -80,7 +72,13 @@ public class RecipeController {
     public void updateRecipeHistory(Recipe recipe){
 
     }
+
+    /**
+     * This method takes in a recipe and saves it. Works for save and publish.
+     * @param recipe
+     */
     public void createRecipe(Recipe recipe){
+        recipeService.saveRecipe(recipe);
 
     }
     public void modifyRecipe(Recipe recipe){

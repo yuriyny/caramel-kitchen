@@ -14,7 +14,6 @@ import java.util.Collection;
 public class Ingredient extends SubprocedureComponent {
     @Id
     private String id;
-    private String name;
     private String unitOfMeasure;
     private int quantity;
     //embedded document for ingredients, no need for referencing

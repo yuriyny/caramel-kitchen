@@ -10,7 +10,6 @@ public class KitchenTool extends SubprocedureComponent implements Comparable<Kit
 
     @Id
     private String id;
-    private String name;
     private String unitOfMeasure;
     @Override
     public int compareTo(KitchenTool o) {
