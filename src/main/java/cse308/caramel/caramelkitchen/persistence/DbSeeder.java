@@ -36,11 +36,11 @@ public class DbSeeder implements CommandLineRunner {
     @Autowired
     S3Services s3Services;
 
-    @Value("${jsa.s3.uploadfile}")
-    private String uploadFilePath;
 
-    @Value("${jsa.s3.key}")
-    private String downloadKey;
+//    private String uploadFilePath;
+
+
+//    private String downloadKey;
 
     @Override
     public void run(String... args) {
@@ -98,14 +98,15 @@ public class DbSeeder implements CommandLineRunner {
         for( Equipment ii1 : equipment){
             System.out.println("Ingredient -- " +ii1.getEquipmentName());
         }*/
-
+        /*String filepath = "D://hi.txt";
         //S3 Client Operations
-        //this command upload file: C:\\s3\\jsa-s3-upload-file.txt
-/*        System.out.println("---------------- START UPLOAD FILE ----------------");
-        s3Services.uploadFile("jsa-s3-upload-file.txt", uploadFilePath);
-        System.out.println("---------------- START DOWNLOAD FILE ----------------");
+        //this command upload file from filepath
+        System.out.println("---------------- START UPLOAD FILE ----------------");
+        s3Services.uploadFile("uploaded-file.txt", filepath);*/
+        //System.out.println("---------------- START DOWNLOAD FILE ----------------");
         //this command download the previously uploaded file
-        s3Services.downloadFile(downloadKey);*/
+        //downloadkey is the name of the file to download from the bucket
+        //s3Services.downloadFile(downloadKey);
 
 
 

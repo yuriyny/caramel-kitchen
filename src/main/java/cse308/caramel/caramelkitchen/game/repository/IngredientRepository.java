@@ -10,6 +10,6 @@ import java.util.Collection;
 public interface IngredientRepository extends MongoRepository<Ingredient, String> {
     @Query("{}")
     Collection<Items> findAllIngredients();
-    @Query("{ingredientName : {$regex: ?0, $options: 'i'}}")
+    @Query("{name : {$regex: ?0, $options: 'i'}}")
     Collection<Items> findAllIngredientsContainingString(String name);
 }
