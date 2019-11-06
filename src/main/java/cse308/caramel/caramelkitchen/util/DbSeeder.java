@@ -5,7 +5,7 @@ import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
 import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
 import cse308.caramel.caramelkitchen.game.persistence.Subprocedure;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
-import cse308.caramel.caramelkitchen.game.repository.EquipmentRepository;
+import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.user.persistence.Request;
 import cse308.caramel.caramelkitchen.user.persistence.User;
@@ -21,7 +21,7 @@ public class DbSeeder implements CommandLineRunner {
     @Autowired
     IngredientRepository ingredientRepository;
     @Autowired
-    EquipmentRepository equipmentRepository;
+    KitchenToolRepository kitchenToolRepository;
     //we can use mongotemplate class or repository interface for managing data in mongodb
     private MongoTemplate mongoTemplate;
     public DbSeeder(MongoTemplate mongoTemplate){
@@ -30,12 +30,10 @@ public class DbSeeder implements CommandLineRunner {
 
     @Autowired
     S3Services s3Services;
-
-    @Value("${jsa.s3.uploadfile}")
+    //private String uploadFilePath = "C:\\planet.png";
+    //assign path to the file you wish to upload to s3 bucked and use it in s3 service upload method
     private String uploadFilePath;
 
-    @Value("${jsa.s3.key}")
-    private String downloadKey;
 
     @Override
     public void run(String... args) {
@@ -92,14 +90,15 @@ public class DbSeeder implements CommandLineRunner {
         }*/
 
         //S3 Client Operations
-        //this command upload file: C:\\s3\\jsa-s3-upload-file.txt
-/*        System.out.println("---------------- START UPLOAD FILE ----------------");
-        s3Services.uploadFile("jsa-s3-upload-file.txt", uploadFilePath);
+        //this command upload file: C:\\s3\\filrtoupload.png
+        //System.out.println("---------------- START UPLOAD FILE ----------------");
+        //s3Services.uploadFile("planet.png", uploadFilePath);
+        /*
         System.out.println("---------------- START DOWNLOAD FILE ----------------");
         //this command download the previously uploaded file
         s3Services.downloadFile(downloadKey);*/
 
-
+        System.out.println("Pre-Signed URL: " + s3Services.getImageUrl("apple.png"));
 
 
 

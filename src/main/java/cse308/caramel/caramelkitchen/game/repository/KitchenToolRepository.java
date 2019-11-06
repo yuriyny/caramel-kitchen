@@ -6,9 +6,9 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.Collection;
 
-public interface EquipmentRepository extends MongoRepository<KitchenTool, String> {
+public interface KitchenToolRepository extends MongoRepository<KitchenTool, String> {
     @Query("{}")
-    Collection<KitchenTool> findAllEquipment();
+    Collection<KitchenTool> findAllKitchenTools();
     @Query("{name : {$regex: ?0, $options: 'i'}}")
     Collection<KitchenTool> findAllEquipmentContainingString(String name);
 }

@@ -1,12 +1,7 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
-import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
-import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
-import cse308.caramel.caramelkitchen.game.repository.EquipmentRepository;
-import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
-import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package cse308.caramel.caramelkitchen.game.service;
 
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
-import cse308.caramel.caramelkitchen.game.repository.EquipmentRepository;
+import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ public class RecipeService {
     @Autowired
     IngredientRepository ingredientRepository;
     @Autowired
-    EquipmentRepository equipmentRepository;
+    KitchenToolRepository kitchenToolRepository;
 
     public List<SubprocedureComponent> findAllEquipmentTool(){
         List<SubprocedureComponent> returnList=new ArrayList<>();
-        returnList.addAll(equipmentRepository.findAll());
+        returnList.addAll(kitchenToolRepository.findAll());
         returnList.addAll(ingredientRepository.findAll());
         returnList=sortList(returnList);
         return returnList;

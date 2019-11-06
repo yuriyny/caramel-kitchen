@@ -2,7 +2,7 @@ package cse308.caramel.caramelkitchen.search.service;
 
 import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
-import cse308.caramel.caramelkitchen.game.repository.EquipmentRepository;
+import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
 import cse308.caramel.caramelkitchen.user.persistence.User;
@@ -22,7 +22,7 @@ public class SearchService {
     @Autowired
     IngredientRepository ingredientRepository;
     @Autowired
-    EquipmentRepository equipmentRepository;
+    KitchenToolRepository kitchenToolRepository;
 
     /*TODO: Add query to search for matching user*/
     public List<User> getUsers(String search){
@@ -35,6 +35,6 @@ public class SearchService {
         return new ArrayList<>(ingredientRepository.findAllIngredientsContainingString(search));
     }
     public List<KitchenTool> getKitchenTools(String search){
-        return new ArrayList<>(equipmentRepository.findAllEquipmentContainingString(search));
+        return new ArrayList<>(kitchenToolRepository.findAllEquipmentContainingString(search));
     }
 }
