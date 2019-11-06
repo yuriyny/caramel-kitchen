@@ -23,7 +23,6 @@ public class User {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING, dropDups = true)
     private String password;
     private boolean enabled;
-    private int active;
     private Collection<Game> gamesPlayed;
     private Collection<Game> gamesInProgress;
     @DBRef

@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.util;
 
+import cse308.caramel.caramelkitchen.game.controller.RecipeController;
 import cse308.caramel.caramelkitchen.game.model.GameApplication;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
@@ -10,6 +11,7 @@ import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.user.persistence.Request;
 import cse308.caramel.caramelkitchen.user.persistence.User;
+import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -25,6 +27,10 @@ public class DbSeeder implements CommandLineRunner {
     IngredientRepository ingredientRepository;
     @Autowired
     KitchenToolRepository kitchenToolRepository;
+    @Autowired
+    RecipeController recipeController;
+    @Autowired
+    UserDomainService userDomainService;
     //we can use mongotemplate class or repository interface for managing data in mongodb
     private MongoTemplate mongoTemplate;
     public DbSeeder(MongoTemplate mongoTemplate){
@@ -47,6 +53,12 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.dropCollection(KitchenTool.class);
         this.mongoTemplate.dropCollection(Recipe.class);
 
+        User user=new User();
+        user.setUsername("user");
+        user.setEnabled(true);
+        user.setPassword("password");
+        userDomainService.saveUser(user);
+
         Ingredient i1 = new Ingredient();
         i1.setName("salt");
         i1.setUnitOfMeasure("teaspoon");
@@ -65,8 +77,6 @@ public class DbSeeder implements CommandLineRunner {
 
         Ingredient i4 = new Ingredient();
         i4.setName("apple");
-        //url should be set at run time
-        //i4.setImageFileUrl("https://caramel-bucket.s3.us-east-2.amazonaws.com/apple.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191106T015905Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAQH3S3KWABJT6ZJCY%2F20191106%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=9c73af0cb39eb99b4d78cc4cf2d4bb0cb7bceb0507ff5dbd515ce885920f639f");
         i4.setImageName("apple.png");
         i4.setQuantity(1);
 
@@ -101,16 +111,17 @@ public class DbSeeder implements CommandLineRunner {
         chopApple.setGame(new GameApplication());
 
         Recipe recipe=new Recipe();
-        recipe.setCreator("user");
+        recipe.setCreator(user.getUsername());
         recipe.setRecipeName("Chopping Apple Recipe");
         recipe.setSubprocedureList(new ArrayList<>());
         recipe.getSubprocedureList().add(chopApple);
         recipe.setIsInProgress(true);
         recipe.setIngredients(new ArrayList<>());
-        recipe.setEquipment(new ArrayList<>());
+        recipe.setKitchenTools(new ArrayList<>());
         recipe.getIngredients().add(i4);
-        recipe.getEquipment().add(e1);
-        mongoTemplate.insert(recipe);
+        recipe.getKitchenTools().add(e1);
+        recipeController.createRecipe(recipe);              //Test create recipe
+//        mongoTemplate.insert(recipe);
 
         //query test
         /*Collection<Equipment> equipment = new ArrayList<>();
