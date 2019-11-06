@@ -1,10 +1,12 @@
 package cse308.caramel.caramelkitchen.game.service;
 
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
+import cse308.caramel.caramelkitchen.game.persistence.Subprocedure;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
+import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class RecipeService {
     IngredientRepository ingredientRepository;
     @Autowired
     KitchenToolRepository kitchenToolRepository;
+    @Autowired
+    UserDomainService userDomainService;
 
     public List<SubprocedureComponent> findAllEquipmentTool(){
         List<SubprocedureComponent> returnList=new ArrayList<>();
@@ -33,7 +37,8 @@ public class RecipeService {
         return recipeRepository.findAll();
     }
     public void saveRecipe(Recipe recipe){
-        /* TODO: save each subprocedure and the save recipe*/
+        recipe.setCreator(userDomainService.getCurrentUser().getUsername());
+        recipeRepository.save(recipe);
     }
     public List<SubprocedureComponent> sortList(List<SubprocedureComponent> list){
         list.sort(Comparator.comparing(a->a.getName()));

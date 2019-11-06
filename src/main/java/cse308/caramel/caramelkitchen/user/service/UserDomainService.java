@@ -5,8 +5,10 @@ import cse308.caramel.caramelkitchen.user.persistence.User;
 import cse308.caramel.caramelkitchen.user.storage.RoleRepository;
 import cse308.caramel.caramelkitchen.user.storage.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,7 +35,10 @@ public class UserDomainService implements UserDetailsService { //removed id beca
 //    public User findUserByUsername(String username) {
 //        return userRepository.findByUsername(username);
 //    }
-
+    public User getCurrentUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findById(auth.getPrincipal().toString()).get();
+    }
     public boolean userExists (User user){
         return userRepository.findById(user.getUsername()).isPresent();  // if username is present, true
     }

@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.util;
 
+import cse308.caramel.caramelkitchen.game.model.GameApplication;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
 import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 
 @Service
@@ -60,9 +63,15 @@ public class DbSeeder implements CommandLineRunner {
         i3.setUnitOfMeasure("tablespoon");
         i3.setQuantity(3);
 
+        Ingredient i4 = new Ingredient();
+        i4.setName("apple");
+        i4.setImageFileUrl("https://caramel-bucket.s3.us-east-2.amazonaws.com/apple.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191106T015905Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAQH3S3KWABJT6ZJCY%2F20191106%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=9c73af0cb39eb99b4d78cc4cf2d4bb0cb7bceb0507ff5dbd515ce885920f639f");
+        i4.setQuantity(1);
+
         this.mongoTemplate.insert(i1);
         this.mongoTemplate.insert(i2);
         this.mongoTemplate.insert(i3);
+        this.mongoTemplate.insert(i4);
 
         KitchenTool e1 = new KitchenTool();
         e1.setName("knife");
@@ -82,6 +91,25 @@ public class DbSeeder implements CommandLineRunner {
         mongoTemplate.insert(e1);
         mongoTemplate.insert(e2);
         mongoTemplate.insert(e3);
+
+
+        Subprocedure chopApple=new Subprocedure();
+        chopApple.setProcedureName("Chop Apple");
+        chopApple.setInstructions("Chop the apple");
+        chopApple.setGame(new GameApplication());
+
+        Recipe recipe=new Recipe();
+        recipe.setCreator("user");
+        recipe.setRecipeName("Chopping Apple Recipe");
+        recipe.setSubprocedureList(new ArrayList<>());
+        recipe.getSubprocedureList().add(chopApple);
+        recipe.setIsInProgress(true);
+        recipe.setIngredients(new ArrayList<>());
+        recipe.setEquipment(new ArrayList<>());
+        recipe.getIngredients().add(i4);
+        recipe.getEquipment().add(e1);
+        mongoTemplate.insert(recipe);
+
         //query test
         /*Collection<Equipment> equipment = new ArrayList<>();
         equipment = equipmentRepository.findAllEquipmentContainingString("oW");

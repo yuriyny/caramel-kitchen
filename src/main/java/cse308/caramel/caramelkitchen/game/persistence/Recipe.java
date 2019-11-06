@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,7 +25,7 @@ public class Recipe {
     //unfinished recipe = true
     //completed recipe sets this field to false
     private Boolean isInProgress = true;
-
+    private List<Subprocedure> subprocedureList;
 /*    should we create a list of <instruction class>
     which will have field like step_description,
     step_number, equipment/ingredients needed?*/
