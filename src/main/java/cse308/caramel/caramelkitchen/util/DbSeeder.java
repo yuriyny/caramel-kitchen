@@ -65,7 +65,9 @@ public class DbSeeder implements CommandLineRunner {
 
         Ingredient i4 = new Ingredient();
         i4.setName("apple");
-        i4.setImageFileUrl("https://caramel-bucket.s3.us-east-2.amazonaws.com/apple.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191106T015905Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAQH3S3KWABJT6ZJCY%2F20191106%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=9c73af0cb39eb99b4d78cc4cf2d4bb0cb7bceb0507ff5dbd515ce885920f639f");
+        //url should be set at run time
+        //i4.setImageFileUrl("https://caramel-bucket.s3.us-east-2.amazonaws.com/apple.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191106T015905Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAQH3S3KWABJT6ZJCY%2F20191106%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=9c73af0cb39eb99b4d78cc4cf2d4bb0cb7bceb0507ff5dbd515ce885920f639f");
+        i4.setImageName("apple.png");
         i4.setQuantity(1);
 
         this.mongoTemplate.insert(i1);
