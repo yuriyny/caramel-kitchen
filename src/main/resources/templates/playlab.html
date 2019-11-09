@@ -1,50 +1,105 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Caramel Kitchen Lab Creation</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
-    <link th:href="@{css/style.css}" rel="stylesheet"/>
-</head>
-<body th:with="reason=${session.pageType}">
-    <header>
-        <img th:src="@{images/logo4.png}" class="logo">
-        <nav>
-            <ul>
-                <li><a th:href="@{/home}">Home</a></li>
-            </ul>
-        </nav>
-    </header>
+    <title>Caramel Kitchen</title>
 
-    <div id="playlab_page">
-        <div id="main_display">
-            <ul id="cooking_board">
-                <li>
-                    <div class="active_item">apple</div>
-                </li>
-                <li>
-                    <div class="active_item">knife</div>
-                </li>
-            </ul>
-        </div>
-        <div id="lab_instructions_gameplay">
-            <ul id="lab_instructions_gameplay_ul">
-                <li>
-                    <div class="lab_step">Instruction 1</div>
-                </li>
-                <li>
-                    <div class="lab_step">Instruction 2</div>
-                </li>
-                <li>
-                    <div class="lab_step comment">Comment</div>
-                </li>
-            </ul>
-        </div>
-        <div id="lab_timer">Timer</div>
-        <div id="lab_score">Score</div>
-        <button id="lab_reset">Reset</button>
+    <!--Let browser know website is optimized for mobile-->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!--Custom stylings-->
+    <link href="css/style.css" rel="stylesheet"/>
+</head>
+
+<body th:with="reason=${session.pageType}">
+<nav>
+    <div class="nav-wrapper amber lighten-4">
+        <a href="#" class="brand-logo">
+            <img class="responsive-img" src="images/logo4.png">
+        </a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a th:href="@{/home}">Home</a></li>
+            <li><a th:href="@{/userprofile}">Profile</a></li>
+            <li><a th:href="@{/logout}">Logout</a></li>
+        </ul>
     </div>
+</nav>
+
+<div class="container custom-box kitchen-container">
+    <div class="row">
+        <div id="cooking-board" class="col s10">
+            <div class="col s2">
+                <div class="card waves-effect waves-teal">
+                    <div class="card-image"><img src="images/knife.png"></div>
+                    <div class="card-content center"><p>Knife</p></div>
+                </div>
+            </div>
+            <div class="col s2">
+                <div id="temp" class="ingredient card waves-effect waves-light">
+                    <div class="card-image"><img src="images/apple.png"></div>
+                    <div class="card-content center"><p>Apple</p></div>
+                </div>
+            </div>
+            <div class="col s2">
+                <div class="ingredient card waves-effect waves-light">
+                    <div class="card-image"><img src="images/garlic.png"></div>
+                    <div class="card-content center"><p>Garlic</p></div>
+                </div>
+            </div>
+            <div class="col s2">
+                <div class="card waves-effect waves-teal">
+                    <div class="card-image"><img src="images/salt.png"></div>
+                    <div class="card-content center"><p>Salt</p></div>
+                </div>
+            </div>
+            <div class="col s2">
+                <div class="ingredient card waves-effect waves-light">
+                    <div class="card-image"><img src="images/carrot.png"></div>
+                    <div class="card-content center"><p>Carrot</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s2">
+            <div id="kitchen_sidebar" class="row">
+                <div id="kitchen_sidebar_reset" class="col s12 waves-effect waves-orange btn-large orange lighten-2">
+                    Reset
+                </div>
+                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Timer</span>
+                </div>
+                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Score</span>
+                </div>
+                <div class="col s12"><h4 class="right">Recipe</h4></div>
+                <div id="recipe_section" class="col s12">
+                    <ul id="recipe_ul" class="collection">
+                        <li class="collection-item">
+                            <div>placeholder</p></div>
+                        </li>
+                        <li class="collection-item blue lighten-4">
+                            <div>placeholder</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function () {
+    });
+
+</script>
+
 </body>
 </html>

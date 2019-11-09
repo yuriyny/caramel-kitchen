@@ -1,104 +1,108 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Caramel Kitchen User Profile</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
-    <link th:href="@{css/style.css}" rel="stylesheet"/>
+    <title>Caramel Kitchen Profile</title>
+
+    <!--Let browser know website is optimized for mobile-->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!--Custom stylings-->
+    <link href="css/style.css" rel="stylesheet"/>
 </head>
+
 <body th:with="reason=${session.pageType}">
-    <header>
-        <img th:src="@{images/logo4.png}" class="logo">
-        <nav>
-            <ul>
-                <li><a th:href="@{/home}">Home</a></li>
-                <li><a th:href="@{/createlab}">Create Lab</a></li>
-                <li><a th:href="@{/aboutus}">About Us</a></li>
-                <li><a th:href="@{/logout}">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <div id="userprofile_page">
-        <div id="user_created_recipes">
-            <h2>My Created Recipes</h2>
-            <ul>
-                <li>
-                    <div class="user_recipe">
-                        <div class="recipe_info">
-                            <p>User Recipe 1</p>
-                            <p>Rated _ stars</p>
-                        </div>
-                        <div class="recipe_actions">
-                            <a href="#">Remove</button></a>
-                            <a href="#">Modify</button></a>
-                            <a href="#">View Parents</button></a>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                   <div class="user_recipe">
-                        <div class="recipe_info">
-                            <p>User Recipe 2</p>
-                            <p>Rated _ stars</p>
-                        </div>
-                        <div class="recipe_actions">
-                            <a href="#">Remove</button></a>
-                            <a href="#">Modify</button></a>
-                            <a href="#">View Parents</button></a>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div id="user_completed_recipes">
-            <h2>My Completed Recipes</h2>
-            <ul>
-                <li>
-                    <div class="completed_recipe">
-                        <p>Recipe a</p>
-                        <p>Score: 1000</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="completed_recipe">
-                        <p>Recipe b</p>
-                        <p>Score: 500</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div id="user_requests_made">
-            <h2>My Requests</h2>
-            <ul>
-                <li>
-                    <div class="_resolved user_request">
-                        <p>Sample resolved request</p>
-                        <!-- <p onclick="closeDIV(event)">&#10003;</p> -->
-                    </div>
-                </li>
-                <li>
-                    <div class="user_request">
-                        <p>Sample request</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="user_request">
-                        <p>Sample request</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="_declined user_request">
-                        <p>Sample declined request</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
+<nav>
+    <div class="nav-wrapper amber lighten-4">
+        <a href="#" class="brand-logo" tabindex="-1">
+            <img class="responsive-img" src="images/logo4.png">
+        </a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a th:href="@{/createlab}">Create Lab</a></li>
+            <li><a th:href="@{/home}">Lobby</a></li>
+            <li><a th:href="@{/aboutus}">About Us</a></li>
+            <li><a th:href="@{/logout}">Logout</a></li>
+        </ul>
     </div>
+</nav>
 
+<div class="container custom-box userprofile-container">
+    <div class="row">
+        <div class="col s4 m4">
+            <div class="card user-desc">
+                <div class="card-image">
+                    <img src="images/placeholder.png">
+                    <span class="card-title">user</span>
+                    <a class="btn-floating halfway-fab waves-effect waves-light red"><i
+                            class="material-icons">add</i></a>
+                </div>
+                <div class="card-content">
+                    <p>user description</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <h5 class="row center">user recipes</h5>
+            <ul id="user-recipes" class="collapsible col s12" data-collapsible="accordian">
+                <li>
+                    <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">apple
+                        pie
+                    </div>
+                    <div class="collapsible-body">
+                        <p>Rating</p>
+                        <a href="#">Remove</a>
+                        <a href="#">Modify</a>
+                        <a href="#">View Parents</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">roast
+                        chicken
+                    </div>
+                    <div class="collapsible-body">
+                        <p>Rating</p>
+                        <a href="#">Remove</a>
+                        <a href="#">Modify</a>
+                        <a href="#">View Parents</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col s4">
+            <h5 class="row center">completed recipes</h5>
+            <div id="completed-recipes" class="collection col s12">
+                <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
+                    <p class="left">roast chicken</p>
+                    <p class="secondary-content">Score: 1000</p>
+                </a>
+                <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
+                    <p class="left">roast chicken</p>
+                    <p class="secondary-content">Score: 1000</p>
+                </a>
+                <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
+                    <p class="left">roast chicken</p>
+                    <p class="secondary-content">Score: 1000</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.collapsible').collapsible();
+        $('select').formSelect();
+    });
+
+</script>
 </body>
 </html>
