@@ -21,7 +21,7 @@ public class Recipe {
     @DBRef
     private Collection<Ingredient> ingredients;
     @DBRef
-    private Collection<KitchenTool> equipment;
+    private Collection<KitchenTool> kitchenTools;
     //unfinished recipe = true
     //completed recipe sets this field to false
     private Boolean isInProgress = true;

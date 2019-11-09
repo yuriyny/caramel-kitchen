@@ -23,7 +23,6 @@ public class RecipeController {
     RecipeService recipeService;
 
     /**
-     *  (NEEDS TO BE CHANGED BECAUSE THERE ARE TWO RECIPE but the other wasn't implemented yet)
      * Needed when you go on home page
      * @return list of recipes in database
      */
@@ -61,6 +60,7 @@ public class RecipeController {
         List<SubprocedureComponent> returnList=new ArrayList<>();
         returnList.addAll(searchService.getIngredients(search));
         returnList.addAll(searchService.getKitchenTools(search));
+        returnList=recipeService.findImage(returnList);
         return returnList;
     }
 
@@ -72,9 +72,10 @@ public class RecipeController {
      * This method takes in a recipe and saves it. Works for save and publish.
      * @param recipe
      */
+    @ResponseBody
+    @PostMapping(path={"/create-recipe"})
     public void createRecipe(Recipe recipe){
         recipeService.saveRecipe(recipe);
-
     }
     public void modifyRecipe(Recipe recipe){
 
