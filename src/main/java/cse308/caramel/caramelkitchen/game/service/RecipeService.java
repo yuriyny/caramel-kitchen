@@ -39,7 +39,7 @@ public class RecipeService {
     }
 
     public List<String> findAllToolActions(String toolId){
-        return (List) kitchenToolRepository.findAllToolActions(toolId);
+        return (List) kitchenToolRepository.findById(toolId).get().getActions();
     }
 
     public List<Recipe> findAllRecipe(){ 

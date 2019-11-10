@@ -5,6 +5,9 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Getter
 @Setter
 @Document(collection = "kitchenTool")
@@ -12,4 +15,5 @@ public class KitchenTool extends SubprocedureComponent{
     @Id
     private String id;
     private String unitOfMeasure;
+    private Collection<String> actions = new ArrayList<>();
 }

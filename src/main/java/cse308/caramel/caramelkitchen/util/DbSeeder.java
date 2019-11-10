@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 @Service
@@ -87,6 +88,8 @@ public class DbSeeder implements CommandLineRunner {
 
         KitchenTool e1 = new KitchenTool();
         e1.setName("knife");
+        e1.getActions().add("Chopping");
+        e1.getActions().add("Peeling");
         Subprocedure p1 = new Subprocedure();
         p1.setProcedureName("chopping");
 
@@ -97,12 +100,20 @@ public class DbSeeder implements CommandLineRunner {
 
         KitchenTool e3 = new KitchenTool();
         e3.setName("bowl");
+        e3.getActions().add("Mixing");
         Subprocedure p3 = new Subprocedure();
         p3.setProcedureName("mixing");
 
         mongoTemplate.insert(e1);
         mongoTemplate.insert(e2);
         mongoTemplate.insert(e3);
+
+        //get all actions from specific tool
+        Collection<String> toolActions = kitchenToolRepository.findById(e1.getId()).get().getActions();
+        //print the result
+        for ( String s : toolActions){
+            System.out.println(s);
+        }
 
 
         Subprocedure chopApple=new Subprocedure();
