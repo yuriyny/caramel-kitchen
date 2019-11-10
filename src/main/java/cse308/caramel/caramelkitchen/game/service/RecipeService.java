@@ -37,6 +37,11 @@ public class RecipeService {
         returnList=findImage(returnList);
         return returnList;
     }
+
+    public List<String> findAllToolActions(String toolId){
+        return (List) kitchenToolRepository.findAllToolActions(toolId);
+    }
+
     public List<Recipe> findAllRecipe(){ 
         return recipeRepository.findAll();
     }

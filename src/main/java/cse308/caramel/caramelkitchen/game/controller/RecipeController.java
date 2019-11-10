@@ -6,10 +6,7 @@ import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +70,7 @@ public class RecipeController {
      * @param recipe
      */
     @ResponseBody
-    @PostMapping(path={"/create-recipe"})
+    @PostMapping(path={"/create-recipe", "/update-recipe"})
     public void createRecipe(Recipe recipe){
         recipeService.saveRecipe(recipe);
     }
@@ -83,4 +80,16 @@ public class RecipeController {
     public Recipe getRecipeContent(String s){
         return new Recipe();
     }
+
+    /**
+     * Returns all actions associated with a tool
+     * GET
+     */
+    @ResponseBody
+    @GetMapping(value = "/tool/{id}")
+    public List<String> getToolActions(@PathVariable String id) {
+        return recipeService.findAllToolActions(id);
+    }
+
 }
+

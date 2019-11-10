@@ -11,4 +11,8 @@ public interface KitchenToolRepository extends MongoRepository<KitchenTool, Stri
     Collection<KitchenTool> findAllKitchenTools();
     @Query("{name : {$regex: ?0, $options: 'i'}}")
     Collection<KitchenTool> findAllEquipmentContainingString(String name);
+    // insert query here to fetch all tool actions
+    @Query("")
+    Collection<String> findAllToolActions(String id);
+
 }
