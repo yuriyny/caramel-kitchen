@@ -15,5 +15,6 @@ public interface KitchenToolRepository extends MongoRepository<KitchenTool, Stri
     // insert query here to fetch all tool actions
     @Query("{_id: ?0}")
     Optional<KitchenTool> findById (String id);
-
+    @Query("{name: ?0}")
+    Optional<KitchenTool> findByName (String name);
 }
