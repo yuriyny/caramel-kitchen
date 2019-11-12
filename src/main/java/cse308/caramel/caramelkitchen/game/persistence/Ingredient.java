@@ -18,5 +18,6 @@ public class Ingredient extends SubprocedureComponent {
     private int quantity;
     //embedded document for ingredients, no need for referencing
     private Collection<Subprocedure> subprocedures = new ArrayList<>();
+    private Collection<String> tags;
 
 }
