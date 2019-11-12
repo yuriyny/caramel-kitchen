@@ -1,5 +1,7 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
+import com.amazonaws.services.s3.model.JSONOutput;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class RecipeController {
@@ -53,12 +57,18 @@ public class RecipeController {
      */
     @ResponseBody
     @PostMapping(path={"/search-ingredient-tool-list"})
-    public List<SubprocedureComponent> searchIngredientTool(@RequestBody String search){
-        List<SubprocedureComponent> returnList=new ArrayList<>();
-        returnList.addAll(searchService.getIngredients(search));
-        returnList.addAll(searchService.getKitchenTools(search));
-        returnList=recipeService.findImage(returnList);
-        return returnList;
+    public Map<String, List<SubprocedureComponent>> searchIngredientTool(@RequestBody String search){
+        List<SubprocedureComponent> ingredients=new ArrayList<>();
+        ingredients.addAll(searchService.getIngredients(search));
+        ingredients=recipeService.findImage(ingredients);
+        List<SubprocedureComponent> tools=new ArrayList<>();
+        tools.addAll(searchService.getKitchenTools(search));
+        tools=recipeService.findImage(tools);
+
+        Map<String, List<SubprocedureComponent>> returnObj = new HashMap<String, List<SubprocedureComponent>>();
+        returnObj.put("ingredients", ingredients);
+        returnObj.put("tools", tools);
+        return returnObj;
     }
 
     public void updateRecipeHistory(Recipe recipe){

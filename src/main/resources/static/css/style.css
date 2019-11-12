@@ -123,7 +123,7 @@ nav ul li a{
     width: 100%;
 }
 
-.search-results{
+#search-results{
     overflow-y: auto;
     height: 46vh;
     width: 98%;
@@ -173,7 +173,7 @@ nav ul li a{
 .createlab-container{
     margin-top: 60px;
     height: 80vh;
-    min-width: 80vw
+    min-width: 80vw;
 }
 
 .card-content{
@@ -190,12 +190,19 @@ nav ul li a{
     background: rgba(0,225,0,0.6)
 }
 
+.processedItem{
+    background: rgba(225,255,0,0.6)
+}
+
 .comment{
     background: rgba(0,0,225, 0.6)
 }
 
 .collection-item{
     user-select: none;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
 }
 
 #recipe_section{
@@ -211,7 +218,7 @@ nav ul li a{
 
 #item-search-results{
     overflow-y: scroll;
-    height: 560px;
+    height: 70%;
 }
 
 .clear-btn{
@@ -236,7 +243,8 @@ nav ul li a{
 #menu #menu-ul .menu-option {
     z-index: 1;
     width: 100px;
-    height: 35px;
+    padding: 5px 0;
+    height: auto;
     display: flex;
     justify-content: center;
     cursor: pointer;
@@ -250,11 +258,18 @@ nav ul li a{
 
 .noSelect{
     cursor: default !important;
+    opacity: 0.7;
 }
 
-.active-card{
-    max-width: 160px;
+/*.active-item{*/
+/*    height: 185px;*/
+/*}*/
+
+.active-item > .card-content{
     word-wrap: break-word;
+    padding: 20px 2px;
+    position: relative;
+    width: 100%;
 }
 
 #item-search-results .collection-item{
@@ -263,6 +278,11 @@ nav ul li a{
 
 #item-search-results .collection-item:active{
     background: #bdbdbd;
+}
+
+#recipe-target{
+    background: none;
+    display: inline-block;
 }
 
 

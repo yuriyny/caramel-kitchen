@@ -13,39 +13,31 @@ class ItemSelection{
     async searchQuery(){
         // console.log(this.search_input.value);
         this.clearSearchUl();
-        if(this.search_input.value === "") return;
-        // $.ajax({
-        //     type: 'POST',
-        //     url: "/search-ingredient-tool-list",
-        //     contentType: "text/plain",
-        //     data: this.search_input.value,
-        //     success: (data) => {
-        //         console.log(data);
-        //         // console.log("ajax post success");
-        //         this.clearSearchUl();
-        //         for(let item of data){
-        //             this.addSearchManual(item);
-        //         }
-        //     },
-        //     error: function(xhr, status, error){
-        //         console.log("ajax post error");
-        //         console.log(error);
-        //         console.log(status);
-        //         console.log(xhr);
-        //     }
-        // });
-        const data = await fetch("/search-ingredient-tool-list", {
+        const keyword = this.search_input.value;
+        if(keyword === "") return;
+
+        const items = await fetch("/search-ingredient-tool-list", {
             method: "POST",
-            body: this.search_input.value,
+            body: keyword,
             contentType: "text/plain"
         })
             .then(response => response.json())
             .catch((e)=>{console.log("err " + e)});
 
-        console.log(data);
-        for(let item of data){
-            this.addSearchResult(item);
+        // let customItem = true;
+        for(let item of items.ingredients){
+            this.addSearchResult(item, "ingredient");
+            // if(item.name === keyword) customItem = false;
         }
+        for(let item of items.tools){
+            this.addSearchResult(item, "tool");
+            // if(item.name === keyword) customItem = false;
+        }
+
+        // if(customItem){
+        //     let custom = {"name" : keyword, "imageFileUrl" : null};
+        //     this.addSearchResult(custom, "ingredient");
+        // }
     }
 
     clearSearchUl(){
@@ -54,11 +46,12 @@ class ItemSelection{
         }
     }
 
-    addSearchResult(item){
+    addSearchResult(item, category){
         const li = document.createElement("li");
         li.setAttribute("class", "collection-item");
         li.textContent = item.name;
-        li.onclick = () => this.cookingBoard.addItem(item);
+        let newItem = {"name": item.name, "imageFileUrl": item.imageFileUrl, "use": category};
+        li.onclick = () => this.cookingBoard.addItem(newItem);
         this.search_ul.appendChild(li);
     }
 }

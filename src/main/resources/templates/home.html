@@ -65,21 +65,21 @@
         <div class="col s8">
             <div class="row" style="margin-top: 20px">
                 <div class="input-field col s3">
-                    <select>
+                    <select id="search-category">
                         <option value="recipe">Recipe</option>
                         <option value="creator">Creator</option>
                     </select>
                     <label>Category</label>
                 </div>
                 <div class="col s9 input-field">
-                    <input id="search_keyword" type="text">
-                    <label for="search_keyword">search for...</label>
+                    <input id="search-keyword" type="text">
+                    <label for="search-keyword">search for...</label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col s12">
-                    <button class="btn-large waves-effect waves-orange orange lighten-2" type="submit" name="action">
+                    <button id="search-btn" class="btn-large waves-effect waves-orange orange lighten-2">
                         Search
                         <i class="material-icons right">search</i>
                     </button>
@@ -87,7 +87,7 @@
             </div>
 
             <div class="row">
-                <ul class="collection search-results">
+                <ul id="search-results" class="collection">
                     <li class="collection-item avatar">
                         <i class="material-icons circle orange lighten-3">format_list_bulleted</i>
                         <a class="title" href="#">Title</a>
@@ -121,11 +121,18 @@
 
 <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="js/HomeSearch.js"></script>
 <script>
     $(document).ready(function () {
         $('.collapsible').collapsible();
         $('select').formSelect();
     });
+
+    const search_input = document.querySelector("#search-keyword");
+    const search_category = document.querySelector("#search-category");
+    const search_ul = document.querySelector("#search-results");
+    const search_btn = document.querySelector("#search-btn");
+    const generalSearch = new HomeSearch(search_input, search_category, search_ul, search_btn);
 
 </script>
 </body>

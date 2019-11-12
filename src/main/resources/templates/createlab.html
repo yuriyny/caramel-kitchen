@@ -45,13 +45,15 @@
             </ul>
         </div>
 
-        <div id="cooking-board" class="col s8">
-            <!--            <div class="col s2">-->
-            <!--                <div class="ingredient card waves-effect waves-light">-->
-            <!--                    <div class="card-image"><img src="images/apple.png"></div>-->
-            <!--                    <div class="card-content center"><p>Apple</p></div>-->
-            <!--                </div>-->
-            <!--            </div>-->
+        <div class="col s8">
+            <div id="cooking-board" class="row">
+                <!--            <div class="col s2">-->
+                <!--                <div class="ingredient card waves-effect waves-light">-->
+                <!--                    <div class="card-image"><img src="images/apple.png"></div>-->
+                <!--                    <div class="card-content center"><p>Apple</p></div>-->
+                <!--                </div>-->
+                <!--            </div>-->
+            </div>
         </div>
 
         <div class="col s2">
@@ -72,9 +74,9 @@
                             class="material-icons right">backspace</i>Discard</a>
                 </div>
                 <div class="col m12 l6">
-                    <a href="#publish"
+                    <a href="#publish" onclick="prompt.updateTargets()"
                        class="waves-effect waves-orange btn-large orange lighten-2 square-btn modal-trigger"><i
-                            class="material-icons right">check</i>Publish</a>
+                            class="material-icons right">check</i>Save</a>
                 </div>
             </div>
         </div>
@@ -82,66 +84,72 @@
 </div>
 
 <div class="modal" id="publish">
-    <form action="" method="POST">
-        <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-orange btn-flat"><i
-                    class="material-icons prefix">close</i></a>
-        </div>
-        <div class="modal-content">
-            <div class="container">
-                <h2 class="center">Publish</h2>
-                <div class="row">
-                    <button type="submit" class="col s12 btn waves-effect waves-orange amber lighten-1">Publish</button>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-orange btn-flat"><i
+                class="material-icons prefix">close</i></a>
+    </div>
+    <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <h2 class="col s12 center">Save Recipe</h2>
+                <div class="col s12 input-field">
+                    <input id="recipe-name" type="text">
+                    <label for="recipe-name">Recipe name</label>
                 </div>
+                <label class="col s2">Recipe Target</label>
+                <select id="recipe-target" class="col s6 browser-default"></select>
+                <div class="col s12 input-field">
+                    <input id="recipe-desc" type="text">
+                    <label for="recipe-desc">Recipe Description</label>
+                </div>
+                <button onclick="prompt.saveRecipe()" class="col s8 offset-s2 btn-large waves-effect waves-orange amber lighten-1" style="margin-top: 20px">Save</button>
+                <button onclick="prompt.publishRecipe()" class="col s12 btn-large waves-effect waves-orange amber lighten-1" style="margin-top: 30px">Publish</button>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 
 <div id="menu">
-    <ul id="menu-ul"></ul>
+    <ul id="menu-ul">
+        <li class="menu-option noSelect" oncontextmenu="return false">No actions available</li>
+    </ul>
 </div>
 
 <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 <script src="js/Instructions.js"></script>
-<script src="js/ActionMenu.js"></script>
 <script src="js/CookingBoard.js"></script>
 <script src="js/ItemSelection.js"></script>
+<script src="js/Prompt.js"></script>
 <script>
     $(document).ready(function () {
-
         $(".modal").modal({
             dismissible: false
         });
+        $('select').formSelect();
     });
 
     const recipe_ul = document.querySelector("#recipe_ul");
-    const recipe = new Instructions(recipe_ul, []);
     const comment_input = document.querySelector("#recipe_comment");
+    const recipe = new Instructions(recipe_ul, []);
     recipe.setCommentInput(comment_input);
 
     const context_menu = document.querySelector("#menu");
     const context_menu_ul = document.querySelector("#menu-ul");
-    const customMenu = new ActionMenu(context_menu, context_menu_ul, recipe);
-
-    // const temp = document.querySelector("#temp");
-    // customMenu.attachMenu(temp);
-    // customMenu.addUtensil("salt");
-    // customMenu.addUtensil("knife");
-    // customMenu.updateMenu();
+    // const customMenu = new ActionMenu(context_menu, context_menu_ul, recipe);
 
     const cooking_board = document.querySelector("#cooking-board");
-    const cookingBoard = new CookingBoard(cooking_board, customMenu);
+    const cookingBoard = new CookingBoard(cooking_board, context_menu, context_menu_ul, recipe);
 
     const search_input = document.querySelector("#item-search-keyword");
     const search_ul = document.querySelector("#item-search-results");
     const itemSelection = new ItemSelection(search_input, search_ul, cookingBoard);
-    // itemSelection.addSearchResult("temp1");
-    // itemSelection.addSearchResult("temp2");
-    // itemSelection.addSearchResult("temp3");
-    // itemSelection.addSearchResult("temp4");
+
+    const recipe_name = document.querySelector("#recipe-name");
+    const recipe_target = document.querySelector("#recipe-target");
+    const recipe_desc = document.querySelector("#recipe-desc");
+    const prompt = new Prompt(recipe_name, recipe_target, recipe_desc, recipe, cookingBoard);
 </script>
 
 </body>

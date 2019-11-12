@@ -10,49 +10,43 @@ class Instructions{
     setCommentInput(comment_input){
         comment_input.onkeypress = (e) => {
             if(e.keyCode === 13){
-                this.addComment(comment_input.value)
+                this.addToRecipe(comment_input.value, "comment")
                 comment_input.value = "";
             }
         }
     }
 
-    addComment(comment){
-        if(!comment) return;
-
-        const li = document.createElement("li");
-        li.setAttribute("class", "collection-item blue lighten-4");
-
-        const div = document.createElement("div");
-        div.textContent = comment;
-
-        const icon = document.createElement("i");
-        icon.setAttribute("class", "material-icons right clear-btn");
-        icon.textContent = "clear";
-        icon.onclick = () => this.deleteStep(li);
-
-        div.appendChild(icon);
-        li.appendChild(div);
-        this.recipe_ul.appendChild(li);
-    }
 
     deleteStep(li){
         li.parentNode.removeChild(li);
     }
 
-    addStep(step){
-        const li = document.createElement("li");
-        li.setAttribute("class", "collection-item");
+    addToRecipe(step, type="instruction"){
+        if(!step) return;
 
-        const div = document.createElement("div");
-        div.textContent = step;
+        const li = document.createElement("li");
+        if(type === "comment"){li.setAttribute("class", "collection-item blue lighten-4");}
+        else{li.setAttribute("class", "collection-item");}
+
+        const p = document.createElement("p");
+        p.textContent = step;
 
         const icon = document.createElement("i");
         icon.setAttribute("class", "material-icons right clear-btn");
         icon.textContent = "clear";
         icon.onclick = () => this.deleteStep(li);
 
-        div.appendChild(icon);
-        li.appendChild(div);
+        li.appendChild(p);
+        li.appendChild(icon);
         this.recipe_ul.appendChild(li);
+    }
+
+    getRecipe(){
+        let recipe = [];
+        for(let li of this.recipe_ul.getElementsByTagName("li")){
+            recipe.push(li.childNodes[0].textContent)
+        }
+
+        return recipe;
     }
 }
