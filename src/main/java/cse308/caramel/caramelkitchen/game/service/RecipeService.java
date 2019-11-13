@@ -1,8 +1,6 @@
 package cse308.caramel.caramelkitchen.game.service;
 
-import cse308.caramel.caramelkitchen.game.persistence.Recipe;
-import cse308.caramel.caramelkitchen.game.persistence.Subprocedure;
-import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
+import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
@@ -30,12 +28,22 @@ public class RecipeService {
     @Autowired
     S3Services s3Services;
 
-    public List<SubprocedureComponent> findAllEquipmentTool(){
-        List<SubprocedureComponent> returnList=new ArrayList<>();
-        returnList.addAll(kitchenToolRepository.findAll());
+//    public List<SubprocedureComponent> findAllEquipmentTool(){
+//        List<SubprocedureComponent> returnList=new ArrayList<>();
+//        returnList.addAll(kitchenToolRepository.findAll());
+//        returnList.addAll(ingredientRepository.findAll());
+//        returnList=sortList(returnList);
+//        returnList=findImage(returnList);
+//        return returnList;
+//    }
+    public List<Ingredient> findAllIngredients(){
+        List<Ingredient> returnList=new ArrayList<>();
         returnList.addAll(ingredientRepository.findAll());
-        returnList=sortList(returnList);
-        returnList=findImage(returnList);
+        return returnList;
+    }
+    public List<KitchenTool> findAllTools(){
+        List<KitchenTool> returnList=new ArrayList<>();
+        returnList.addAll(kitchenToolRepository.findAll());
         return returnList;
     }
 

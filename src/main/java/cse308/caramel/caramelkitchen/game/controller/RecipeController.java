@@ -1,7 +1,5 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
-import com.amazonaws.services.s3.model.JSONOutput;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
@@ -28,22 +26,21 @@ public class RecipeController {
     UserDomainService userDomainService;
 
     /**
-     * Needed when you go on home page
-     * @return list of recipes in database
-     */
-    @ResponseBody
-    @GetMapping(path={"/recipe-list"})
-    public List<Recipe> getRecipesList(){
-        return recipeService.findAllRecipe();
-    }
-    /**
      *  Needed when you click on create lab
      * @return list of ingredient/tool in database
      */
-    @ResponseBody
-    @GetMapping(path={"/ingredient-tool-list"})
-    public List<SubprocedureComponent> getIngredientToolList(){
-        return recipeService.findAllEquipmentTool();
+    public  Map<String, List<SubprocedureComponent>> getIngredientToolList(){
+        List<SubprocedureComponent> ingredients=new ArrayList<>();
+        ingredients.addAll(recipeService.findAllIngredients());
+        ingredients=recipeService.findImage(ingredients);
+        List<SubprocedureComponent> tools=new ArrayList<>();
+        tools.addAll(recipeService.findAllTools());
+        tools=recipeService.findImage(tools);
+
+        Map<String, List<SubprocedureComponent>> returnObj = new HashMap<>();
+        returnObj.put("ingredients", ingredients);
+        returnObj.put("tools", tools);
+        return returnObj;
     }
     /**
      * Search recipe
@@ -52,6 +49,9 @@ public class RecipeController {
     @ResponseBody
     @PostMapping(path={"/search-recipe-list"})
     public List<Recipe> searchRecipe(@RequestBody String search){
+        if(search.isEmpty()){
+            return recipeService.findAllRecipe();
+        }
         return searchService.getRecipes(search);
     }
 
@@ -63,13 +63,19 @@ public class RecipeController {
     @PostMapping(path={"/search-ingredient-tool-list"})
     public Map<String, List<SubprocedureComponent>> searchIngredientTool(@RequestBody String search){
         List<SubprocedureComponent> ingredients=new ArrayList<>();
-        ingredients.addAll(searchService.getIngredients(search));
-        ingredients=recipeService.findImage(ingredients);
         List<SubprocedureComponent> tools=new ArrayList<>();
-        tools.addAll(searchService.getKitchenTools(search));
+
+        if(search.isEmpty()){
+            ingredients.addAll(recipeService.findAllIngredients());
+            tools.addAll(recipeService.findAllTools());
+        }else {
+            ingredients.addAll(searchService.getIngredients(search));
+            tools.addAll(searchService.getKitchenTools(search));
+        }
+        ingredients=recipeService.findImage(ingredients);
         tools=recipeService.findImage(tools);
 
-        Map<String, List<SubprocedureComponent>> returnObj = new HashMap<String, List<SubprocedureComponent>>();
+        Map<String, List<SubprocedureComponent>> returnObj = new HashMap<>();
         returnObj.put("ingredients", ingredients);
         returnObj.put("tools", tools);
         return returnObj;
