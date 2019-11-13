@@ -50,8 +50,9 @@ class ItemSelection{
         const li = document.createElement("li");
         li.setAttribute("class", "collection-item");
         li.textContent = item.name;
-        let newItem = {"name": item.name, "imageFileUrl": item.imageFileUrl, "use": category};
-        li.onclick = () => this.cookingBoard.addItem(newItem);
+        // let newItem = {"name": item.name, "imageFileUrl": item.imageFileUrl, "use": category};
+
+        li.onclick = () => this.cookingBoard.addItem(item, category);
         this.search_ul.appendChild(li);
     }
 }

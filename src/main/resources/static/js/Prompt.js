@@ -23,24 +23,51 @@ class Prompt {
     }
 
     getRecipeInfo(){
+        //recipe requires from frontend
+        //  ingredients, kitchen tools, isinProgress, recipe name, and subprocedure list
         let data = {};
-        data["name"] = this.recipe_name.value;
-        data["target"] = this.recipe_target.options[this.recipe_target.selectedIndex].value;
-        data["desc"] = this.recipe_desc.value;
-        data["recipe"] = this.recipe.getRecipe();
-        data["required"] = this.cookingBoard.getBasicItems();
+        // data["target"] = this.recipe_target.options[this.recipe_target.selectedIndex].value;
+        // data["desc"] = this.recipe_desc.value;
+        data["ingredients"] = this.cookingBoard.getIngredients();
+        data["kitchenTools"] = this.cookingBoard.getTools();
+        data["recipeName"] = this.recipe_name.value;
+        data["subprocedureList"] = this.recipe.getRecipe();
         return data;
     }
 
-    saveRecipe(){
+    async saveRecipe(){
         let data = this.getRecipeInfo();
+        data["isInProgress"] = true;
         console.log(data);
-        //send backend
+
+        // const send = await fetch("/create-recipe", {
+        //     method: "POST",
+        //     body: JSON.stringify(data),
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         "Accept": "application/json"
+        //     }
+        // })
+        //     .then(response => "success")
+        //     .catch((e)=>{console.log("err " + e)});
+        // console.log(send);
     }
 
-    publishRecipe(){
+    async publishRecipe(){
         let data = this.getRecipeInfo();
+        data["isInProgress"] = false;
         console.log(data);
-        //send backend
+
+        const send = await fetch("/create-recipe", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+            .then(response => "success")
+            .catch(e => {console.log("err " + e)});
+        console.log(send);
     }
 }

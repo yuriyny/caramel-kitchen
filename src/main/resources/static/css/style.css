@@ -6,13 +6,24 @@
     box-sizing: border-box;
 }
 
-.nav-wrapper .brand-logo img{
+body{
+    height: 100vh;
+    background-image: url(/images/empty-kitchen.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center center;
+}
+
+.brand-logo{
+    background-image: url(/images/logo7.png);
+    background-size: 100% 100%;
     height: 150px;
-    padding-left: 50px;
-    width: 500px;
+    top: -25px;
+    left: 100px;
+    width: 450px;
     z-index: 999 !important;
     position: relative;
-    user-select: none;
+    outline: none;
 }
 
 nav ul li a{
@@ -85,8 +96,9 @@ nav ul li a{
 
 #brief-intro{
     padding: 50px;
-    height: 400px;
+    height: 550px;
     line-height: 2em;
+    opacity: 0.8;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/
@@ -198,7 +210,7 @@ nav ul li a{
     background: rgba(0,0,225, 0.6)
 }
 
-.collection-item{
+.recipe-step{
     user-select: none;
     position: relative;
     display: flex;

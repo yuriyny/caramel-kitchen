@@ -33,13 +33,13 @@ class CookingBoard{
     }
 
     /** MENU ADD ITEM---------------------------------*/
-    addItem(item, tag=[]){
+    addItem(item, use, tag=[]){
         // console.log(use);
         let record = {};
         record["name"] = item.name;
         if(tag) record["tags"] = [tag];
         else record["tags"] = [];
-        record["use"] = item.use;
+        record["use"] = use;
 
         const wrapper = document.createElement("div");
         wrapper.setAttribute("class", "col s4 m3 l2");
@@ -66,15 +66,15 @@ class CookingBoard{
         const content = document.createElement("p");
         content.textContent = item.name;
 
-        if(item.use === "ingredient"){
+        if(use === "ingredient"){
             card.classList.add("ingredient");
             this.attachMenu(card);
-            if(!this.ingredients.includes(item.name)) this.ingredients.push(item.name);
+            this.addIngredient(item);
         }
-        else if(item.use === "tool"){
-            this.addTool(item.name);
+        else if(use === "tool"){
+            this.addTool(item);
         }
-        else if(item.use === "processedItem"){
+        else if(use === "processedItem"){
             card.classList.add("processedItem");
             this.attachMenu(card);
             content.textContent += ": " + tag;
@@ -136,22 +136,44 @@ class CookingBoard{
         };
     }
 
-    /**add to tools list as known by action menu */
-    async addTool(name){
-        if(!this.tools.includes(name)) this.tools.push(name);
-        const path = "/tool/" + name;
-        // console.log("I am now calling /tool/knife");
-        const actions = await fetch(path, {
-            method: "GET",
-            contentType: "text/plain"
-        })
-            .then(response => response.json())
-            .catch((e)=>{console.log("err " + e)});
+    /**add to ingredient list*/
+    addIngredient(item){
+        // if(!this.ingredients.includes(item.name)) this.ingredients.push(item);
+        for(const ingredient of this.ingredients){
+            if(ingredient.name === item.name) return;
+        }
+        this.ingredients.push(item);
+    }
 
-        for(let action of actions){
+    /**add to tools list as known by action menu */
+    addTool(item){
+        // if(!this.tools.includes(name)) this.tools.push(name);
+        let newTool = true;
+        for(const tool of this.tools){
+            if(tool.name === item.name) return;
+        }
+        this.tools.push(item);
+
+        console.log(item);
+        console.log(item.actions);
+
+        for(let action of item.actions){
             if(!this.actions.includes(action))
                 this.actions.push(action)
         }
+
+        // const path = "/tool/" + name;
+        // const actions = await fetch(path, {
+        //     method: "GET",
+        //     contentType: "text/plain"
+        // })
+        //     .then(response => response.json())
+        //     .catch((e)=>{console.log("err " + e)});
+        //
+        // for(let action of actions){
+        //     if(!this.actions.includes(action))
+        //         this.actions.push(action)
+        // }
 
         this.updateMenu();
     }
@@ -179,8 +201,8 @@ class CookingBoard{
                 if(item.use === "processedItem"){
                     this.addTag(item, li.innerHTML);
                 } else {
-                    let newItem = {"name": item.name, "imageFileUrl": item.img, "use": "processedItem"};
-                    this.addItem(newItem, li.innerHTML);
+                    let newItem = {"name": item.name, "imageFileUrl": item.img};
+                    this.addItem(newItem, "processedItem", li.innerHTML);
                 }
             }
             this.menu_ul.appendChild(li);
@@ -196,9 +218,14 @@ class CookingBoard{
     }
 
     /** MISC------------------------------------*/
-    getBasicItems(){
-        let basicItems = this.ingredients.concat(this.tools);
-        return basicItems;
+    getTools(){
+        console.log(this.tools);
+        return this.tools;
+    }
+
+    getIngredients(){
+        console.log(this.ingredients);
+        return this.ingredients;
     }
 
     getProcessedItems(){

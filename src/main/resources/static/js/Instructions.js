@@ -25,8 +25,8 @@ class Instructions{
         if(!step) return;
 
         const li = document.createElement("li");
-        if(type === "comment"){li.setAttribute("class", "collection-item blue lighten-4");}
-        else{li.setAttribute("class", "collection-item");}
+        if(type === "comment"){li.setAttribute("class", "collection-item recipe-step blue lighten-4");}
+        else{li.setAttribute("class", "collection-item recipe-step");}
 
         const p = document.createElement("p");
         p.textContent = step;
@@ -44,7 +44,12 @@ class Instructions{
     getRecipe(){
         let recipe = [];
         for(let li of this.recipe_ul.getElementsByTagName("li")){
-            recipe.push(li.childNodes[0].textContent)
+            let sub = {};
+            sub["game"] = null;
+            sub["instructions"] = "placeholder text";
+            sub["procedureName"] = li.childNodes[0].textContent;
+            // recipe.push(li.childNodes[0].textContent)
+            recipe.push(sub);
         }
 
         return recipe;
