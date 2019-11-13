@@ -4,11 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import java.util.Collection;
+
 @Getter
 @Setter
 public class Game {
     private String gameName;
-    private int score;
+    private String username;
+    private Collection<Double> score;
     @DBRef
     private Recipe recipe;
 }

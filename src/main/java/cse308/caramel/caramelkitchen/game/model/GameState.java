@@ -1,11 +1,13 @@
 package cse308.caramel.caramelkitchen.game.model;
 
+import cse308.caramel.caramelkitchen.game.persistence.Recipe;
+
 import java.util.Collection;
 
 public class GameState {
-    String id;
     String user;
-    String recipeId;
+    String gameName;
+    Recipe recipe;
     int lastCompletedStep;
     Collection<Double> scores;
 }
