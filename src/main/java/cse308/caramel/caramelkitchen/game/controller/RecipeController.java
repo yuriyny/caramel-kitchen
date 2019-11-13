@@ -4,10 +4,12 @@ import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.search.service.SearchService;
+import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,8 @@ public class RecipeController {
     SearchService searchService;
     @Autowired
     RecipeService recipeService;
+    @Autowired
+    UserDomainService userDomainService;
 
     /**
      * Needed when you go on home page
@@ -71,8 +75,8 @@ public class RecipeController {
      */
     @ResponseBody
     @PostMapping(path={"/create-recipe", "/update-recipe"})
-    public void createRecipe(Recipe recipe){
-        recipeService.saveRecipe(recipe);
+    public void createRecipe(@RequestBody Recipe recipe,Principal principal){
+        recipeService.saveRecipe(recipe,principal.getName());
     }
     public void modifyRecipe(Recipe recipe){
 
@@ -90,6 +94,5 @@ public class RecipeController {
     public List<String> getToolActions(@PathVariable String id) {
         return recipeService.findAllToolActions(id);
     }
-
 }
 
