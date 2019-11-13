@@ -1,3 +1,4 @@
+/*
 package cse308.caramel.caramelkitchen.util;
 
 import cse308.caramel.caramelkitchen.game.controller.RecipeController;
@@ -110,11 +111,13 @@ public class DbSeeder implements CommandLineRunner {
         mongoTemplate.insert(e3);
 
         //get all actions from specific tool
-        Collection<String> toolActions = kitchenToolRepository.findById(e1.getId()).get().getActions();
+   */
+/*     Collection<String> toolActions = kitchenToolRepository.findById(e1.getId()).get().getActions();
         //print the result
         for ( String s : toolActions){
             System.out.println(s);
-        }
+        }*//*
+
 
 
         Subprocedure chopApple=new Subprocedure();
@@ -136,25 +139,29 @@ public class DbSeeder implements CommandLineRunner {
 //        mongoTemplate.insert(recipe);
 
         //query test
-        /*Collection<Equipment> equipment = new ArrayList<>();
+        */
+/*Collection<Equipment> equipment = new ArrayList<>();
         equipment = equipmentRepository.findAllEquipmentContainingString("oW");
         for( Equipment ii1 : equipment){
             System.out.println("Ingredient -- " +ii1.getEquipmentName());
-        }*/
+        }*//*
+
 
         //S3 Client Operations
         //this command upload file: C:\\s3\\filrtoupload.png
         //System.out.println("---------------- START UPLOAD FILE ----------------");
         //s3Services.uploadFile("planet.png", uploadFilePath);
-        /*
+        */
+/*
         System.out.println("---------------- START DOWNLOAD FILE ----------------");
         //this command download the previously uploaded file
-        s3Services.downloadFile(downloadKey);*/
+        s3Services.downloadFile(downloadKey);*//*
 
-        System.out.println("Pre-Signed URL: " + s3Services.getImageUrl("apple.png"));
+
+       // System.out.println("Pre-Signed URL: " + s3Services.getImageUrl("apple.png"));
 
 
 
 
     }
-}
+}*/
