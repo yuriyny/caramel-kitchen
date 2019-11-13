@@ -27,32 +27,12 @@ public class RecipeController {
     UserDomainService userDomainService;
 
     /**
-     *  Needed when you click on create lab
-     * @return list of ingredient/tool in database
-     */
-    public  Map<String, List<SubprocedureComponent>> getIngredientToolList(){
-        List<SubprocedureComponent> ingredients=new ArrayList<>();
-        ingredients.addAll(recipeService.findAllIngredients());
-        ingredients=recipeService.findImage(ingredients);
-        List<SubprocedureComponent> tools=new ArrayList<>();
-        tools.addAll(recipeService.findAllTools());
-        tools=recipeService.findImage(tools);
-
-        Map<String, List<SubprocedureComponent>> returnObj = new HashMap<>();
-        returnObj.put("ingredients", ingredients);
-        returnObj.put("tools", tools);
-        return returnObj;
-    }
-    /**
      * Search recipe
      * @return list of recipe matched in database
      */
     @ResponseBody
     @PostMapping(path={"/search-recipe-list"})
     public List<Recipe> searchRecipe(@RequestBody String search){
-        if(search.isEmpty()){
-            return recipeService.findAllRecipe();
-        }
         return searchService.getRecipes(search);
     }
 
@@ -64,22 +44,38 @@ public class RecipeController {
     @PostMapping(path={"/search-ingredient-tool-list"})
     public Map<String, List<SubprocedureComponent>> searchIngredientTool(@RequestBody String search){
         List<SubprocedureComponent> ingredients=new ArrayList<>();
-        List<SubprocedureComponent> tools=new ArrayList<>();
-
-        if(search.isEmpty()){
-            ingredients.addAll(recipeService.findAllIngredients());
-            tools.addAll(recipeService.findAllTools());
-        }else {
-            ingredients.addAll(searchService.getIngredients(search));
-            tools.addAll(searchService.getKitchenTools(search));
-        }
+        ingredients.addAll(searchService.getIngredients(search));
         ingredients=recipeService.findImage(ingredients);
+        
+        List<SubprocedureComponent> tools=new ArrayList<>();
+        tools.addAll(searchService.getKitchenTools(search));
         tools=recipeService.findImage(tools);
 
         Map<String, List<SubprocedureComponent>> returnObj = new HashMap<>();
         returnObj.put("ingredients", ingredients);
         returnObj.put("tools", tools);
         return returnObj;
+    }
+    @ResponseBody
+    @GetMapping(path={"/ingredient-tool-list"})
+    public Map<String, List<SubprocedureComponent>> ingredientToolList(){
+        List<SubprocedureComponent> ingredients=new ArrayList<>();
+        ingredients.addAll(recipeService.findAllIngredients());
+        ingredients=recipeService.findImage(ingredients);
+
+        List<SubprocedureComponent> tools=new ArrayList<>();
+        tools.addAll(recipeService.findAllTools());
+        tools=recipeService.findImage(tools);
+
+        Map<String, List<SubprocedureComponent>> returnObj = new HashMap<>();
+        returnObj.put("ingredients", ingredients);
+        returnObj.put("tools", tools);
+        return returnObj;
+    }
+    @ResponseBody
+    @GetMapping(path={"/recipe-list"})
+    public List<Recipe> recipeList(){
+        return recipeService.findAllRecipe();
     }
 
     public void updateRecipeHistory(Recipe recipe){
