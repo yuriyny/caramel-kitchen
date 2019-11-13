@@ -74,7 +74,7 @@ class HomeSearch{
 
         const title = document.createElement("a");
         title.setAttribute("class", "title");
-        title.setAttribute("href", "#");
+        title.setAttribute("href", "play/"+result.id);
         title.textContent = result.recipeName;
 
         const info = document.createElement("p");
