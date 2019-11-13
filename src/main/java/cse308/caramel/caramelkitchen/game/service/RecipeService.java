@@ -54,6 +54,9 @@ public class RecipeService {
     public List<Recipe> findAllRecipe(){ 
         return recipeRepository.findAll();
     }
+    public Recipe findRecipe(String id){
+        return recipeRepository.findById(id).get();
+    }
     public void saveRecipe(Recipe recipe, String userName){
         if(recipe.getCreator()==null){
             recipe.setCreator(userName);

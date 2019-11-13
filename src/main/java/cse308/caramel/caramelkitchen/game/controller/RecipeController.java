@@ -8,6 +8,7 @@ import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -101,6 +102,18 @@ public class RecipeController {
         return new Recipe();
     }
 
+    /**
+     * This method will direct user to the playlab page with the recipe of their choice
+     * @param id    recipe id that is selected by the user
+     * @return
+     */
+    @ResponseBody
+    @GetMapping(path={"/play/{id}"})
+    public ModelAndView playRecipe(@PathVariable String id){
+        ModelAndView modelAndView = new ModelAndView("playlab");
+        modelAndView.addObject("recipe",recipeService.findRecipe(id));
+        return modelAndView;
+    }
     /**
      * Returns all actions associated with a tool
      * GET
