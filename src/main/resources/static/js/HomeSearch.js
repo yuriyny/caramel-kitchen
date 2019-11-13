@@ -7,13 +7,21 @@ class HomeSearch{
         this.search_category = search_category;
         this.search_ul = search_results_ul;
         this.search_btn = search_btn;
+
         this.search_btn.onclick = () => this.searchQuery();
+        this.search_input.addEventListener("keyup", (e)=>{
+            if(e.keyCode === 13){ this.search_btn.click(); }
+        })
     }
 
     async searchQuery(){
         const keyword = this.search_input.value;
         const category = this.search_category.options[this.search_category.selectedIndex].value;
-        if(keyword === "" || category === "creator") return;
+        if(category === "creator") return;
+        if(keyword === ""){
+            this.searchAllQuery();
+            return;
+        }
 
         this.clearSearchUl();
 
@@ -32,6 +40,21 @@ class HomeSearch{
             } else if (category === "creator") {
                 this.createCreatorResultLi(result)
             }
+        }
+    }
+
+    async searchAllQuery(){
+        this.clearSearchUl();
+
+        const results = await fetch("/recipe-list", {
+            method: "GET",
+            contentType: "text/plain"
+        })
+            .then(response => response.json())
+            .catch((e)=>{console.log("err " + e)});
+
+        for(let result of results) {
+            this.createRecipeResultLi(result);
         }
     }
 

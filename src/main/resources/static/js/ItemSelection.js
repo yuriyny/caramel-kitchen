@@ -11,10 +11,12 @@ class ItemSelection{
     }
 
     async searchQuery(){
-        // console.log(this.search_input.value);
         this.clearSearchUl();
         const keyword = this.search_input.value;
-        if(keyword === "") return;
+        if(keyword === "") {
+            this.searchAllQuery();
+            return;
+        }
 
         const items = await fetch("/search-ingredient-tool-list", {
             method: "POST",
@@ -38,6 +40,24 @@ class ItemSelection{
         //     let custom = {"name" : keyword, "imageFileUrl" : null};
         //     this.addSearchResult(custom, "ingredient");
         // }
+    }
+
+    async searchAllQuery(){
+        this.clearSearchUl();
+
+        const items = await fetch("/ingredient-tool-list", {
+            method: "GET",
+            contentType: "text/plain"
+        })
+            .then(response => response.json())
+            .catch((e)=>{console.log("err " + e)});
+
+        for(let item of items.ingredients){
+            this.addSearchResult(item, "ingredient");
+        }
+        for(let item of items.tools){
+            this.addSearchResult(item, "tool");
+        }
     }
 
     clearSearchUl(){

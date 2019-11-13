@@ -86,30 +86,22 @@
 
             <div class="row">
                 <ul id="search-results" class="collection">
-                    <li class="collection-item avatar">
-                        <i class="material-icons circle orange lighten-3">format_list_bulleted</i>
-                        <a class="title" href="#">Title</a>
-                        <p>First Line <br>
-                            Second Line
-                        </p>
-                        <p class="secondary-content">Rating:</p>
-                    </li>
-                    <li class="collection-item avatar">
-                        <i class="material-icons circle orange lighten-3">format_list_bulleted</i>
-                        <a class="title">Title</a>
-                        <p>First Line <br>
-                            Second Line
-                        </p>
-                        <p class="secondary-content">Rating:</p>
-                    </li>
-                    <li class="collection-item avatar">
-                        <i class="material-icons circle orange lighten-3">person</i>
-                        <a class="title">Title</a>
-                        <p>First Line <br>
-                            Second Line
-                        </p>
-                        <p class="secondary-content">Rating:</p>
-                    </li>
+<!--                    <li class="collection-item avatar">-->
+<!--                        <i class="material-icons circle orange lighten-3">format_list_bulleted</i>-->
+<!--                        <a class="title">Title</a>-->
+<!--                        <p>First Line <br>-->
+<!--                            Second Line-->
+<!--                        </p>-->
+<!--                        <p class="secondary-content">Rating:</p>-->
+<!--                    </li>-->
+<!--                    <li class="collection-item avatar">-->
+<!--                        <i class="material-icons circle orange lighten-3">person</i>-->
+<!--                        <a class="title">Title</a>-->
+<!--                        <p>First Line <br>-->
+<!--                            Second Line-->
+<!--                        </p>-->
+<!--                        <p class="secondary-content">Rating:</p>-->
+<!--                    </li>-->
 
                 </ul>
             </div>
@@ -121,17 +113,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="js/HomeSearch.js"></script>
 <script>
-    $(document).ready(function () {
-        $('.collapsible').collapsible();
-        $('select').formSelect();
-    });
-
     const search_input = document.querySelector("#search-keyword");
     const search_category = document.querySelector("#search-category");
     const search_ul = document.querySelector("#search-results");
     const search_btn = document.querySelector("#search-btn");
     const generalSearch = new HomeSearch(search_input, search_category, search_ul, search_btn);
 
+    $(document).ready(function () {
+        $('.collapsible').collapsible();
+        $('select').formSelect();
+        generalSearch.searchQuery();
+    });
 </script>
 </body>
 </html>
