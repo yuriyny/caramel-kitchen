@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.*;
 
 
@@ -35,10 +36,12 @@ public class UserDomainService implements UserDetailsService { //removed id beca
 //    public User findUserByUsername(String username) {
 //        return userRepository.findByUsername(username);
 //    }
-    public User getCurrentUser(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.findById(auth.getPrincipal().toString()).get();
-    }
+//    public User getCurrentUser(Principal principal){
+////        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+////        System.out.println(auth.getPrincipal());
+////        return userRepository.findById(auth.getPrincipal().toString()).get();
+//        return userRepository.findById(principal.getName()).get();
+//    }
     public boolean userExists (User user){
         return userRepository.findById(user.getUsername()).isPresent();  // if username is present, true
     }

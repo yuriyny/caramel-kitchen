@@ -2,6 +2,7 @@ package cse308.caramel.caramelkitchen.util;
 
 import cse308.caramel.caramelkitchen.game.controller.RecipeController;
 import cse308.caramel.caramelkitchen.game.model.GameApplication;
+import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
 import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
@@ -29,7 +30,7 @@ public class DbSeeder implements CommandLineRunner {
     @Autowired
     KitchenToolRepository kitchenToolRepository;
     @Autowired
-    RecipeController recipeController;
+    RecipeService recipeService;
     @Autowired
     UserDomainService userDomainService;
     //we can use mongotemplate class or repository interface for managing data in mongodb
@@ -119,7 +120,7 @@ public class DbSeeder implements CommandLineRunner {
         Subprocedure chopApple=new Subprocedure();
         chopApple.setProcedureName("Chop Apple");
         chopApple.setInstructions("Chop the apple");
-        chopApple.setGame(new GameApplication());
+//        chopApple.setGame(new GameApplication());
 
         Recipe recipe=new Recipe();
         recipe.setCreator(user.getUsername());
@@ -131,7 +132,7 @@ public class DbSeeder implements CommandLineRunner {
         recipe.setKitchenTools(new ArrayList<>());
         recipe.getIngredients().add(i4);
         recipe.getKitchenTools().add(e1);
-        recipeController.createRecipe(recipe);              //Test create recipe
+        recipeService.saveRecipe(recipe,user.getUsername());
 //        mongoTemplate.insert(recipe);
 
         //query test

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -45,9 +46,9 @@ public class RecipeService {
     public List<Recipe> findAllRecipe(){ 
         return recipeRepository.findAll();
     }
-    public void saveRecipe(Recipe recipe){
+    public void saveRecipe(Recipe recipe, String userName){
         if(recipe.getCreator()==null){
-            recipe.setCreator(userDomainService.getCurrentUser().getUsername());
+            recipe.setCreator(userName);
         }
         recipeRepository.save(recipe);
     }
