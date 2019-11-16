@@ -79,4 +79,12 @@ public class RecipeService {
         }
         return list;
     }
+
+    /*
+        Ingredient methods
+     */
+
+    public void saveIngredient(Ingredient ingredient){
+        ingredientRepository.save(ingredient);
+    }
 }

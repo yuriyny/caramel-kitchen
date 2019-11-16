@@ -2,6 +2,7 @@ package cse308.caramel.caramelkitchen.game.controller;
 
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
+import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.search.service.SearchService;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
@@ -23,6 +24,8 @@ public class RecipeController {
     SearchService searchService;
     @Autowired
     RecipeService recipeService;
+    @Autowired
+    RecipeEditorService recipeEditorService;
     @Autowired
     UserDomainService userDomainService;
 
@@ -153,6 +156,14 @@ public class RecipeController {
         modelAndView.addObject("message", "You have successfully published a lab: " + name);
         return modelAndView;
     }
+
+    @ResponseBody
+    @GetMapping(value= "/valid-actions")
+    public List<String> getValidToolActionsForIngredient(@RequestParam("ingredient") String ingredientName, 
+                                                         @RequestParam("tool") String toolName) {
+        return recipeEditorService.retrieveValidToolActions(ingredientName, toolName);
+    }
+
 }
 
 
