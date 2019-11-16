@@ -7,7 +7,7 @@ class HomeSearch{
         this.search_category = search_category;
         this.search_ul = search_results_ul;
         this.search_btn = search_btn;
-
+        
         this.search_btn.onclick = () => this.searchQuery();
         this.search_input.addEventListener("keyup", (e)=>{
             if(e.keyCode === 13){ this.search_btn.click(); }
@@ -17,44 +17,67 @@ class HomeSearch{
     async searchQuery(){
         const keyword = this.search_input.value;
         const category = this.search_category.options[this.search_category.selectedIndex].value;
-        if(category === "creator") return;
+        // if(category === "creator") return;
         if(keyword === ""){
-            this.searchAllQuery();
+            this.searchAllQuery(category);
             return;
         }
 
         this.clearSearchUl();
 
-        const results = await fetch("/search-recipe-list", {
-            method: "POST",
-            body: keyword,
-            contentType: "text/plain"
-        })
-            .then(response => response.json())
-            .catch((e)=>{console.log("err " + e)});
-
-        console.log(results);
-        for(let result of results) {
-            if (category === "recipe") {
+        if (category ==="recipe"){
+            // const recipeResults =this.postFetch("/search-recipe-list",keyword)
+            const recipeResults = await fetch("/search-recipe-list", {
+                method: "POST",
+                body: keyword,
+                contentType: "text/plain"
+            })
+                .then(response => response.json())
+                .catch((e)=>{console.log("err " + e)});
+            for(let result of recipeResults){
                 this.createRecipeResultLi(result);
-            } else if (category === "creator") {
+            }
+        }else{
+            // const userResults =this.postFetch("/search-user",keyword)
+            const userResults = await fetch("/search-user", {
+                method: "POST",
+                body: keyword,
+                contentType: "text/plain"
+            })
+                .then(response => response.json())
+                .catch((e)=>{console.log("err " + e)});
+            for(let result of userResults){
                 this.createCreatorResultLi(result)
             }
         }
     }
 
-    async searchAllQuery(){
+    async searchAllQuery(category){
         this.clearSearchUl();
-
-        const results = await fetch("/recipe-list", {
-            method: "GET",
-            contentType: "text/plain"
-        })
-            .then(response => response.json())
-            .catch((e)=>{console.log("err " + e)});
-
-        for(let result of results) {
-            this.createRecipeResultLi(result);
+        if (category==="recipe") {
+            const recipeResults=await fetch("/recipe-list", {
+                method: "GET",
+                contentType: "text/plain"
+            })
+                .then(response => response.json())
+                .catch((e) => {
+                    console.log("err " + e)
+                });
+            for (let result of recipeResults) {
+                this.createRecipeResultLi(result);
+            }
+        }else{
+            const userResults= await fetch("/user-list", {
+                method: "GET",
+                contentType: "text/plain"
+            })
+                .then(response => response.json())
+                .catch((e) => {
+                    console.log("err " + e)
+                });
+            for (let result of userResults) {
+                this.createCreatorResultLi(result);
+            }
         }
     }
 
@@ -93,6 +116,22 @@ class HomeSearch{
     }
 
     createCreatorResultLi(result){
+        const li = document.createElement("li");
+        li.setAttribute("class", "collection-item avatar");
+
+        const icon = document.createElement("i");
+        icon.setAttribute("class", "material-icons circle orange light-3");
+        icon.textContent = "format_list_bulleted";
+
+        const title = document.createElement("a");
+        title.setAttribute("class", "title");
+        title.setAttribute("href", "#");
+        title.textContent = result.username;
+
+        li.appendChild(icon);
+        li.appendChild(title);
+
+        this.search_ul.appendChild(li);
     }
 
 }

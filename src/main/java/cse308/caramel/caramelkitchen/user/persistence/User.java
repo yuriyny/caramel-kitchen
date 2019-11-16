@@ -10,7 +10,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -32,5 +34,13 @@ public class User {
     private Collection<Feedback> feedback;
     @DBRef
     private Collection<Request> requests;
+    public User(){
+        gamesPlayed=new ArrayList<>();
+        gamesInProgress=new ArrayList<>();
+        recipesCreated=new ArrayList<>();
+        roles=new HashSet<>();
+        feedback=new ArrayList<>();
+        requests=new ArrayList<>();
+    }
 
 }

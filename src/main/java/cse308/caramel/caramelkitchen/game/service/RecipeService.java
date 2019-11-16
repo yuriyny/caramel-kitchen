@@ -36,6 +36,9 @@ public class RecipeService {
 //        returnList=findImage(returnList);
 //        return returnList;
 //    }
+    public void deleteRecipe(Recipe recipe){
+        recipeRepository.delete(recipe);
+    }
     public List<Ingredient> findAllIngredients(){
         List<Ingredient> returnList=new ArrayList<>();
         returnList.addAll(ingredientRepository.findAll());
@@ -51,17 +54,18 @@ public class RecipeService {
         return (List) kitchenToolRepository.findByName(toolId).get().getActions();
     }
 
-    public List<Recipe> findAllRecipe(){ 
-        return recipeRepository.findAll();
+    public List<Recipe> findAllPublishedRecipe(){
+        return (List<Recipe>)recipeRepository.findAllPublishedRecipes();
     }
     public Recipe findRecipe(String id){
         return recipeRepository.findById(id).get();
     }
-    public void saveRecipe(Recipe recipe, String userName){
+    public Recipe saveRecipe(Recipe recipe, String userName){
         if(recipe.getCreator()==null){
             recipe.setCreator(userName);
         }
         recipeRepository.save(recipe);
+        return recipe;
     }
     public List<SubprocedureComponent> sortList(List<SubprocedureComponent> list){
         list.sort(Comparator.comparing(a->a.getName()));
