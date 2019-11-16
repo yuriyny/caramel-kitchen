@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

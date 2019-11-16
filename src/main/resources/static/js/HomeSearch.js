@@ -27,7 +27,6 @@ class HomeSearch{
         this.clearSearchUl();
 
         if (category ==="recipe"){
-            // const recipeResults =this.postFetch("/search-recipe-list",keyword)
             const recipeResults = await fetch("/search-recipe-list", {
                 method: "POST",
                 body: keyword,
@@ -39,7 +38,6 @@ class HomeSearch{
                 this.createRecipeResultLi(result);
             }
         }else{
-            // const userResults =this.postFetch("/search-user",keyword)
             const userResults = await fetch("/search-user", {
                 method: "POST",
                 body: keyword,
