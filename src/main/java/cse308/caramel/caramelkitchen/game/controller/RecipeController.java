@@ -104,9 +104,9 @@ public class RecipeController {
      * @return
      */
     @ResponseBody
-    @GetMapping(path={"/play/{id}"})
+    @GetMapping(path="/play/{id}")
     public ModelAndView playRecipe(@PathVariable String id){
-        ModelAndView modelAndView = new ModelAndView("playlab");
+        ModelAndView modelAndView = new ModelAndView("/playlab");
         modelAndView.addObject("recipe",recipeService.findRecipe(id));
         return modelAndView;
     }
@@ -118,6 +118,17 @@ public class RecipeController {
     @GetMapping(value = "/tool/{id}")
     public List<String> getToolActions(@PathVariable String id) {
         return recipeService.findAllToolActions(id);
+    }
+
+    /**
+     * Return to home after publish
+     */
+    @ResponseBody
+    @GetMapping(value = "/home/{name}")
+    public ModelAndView publishRedirect(@PathVariable String name){
+        ModelAndView modelAndView = new ModelAndView("/home");
+        modelAndView.addObject("message", "You have successfully published a lab: " + name);
+        return modelAndView;
     }
 }
 

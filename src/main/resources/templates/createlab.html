@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!--Custom stylings-->
-    <link href="css/style.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
 </head>
 
 <body th:with="reason=${session.pageType}">
@@ -23,9 +23,9 @@
     <div class="nav-wrapper amber lighten-4">
         <a href="#" class="brand-logo" tabindex="-1"></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a th:href="@{/home}">Lobby</a></li>
-            <li><a th:href="@{/userprofile}">Profile</a></li>
-            <li><a th:href="@{/logout}">Logout</a></li>
+            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">search</i>Home</p></a></li>
+            <li><a th:href="@{/userprofile}"><p style="display: inline-flex"><i class="material-icons">face</i>Profile</p></a></li>
+            <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
         </ul>
     </div>
 </nav>
@@ -45,12 +45,18 @@
 
         <div class="col s8">
             <div id="cooking-board" class="row">
-                <!--            <div class="col s2">-->
-                <!--                <div class="ingredient card waves-effect waves-light">-->
-                <!--                    <div class="card-image"><img src="images/apple.png"></div>-->
-                <!--                    <div class="card-content center"><p>Apple</p></div>-->
-                <!--                </div>-->
-                <!--            </div>-->
+<!--                            <div class="col s4 m3 l2">-->
+<!--                                <div class="ingredient card waves-effect waves-light active-item">-->
+<!--                                    <div class="card-image"><img src="images/placeholder.png"></div>-->
+<!--                                    <div class="card-content center"><p>apple</p></div>-->
+<!--                                    <div class="card-menu">-->
+<!--                                        <ul id="card-menu-ul">-->
+<!--                                            <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
+<!--                                            <li class="menu-option" oncontextmenu="return false">Menu-option</li>-->
+<!--                                        </ul>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
             </div>
         </div>
 
@@ -58,9 +64,9 @@
             <div class="row">
                 <div class="col s12"><h4 class="right">Recipe</h4></div>
                 <div id="recipe_section" class="col s12">
-                    <ul id="recipe_ul" class="collection">
-                        <!--                        <li class="collection-item"><div>placeholder<i class="material-icons right clear-btn">clear</i></p></div></li>-->
-                        <!--                        <li class="collection-item blue lighten-4"><div>placeholder<i class="material-icons right clear-btn">clear</i></div></li>-->
+                    <ul id="recipe_ul">
+                        <!--                        <li class="recipe-step"><div>placeholder<i class="material-icons right clear-btn">clear</i></p></div></li>-->
+                        <!--                        <li class="recipe-step blue lighten-4"><div>placeholder<i class="material-icons right clear-btn">clear</i></div></li>-->
                     </ul>
                 </div>
                 <div class="col s12 input-field">
@@ -68,7 +74,7 @@
                     <label for="recipe_comment">comment</label>
                 </div>
                 <div class="col m12 l6">
-                    <a class="waves-effect waves-orange btn-large orange lighten-2 square-btn"><i
+                    <a th:href="@{/home}" class="waves-effect waves-orange btn-large orange lighten-2 square-btn"><i
                             class="material-icons right">backspace</i>Discard</a>
                 </div>
                 <div class="col m12 l6">
@@ -107,31 +113,26 @@
     </div>
 </div>
 
-<div id="menu">
-    <ul id="menu-ul">
-        <li class="menu-option noSelect" oncontextmenu="return false">No actions available</li>
-    </ul>
-</div>
 
-<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script src="js/Instructions.js"></script>
-<script src="js/CookingBoard.js"></script>
-<script src="js/ItemSelection.js"></script>
-<script src="js/Prompt.js"></script>
+<script src="/js/Instructions.js"></script>
+<script src="/js/CookingBoard.js"></script>
+<script src="/js/ItemSelection.js"></script>
+<script src="/js/Prompt.js"></script>
 <script>
     const recipe_ul = document.querySelector("#recipe_ul");
     const comment_input = document.querySelector("#recipe_comment");
     const recipe = new Instructions(recipe_ul, []);
     recipe.setCommentInput(comment_input);
 
-    const context_menu = document.querySelector("#menu");
-    const context_menu_ul = document.querySelector("#menu-ul");
+    // const context_menu = document.querySelector("#menu");
+    // const context_menu_ul = document.querySelector("#menu-ul");
     // const customMenu = new ActionMenu(context_menu, context_menu_ul, recipe);
 
     const cooking_board = document.querySelector("#cooking-board");
-    const cookingBoard = new CookingBoard(cooking_board, context_menu, context_menu_ul, recipe);
+    const cookingBoard = new CookingBoard(cooking_board, recipe);
 
     const search_input = document.querySelector("#item-search-keyword");
     const search_ul = document.querySelector("#item-search-results");
@@ -149,6 +150,13 @@
         $('select').formSelect();
         itemSelection.searchAllQuery();
     });
+
+    $('#nav-mobile a').map( function() {
+        $(this).click(function() {
+            if(cookingBoard.getSavedStatus() === false)
+                return window.confirm("You have unsaved work. Are you sure you want to leave?");
+        });
+    })
 </script>
 
 </body>

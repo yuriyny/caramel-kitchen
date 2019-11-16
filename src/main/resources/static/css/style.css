@@ -50,6 +50,11 @@ nav ul li a{
     background: #ffa812;
 }
 
+.material-icons{
+    display: inline-flex;
+    vertical-align: top;
+}
+
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*--GENERAL USE--------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
@@ -77,6 +82,7 @@ nav ul li a{
 /*---------------------------------------------------------------------------------------------------------------------*/
 
 #login-page{
+    min-width: 500px;
     padding: 40px 120px;
     position: relative;
     background: white;
@@ -127,7 +133,9 @@ nav ul li a{
 } */
 
 #recommendations{
-    height: 58vh;
+    position: absolute;
+    height: 85%;
+    width: 30%;
     overflow-y: auto;
 }
 
@@ -184,12 +192,52 @@ nav ul li a{
 
 .createlab-container{
     margin-top: 60px;
-    height: 80vh;
-    min-width: 80vw;
+    min-height: 740px;
+    min-width: 1540px;
 }
 
 .card-content{
     user-select: none;
+}
+
+.card-menu{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    opacity: 0;
+}
+
+.card-menu:hover{
+    opacity: 1;
+}
+
+#card-menu-ul{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+#card-menu-ul > .menu-option{
+    z-index: 1;
+    padding: 5px 0;
+    margin-bottom: 8px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    background: #ffdb59;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    color: black;
+    border-radius: 3px;
+}
+
+#card-menu-ul > .menu-option:hover{
+    background: lightblue;
 }
 
 #cooking-board{
@@ -215,12 +263,26 @@ nav ul li a{
     position: relative;
     display: flex;
     justify-content: space-between;
+    border: none;
+    background: none;
+    width: 240px;
+    padding: 10px;
+}
+
+.recipe-step > p{
+    width: 181px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 #recipe_section{
-    height: 460px;
+    height: 450px;
+    width: 240px;
     overflow-y: auto;
     padding-left: 0;
+    background-color: lightblue;
+    transform: skew(0deg, -1deg);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
 .square-btn{
@@ -240,33 +302,6 @@ nav ul li a{
 .clear-btn:hover{
     opacity: 1;
 }
-
-#menu {
-    z-index: 1;
-    position: fixed;
-    display: none;
-    transition: 0.2s display ease-in;
-}
-
-#menu #menu-ul {
-    list-style: none;
-}
-
-#menu #menu-ul .menu-option {
-    z-index: 1;
-    width: 100px;
-    padding: 5px 0;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    cursor: pointer;
-    background: #ffd53f;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    color: black;
-    border-radius: 3px;
-    margin-bottom: 5px;
-}
-
 
 .noSelect{
     cursor: default !important;
@@ -304,11 +339,11 @@ nav ul li a{
 
 .kitchen-container{
     margin-top: 60px;
-    height: 80vh;
-    min-width: 80vw;
+    min-height: 740px;
+    min-width: 1540px;
 }
 
-#kitchen_sidebar_reset{
+#kitchen_sidebar_ingredients{
     margin-top: 10px;
     width: 96%;
     font-size: 1.5em;

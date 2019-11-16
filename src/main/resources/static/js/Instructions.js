@@ -25,8 +25,8 @@ class Instructions{
         if(!step) return;
 
         const li = document.createElement("li");
-        if(type === "comment"){li.setAttribute("class", "collection-item recipe-step blue lighten-4");}
-        else{li.setAttribute("class", "collection-item recipe-step");}
+        if(type === "comment"){li.setAttribute("class", "recipe-step blue lighten-4");}
+        else{li.setAttribute("class", "recipe-step");}
 
         const p = document.createElement("p");
         p.textContent = step;

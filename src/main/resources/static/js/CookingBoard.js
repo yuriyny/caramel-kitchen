@@ -3,13 +3,11 @@
  * utensils and ingredients.
  */
 class CookingBoard{
-    constructor(board_ul, menu, menu_ul, recipe){
+    constructor(board_ul, recipe){
         /** the board element*/
         this.board_ul = board_ul;
 
         /** the action menu*/
-        this.menu = menu;
-        this.menu_ul = menu_ul;
         this.recipe = recipe;
 
         /** additional info*/
@@ -19,17 +17,11 @@ class CookingBoard{
         this.ingredients = [];
         // this.processedItems = [];
         this.actions = [];
+        this.saved = true;
 
-        /** misc*/
-        this.menuVisible = false;
-        this.focus_item = null;
-
-        this.order = 0;
-        window.addEventListener("click", e => {
-            if(this.menuVisible && this.order === 0)
-                this.toggleMenu("hide");
-            this.order = 0;
-        });
+        window.onbeforeunload = ()=> {
+            if(this.saved === false) this.pullModal();
+        };
     }
 
     /** MENU ADD ITEM---------------------------------*/
@@ -37,7 +29,7 @@ class CookingBoard{
         // console.log(use);
         let record = {};
         record["name"] = item.name;
-        if(tag) record["tags"] = [tag];
+        if(tag.length > 0) record["tags"] = [tag];
         else record["tags"] = [];
         record["use"] = use;
 
@@ -66,9 +58,14 @@ class CookingBoard{
         const content = document.createElement("p");
         content.textContent = item.name;
 
+        const card_menu = document.createElement("div");
+        card_menu.setAttribute("class", "card-menu");
+
+        const card_menu_ul = document.createElement("ul");
+        card_menu_ul.setAttribute("id", "card-menu-ul");
+
         if(use === "ingredient"){
             card.classList.add("ingredient");
-            this.attachMenu(card);
             this.addIngredient(item);
         }
         else if(use === "tool"){
@@ -76,64 +73,31 @@ class CookingBoard{
         }
         else if(use === "processedItem"){
             card.classList.add("processedItem");
-            this.attachMenu(card);
             content.textContent += ": " + tag;
         } else { console.log("item use not defined"); }
 
+        card_menu.appendChild(card_menu_ul);
         card_content.appendChild(content);
         card_img.appendChild(img);
         card.appendChild(card_img);
         card.appendChild(card_content);
+        card.appendChild(card_menu);
         wrapper.appendChild(card);
         this.board_ul.appendChild(wrapper);
 
         this.items[this.identifier] = record;
         this.identifier++;
 
+        this.updateMenu();
         console.log(this.items);
     }
 
-    addTag(item, tag){
-        if(item.tags.includes(tag)) return;
-        this.focus_item.childNodes[1].textContent += ", " + tag;
+    addTag(itemKey, tag) {
+        if (this.items[itemKey].tags.includes(tag)) return;
 
-        item.tags.push(tag);
-    }
+        document.getElementById(itemKey).childNodes[1].firstChild.textContent += ", " + tag;
 
-    /** ACTION MENU FUNCTIONS --------------------------------*/
-    /**moves action menu object to a location on page */
-    setPosition({x, y}){
-        this.menu.style.left = `${x}px`;
-        this.menu.style.top = `${y}px`;
-        this.toggleMenu("show");
-        this.order += 1;
-    }
-
-    /**toggle visibility of action menu */
-    toggleMenu(state){
-        if(state === "show"){
-            this.menuVisible = true;
-            this.menu.style.display = "block";
-        }
-        else if(state === "hide"){
-            this.menuVisible = false;
-            this.menu.style.display = "none";
-        }
-    }
-
-    /**adds action menu feature to an item on page */
-    attachMenu(item){
-        // if(this.utensils.includes(item.textContent)) return;
-        item.onclick = e => {
-            e.preventDefault();
-            const origin = {
-                x: e.pageX,
-                y: e.pageY
-            };
-            this.setPosition(origin);
-            this.focus_item = item;
-            return false;
-        };
+        this.items[itemKey].tags.push(tag);
     }
 
     /**add to ingredient list*/
@@ -161,59 +125,54 @@ class CookingBoard{
             if(!this.actions.includes(action))
                 this.actions.push(action)
         }
-
-        // const path = "/tool/" + name;
-        // const actions = await fetch(path, {
-        //     method: "GET",
-        //     contentType: "text/plain"
-        // })
-        //     .then(response => response.json())
-        //     .catch((e)=>{console.log("err " + e)});
-        //
-        // for(let action of actions){
-        //     if(!this.actions.includes(action))
-        //         this.actions.push(action)
-        // }
-
-        this.updateMenu();
-    }
-
-    /**get item that action menu is currently showing for */
-    getFocusItem(){
-        return this.items[this.focus_item.id];
     }
 
     updateMenu(){
-        while(this.menu_ul.firstChild){
-            this.menu_ul.removeChild(this.menu_ul.firstChild);
-        }
+        let menu_ul;
+        for(const key in this.items){
+            // const id = "#" + key;
+            if(this.items[key].use === "tool") continue;
 
-        for(const action of this.actions){
-            const li = document.createElement("li");
-            li.setAttribute("class", "menu-option");
-            li.setAttribute("oncontextmenu", "return false");
-            li.textContent = action;
-
-            li.onclick = () => {
-                let item = this.getFocusItem();
-                this.recipe.addToRecipe(`${li.innerHTML} ${item.name}`);
-
-                if(item.use === "processedItem"){
-                    this.addTag(item, li.innerHTML);
-                } else {
-                    let newItem = {"name": item.name, "imageFileUrl": item.img};
-                    this.addItem(newItem, "processedItem", li.innerHTML);
-                }
+            const card = document.getElementById(key);
+            console.log(card);
+            menu_ul = card.childNodes[2].firstChild;
+            while(menu_ul.firstChild){
+                menu_ul.removeChild(menu_ul.firstChild);
             }
-            this.menu_ul.appendChild(li);
-        }
 
-        if(!this.menu_ul.firstChild){
-            const li = document.createElement("li");
-            li.setAttribute("class", "menu-option noSelect");
-            li.setAttribute("oncontextmenu", "return false");
-            li.textContent = "No actions available";
-            this.menu_ul.appendChild(li);
+            for(const action of this.actions){
+                const li = document.createElement("li");
+                li.setAttribute("class", "menu-option");
+                li.setAttribute("oncontextmenu", "return false");
+                li.textContent = action;
+
+                li.onclick = (e) => {
+                    // let item_name = e.target.parentNode.parentNode.previousSibling.firstChild.innerHTML;
+
+                    let step = li.innerHTML;
+                    for (const tag of this.items[key].tags) step += " '" + tag + "'";
+                    step += " " + this.items[key].name;
+                    this.recipe.addToRecipe(step);
+
+                    if(this.items[key].use === "processedItem"){
+                        this.addTag(key, li.innerHTML);
+                    } else {
+                        let newItem = {"name": this.items[key].name, "imageFileUrl": this.items[key].img};
+                        this.addItem(newItem, "processedItem", li.innerHTML);
+                    }
+
+                    this.saved = false;
+                }
+                menu_ul.appendChild(li);
+            }
+
+            if(!menu_ul.firstChild){
+                const li = document.createElement("li");
+                li.setAttribute("class", "menu-option noSelect");
+                li.setAttribute("oncontextmenu", "return false");
+                li.textContent = "No actions available";
+                menu_ul.appendChild(li);
+            }
         }
     }
 
@@ -241,5 +200,13 @@ class CookingBoard{
             }
         }
         return processedItems;
+    }
+
+    setSavedStatus(state){
+        this.saved = state;
+    }
+
+    getSavedStatus(){
+        return this.saved;
     }
 }

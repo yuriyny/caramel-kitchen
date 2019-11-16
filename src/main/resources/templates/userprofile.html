@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!--Custom stylings-->
-    <link href="css/style.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
 </head>
 
 <body th:with="reason=${session.pageType}">
@@ -23,10 +23,10 @@
     <div class="nav-wrapper amber lighten-4">
         <a href="#" class="brand-logo" tabindex="-1"></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a th:href="@{/createlab}">Create Lab</a></li>
-            <li><a th:href="@{/home}">Lobby</a></li>
-            <li><a th:href="@{/aboutus}">About Us</a></li>
-            <li><a th:href="@{/logout}">Logout</a></li>
+            <li><a th:href="@{/createlab}"><p style="display: inline-flex"><i class="material-icons">content_copy</i>Create Lab</p></a></li>
+            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">search</i>Home</p></a></li>
+            <li><a th:href="@{/aboutus}"><p style="display: inline-flex"><i class="material-icons">people</i>About Us</p></a></li>
+            <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
         </ul>
     </div>
 </nav>
@@ -61,8 +61,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">roast
-                        chicken
+                    <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn"><i class="material-icons">people</i>roast chicken
                     </div>
                     <div class="collapsible-body">
                         <p>Rating</p>
@@ -93,7 +92,7 @@
     </div>
 </div>
 
-<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
     $(document).ready(function () {

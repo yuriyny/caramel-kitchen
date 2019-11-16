@@ -51,12 +51,19 @@ class Prompt {
         //     .then(response => "success")
         //     .catch((e)=>{console.log("err " + e)});
         // console.log(send);
+
+        this.cookingBoard.setSavedStatus(true);
     }
 
     async publishRecipe(){
         let data = this.getRecipeInfo();
         data["isInProgress"] = false;
         console.log(data);
+
+        if(!data["recipeName"]){
+            console.log("missing name");
+            return;
+        }
 
         const send = await fetch("/create-recipe", {
             method: "POST",
@@ -68,6 +75,9 @@ class Prompt {
         })
             .then(response => "success")
             .catch(e => {console.log("err " + e)});
+
         console.log(send);
+        // this.cookingBoard.setSavedStatus(true);
+        window.location.href = "/home/" + data["recipeName"];
     }
 }

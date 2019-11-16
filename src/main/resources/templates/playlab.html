@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!--Custom stylings-->
-    <link href="css/style.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
 </head>
 
 <body th:with="reason=${session.pageType}">
@@ -23,9 +23,9 @@
     <div class="nav-wrapper amber lighten-4">
         <a href="#" class="brand-logo" tabindex="-1"></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a th:href="@{/home}">Home</a></li>
-            <li><a th:href="@{/userprofile}">Profile</a></li>
-            <li><a th:href="@{/logout}">Logout</a></li>
+            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">search</i>Home</p></a></li>
+            <li><a th:href="@{/aboutus}"><p style="display: inline-flex"><i class="material-icons">face</i>Profile</p></a></li>
+            <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
         </ul>
     </div>
 </nav>
@@ -45,22 +45,24 @@
 
         <div class="col s2">
             <div id="kitchen_sidebar" class="row">
-                <div id="kitchen_sidebar_reset" class="col s12 waves-effect waves-orange btn-large orange lighten-2">
-                    Reset
+                <div id="kitchen_sidebar_ingredients" class="col s12 waves-effect waves-orange btn-large orange lighten-2">
+                    Ingredients
                 </div>
-                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Timer</span>
-                </div>
-                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Score</span>
-                </div>
+<!--                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Timer</span>-->
+<!--                </div>-->
+<!--                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Score</span>-->
+<!--                </div>-->
                 <div class="col s12"><h4 class="right">Recipe</h4></div>
                 <div id="recipe_section" class="col s12">
-                    <ul id="recipe_ul" class="collection">
+                    <ul id="recipe_ul">
 <!--                        <li class="collection-item">-->
 <!--                            <div>placeholder</p></div>-->
 <!--                        </li>-->
 <!--                        <li class="collection-item blue lighten-4">-->
 <!--                            <div>placeholder</div>-->
 <!--                        </li>-->
+
+                        <li class="recipe-step" th:each="step:${recipe.subprocedureList}" th:text="${step.procedureName}"></li>
                     </ul>
                 </div>
             </div>
@@ -69,7 +71,7 @@
 </div>
 
 <!--Import jQuery before materialize.js-->
-<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
     $(document).ready(function () {

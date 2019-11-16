@@ -9,13 +9,13 @@
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
 
     <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!--Import materialize.css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!--Custom stylings-->
-    <link href="css/style.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
 </head>
 
 <body th:with="reason=${session.pageType}">
@@ -23,10 +23,10 @@
     <div class="nav-wrapper amber lighten-4">
         <a href="#" class="brand-logo" tabindex="-1"></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a th:href="@{/createlab}">Create Lab</a></li>
-            <li><a th:href="@{/userprofile}">Profile</a></li>
-            <li><a th:href="@{/aboutus}">About Us</a></li>
-            <li><a th:href="@{/logout}">Logout</a></li>
+            <li><a th:href="@{/createlab}"><p style="display: inline-flex"><i class="material-icons">content_copy</i>Create Lab</p></a></li>
+            <li><a th:href="@{/userprofile}"><p style="display: inline-flex"><i class="material-icons">face</i>Profile</p></a></li>
+            <li><a th:href="@{/aboutus}"><p style="display: inline-flex"><i class="material-icons">people</i>About Us</p></a></li>
+            <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
         </ul>
     </div>
 </nav>
@@ -102,17 +102,16 @@
 <!--                        </p>-->
 <!--                        <p class="secondary-content">Rating:</p>-->
 <!--                    </li>-->
-
                 </ul>
             </div>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script src="js/HomeSearch.js"></script>
-<script>
+<script src="/js/HomeSearch.js"></script>
+<script th:inline="javascript">
     const search_input = document.querySelector("#search-keyword");
     const search_category = document.querySelector("#search-category");
     const search_ul = document.querySelector("#search-results");
@@ -123,7 +122,12 @@
         $('.collapsible').collapsible();
         $('select').formSelect();
         generalSearch.searchQuery();
+
+        const toast = [[${message}]];
+        if(toast) M.toast({html: toast, displayLength: 2500});
     });
+
+
 </script>
 </body>
 </html>

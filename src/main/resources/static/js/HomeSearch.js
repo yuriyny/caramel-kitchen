@@ -9,9 +9,10 @@ class HomeSearch{
         this.search_btn = search_btn;
 
         this.search_btn.onclick = () => this.searchQuery();
-        this.search_input.addEventListener("keyup", (e)=>{
-            if(e.keyCode === 13){ this.search_btn.click(); }
-        })
+        // this.search_input.addEventListener("keyup", (e)=>{
+        //     if(e.keyCode === 13){ this.search_btn.click(); }
+        // })
+        this.search_input.addEventListener("input", ()=>{ this.searchQuery(); });
     }
 
     async searchQuery(){
@@ -74,7 +75,7 @@ class HomeSearch{
 
         const title = document.createElement("a");
         title.setAttribute("class", "title");
-        title.setAttribute("href", "play/"+result.id);
+        title.setAttribute("href", "/play/"+result.id);
         title.textContent = result.recipeName;
 
         const info = document.createElement("p");
