@@ -33,7 +33,7 @@ public class RecipeController {
     @ResponseBody
     @PostMapping(path={"/search-recipe-list"})
     public List<Recipe> searchRecipe(@RequestBody String search){
-        return searchService.getRecipes(search);
+        return searchService.getPublishedRecipes(search);
     }
 
     /**
@@ -46,7 +46,7 @@ public class RecipeController {
         List<SubprocedureComponent> ingredients=new ArrayList<>();
         ingredients.addAll(searchService.getIngredients(search));
         ingredients=recipeService.findImage(ingredients);
-        
+
         List<SubprocedureComponent> tools=new ArrayList<>();
         tools.addAll(searchService.getKitchenTools(search));
         tools=recipeService.findImage(tools);
@@ -75,7 +75,7 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(path={"/recipe-list"})
     public List<Recipe> recipeList(){
-        return recipeService.findAllRecipe();
+        return recipeService.findAllPublishedRecipe();
     }
 
     public void updateRecipeHistory(Recipe recipe){
@@ -87,13 +87,25 @@ public class RecipeController {
      * @param recipe
      */
     @ResponseBody
-    @PostMapping(path={"/create-recipe", "/update-recipe"})
+    @PostMapping(path={"/create-recipe"})
     public void createRecipe(@RequestBody Recipe recipe,Principal principal){
-        recipeService.saveRecipe(recipe,principal.getName());
+        recipe=recipeService.saveRecipe(recipe,principal.getName());
+        userDomainService.addRecipeToUser(principal.getName(),recipe);
     }
-    public void modifyRecipe(Recipe recipe){
+    @ResponseBody
+    @PostMapping(path={"/delete-recipe"})
+    public void deleteRecipe(@RequestBody Recipe recipe){
+        recipeService.deleteRecipe(recipe);
+        userDomainService.deleteRecipeFromUser(recipe);
+    }
+
+    @ResponseBody
+    @PostMapping(path={"/extend-recipe"})
+    public void extendRecipe(Recipe recipe){
+//        RecipeRevisionHistory recipeRevisionHistory=new RecipeRevisionHistory();
 
     }
+
     public Recipe getRecipeContent(String s){
         return new Recipe();
     }
@@ -120,6 +132,17 @@ public class RecipeController {
         return recipeService.findAllToolActions(id);
     }
 
+    @ResponseBody
+    @GetMapping(path={"/get-all-user-recipes/{id}"})
+    public List<Recipe> getAllUserRecipes(@PathVariable String id){
+        return (List<Recipe>)userDomainService.getUserByUsername(id).getRecipesCreated();
+    }
+    @ResponseBody
+    @GetMapping(path={"/get-all-user-recipes"})
+    public List<Recipe> getAllUserRecipes(Principal principal){
+        return (List<Recipe>)userDomainService.getUserByUsername(principal.getName()).getRecipesCreated();
+    }
+
     /**
      * Return to home after publish
      */
@@ -131,4 +154,5 @@ public class RecipeController {
         return modelAndView;
     }
 }
+
 

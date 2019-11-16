@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.Collection;
 
 public interface RecipeRepository extends MongoRepository<Recipe, String> {
-    @Query("{}")
-    Collection<Recipe> findAllRecipes();
-    @Query("{recipeName : {$regex: ?0, $options: 'i'}}")
+    @Query("{isInProgress: { $eq:false }}")
+    Collection<Recipe> findAllPublishedRecipes();
+    @Query("{recipeName : {$regex: ?0, $options: 'i'},isInProgress: { $eq:false }}")
     Collection<Recipe> findAllRecipesContainingString(String name);
 }

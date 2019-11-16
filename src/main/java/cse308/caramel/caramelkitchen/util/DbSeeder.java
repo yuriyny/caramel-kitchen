@@ -1,7 +1,5 @@
 package cse308.caramel.caramelkitchen.util;
 
-import cse308.caramel.caramelkitchen.game.controller.RecipeController;
-import cse308.caramel.caramelkitchen.game.model.GameApplication;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
@@ -14,7 +12,6 @@ import cse308.caramel.caramelkitchen.user.persistence.Request;
 import cse308.caramel.caramelkitchen.user.persistence.User;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -59,7 +56,7 @@ public class DbSeeder implements CommandLineRunner {
         user.setUsername("user");
         user.setEnabled(true);
         user.setPassword("password");
-        userDomainService.saveUser(user);
+        userDomainService.saveNewUser(user);
 
         Ingredient i1 = new Ingredient();
         i1.setName("salt");
@@ -127,12 +124,14 @@ public class DbSeeder implements CommandLineRunner {
         recipe.setRecipeName("Chopping Apple Recipe");
         recipe.setSubprocedureList(new ArrayList<>());
         recipe.getSubprocedureList().add(chopApple);
-        recipe.setIsInProgress(true);
+        recipe.setIsInProgress(false);
         recipe.setIngredients(new ArrayList<>());
         recipe.setKitchenTools(new ArrayList<>());
         recipe.getIngredients().add(i4);
         recipe.getKitchenTools().add(e1);
         recipeService.saveRecipe(recipe,user.getUsername());
+        user.getRecipesCreated().add(recipe);
+        userDomainService.saveUser(user);
 //        mongoTemplate.insert(recipe);
 
         //query test

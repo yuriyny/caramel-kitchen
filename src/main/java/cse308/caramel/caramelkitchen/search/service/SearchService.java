@@ -25,10 +25,10 @@ public class SearchService {
     KitchenToolRepository kitchenToolRepository;
 
     /*TODO: Add query to search for matching user*/
-    public List<User> getUsers(String search){
-        return new ArrayList<>();
+    public List<User> getCreators(String search){
+        return new ArrayList<>(userRepository.findAllCreatorsContainingString(search));
     }
-    public List<Recipe> getRecipes(String search){
+    public List<Recipe> getPublishedRecipes(String search){
         return new ArrayList<>(recipeRepository.findAllRecipesContainingString(search));
     }
     public List<KitchenTool> getIngredients(String search){
