@@ -1,6 +1,7 @@
 package cse308.caramel.caramelkitchen.game.service;
 
 import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
+import cse308.caramel.caramelkitchen.game.repository.BlacklistRepository;
 import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ public class RecipeEditorService {
     public List<String> retrieveValidToolActions(String ingredientName, String toolName) {
         // ex.
         // salt : { knife : { chop, peel, slice } }
-        List<String> blacklistedActions = blacklistRepository.findBlacklistedActions(ingredientName, toolName);
+        List<String> blacklistedActions = new ArrayList<>();
+        //blacklistRepository.findBlacklistedActions(ingredientName, toolName);
         // blacklistedActions should contain [chop, peel, slice]
         KitchenTool tool = kitchenToolRepository.findByName(toolName).get();
         List<String> allActions = null;
