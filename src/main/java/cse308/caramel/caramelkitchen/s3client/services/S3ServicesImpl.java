@@ -148,7 +148,7 @@ public class S3ServicesImpl implements S3Services {
             data.setContentType(multipartFile.getContentType());
             data.setContentLength(multipartFile.getSize());
             //PutObjectResult objectResult = s3client.putObject("myBucket", multipartFile.getOriginalFilename(), multipartFile.getInputStream(), data);
-            PutObjectResult objectResult = s3client.putObject("myBucket", keyName, multipartFile.getInputStream(), data);
+            PutObjectResult objectResult = s3client.putObject(bucketName, keyName, multipartFile.getInputStream(), data);
 
             System.out.println(objectResult.getContentMd5());
         } catch (AmazonServiceException ase) {
