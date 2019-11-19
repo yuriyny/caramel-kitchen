@@ -33,14 +33,39 @@
 <div class="container custom-box kitchen-container">
     <div class="row">
         <div class="col s10">
-            <div id="cooking-board" class="row">
+<!--            <div id="cooking-board" class="row">-->
                 <!--            <div class="col s2">-->
     <!--                <div id="temp" class="ingredient card waves-effect waves-light">-->
     <!--                    <div class="card-image"><img src="images/apple.png"></div>-->
     <!--                    <div class="card-content center"><p>Apple</p></div>-->
     <!--                </div>-->
     <!--            </div>-->
+<!--            </div>-->
+            <ul class="tabs">
+                <li class="tab col s3"><a class="active" href="#items">Your Items</a></li>
+                <li class="tab col s3"><a href="#gameView">Game</a></li>
+            </ul>
+        </div>
+
+        <div class="col s10" id="items">
+            <div id="item-board" class="row">
+<!--                <div class="col s4 m3 l2">-->
+<!--                    <div class="ingredient card waves-effect waves-light active-item">-->
+<!--                        <div class="card-image"><img src="images/placeholder.png"></div>-->
+<!--                        <div class="card-content center"><p>apple</p></div>-->
+<!--                        <div class="card-menu">-->
+<!--                            <ul id="card-menu-ul">-->
+<!--                                <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
+<!--                                <li class="menu-option" oncontextmenu="return false">Menu-option</li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
+        </div>
+
+        <div class="col s10" id="gameView">
+
         </div>
 
         <div class="col s2">
@@ -73,10 +98,24 @@
 <!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
+<script src="/js/CookingBoard.js"></script>
+<script th:inline="javascript">
     $(document).ready(function () {
+        $('.tabs').tabs();
+
     });
 
+    let recipe = [[${recipe}]];
+    console.log(recipe);
+
+    const item_board = document.querySelector("#item-board");
+    const itemBoard = new CookingBoard(item_board, null);
+    for(let tool of recipe.kitchenTools){
+        itemBoard.addItem(tool, "tool");
+    }
+    for(let ingredient of recipe.ingredients){
+        itemBoard.addItem(ingredient, "ingredient");
+    }
 </script>
 
 </body>

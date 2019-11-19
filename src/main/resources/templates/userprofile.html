@@ -33,60 +33,161 @@
 
 <div class="container custom-box userprofile-container">
     <div class="row">
-        <div class="col s4 m4">
-            <div class="card user-desc">
-                <div class="card-image">
-                    <img src="images/placeholder.png">
-                    <span class="card-title">user</span>
-                    <a class="btn-floating halfway-fab waves-effect waves-light red"><i
-                            class="material-icons">add</i></a>
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s3"><a class="active" href="#profile">Profile</a></li>
+                <li class="tab col s3"><a href="#userAddIngredient">Add Ingredient</a></li>
+                <li class="tab col s3"><a href="#userAddTool">Add Tool</a></li>
+            </ul>
+        </div>
+
+        <div class="col s12" id="profile">
+            <div class="col s4">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/placeholder.png">
+                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i
+                                class="material-icons">add</i></a>
+                    </div>
+                    <div class="card-content">
+                        <p>user description</p>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <p>user description</p>
+            </div>
+            <div class="col s4">
+                <h5 class="row center">user recipes</h5>
+                <ul id="user-recipes" class="collapsible col s12" data-collapsible="accordian">
+                    <li>
+                        <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">apple
+                            pie
+                        </div>
+                        <div class="collapsible-body">
+                            <p>Rating</p>
+                            <a href="#">Remove</a>
+                            <a href="#">Modify</a>
+                            <a href="#">View Parents</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn"><i class="material-icons">people</i>roast chicken
+                        </div>
+                        <div class="collapsible-body">
+                            <p>Rating</p>
+                            <a href="#">Remove</a>
+                            <a href="#">Modify</a>
+                            <a href="#">View Parents</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col s4">
+                <h5 class="row center">completed recipes</h5>
+                <div id="completed-recipes" class="collection col s12">
+                    <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
+                        <p class="left">roast chicken</p>
+                        <p class="secondary-content">Score: 1000</p>
+                    </a>
+                    <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
+                        <p class="left">roast chicken</p>
+                        <p class="secondary-content">Score: 1000</p>
+                    </a>
+                    <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
+                        <p class="left">roast chicken</p>
+                        <p class="secondary-content">Score: 1000</p>
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col s4">
-            <h5 class="row center">user recipes</h5>
-            <ul id="user-recipes" class="collapsible col s12" data-collapsible="accordian">
-                <li>
-                    <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">apple
-                        pie
+
+        <div id="userAddIngredient" class="col s12">
+            <div class="col s4">
+                <div class="card">
+                    <div class="card-image"><img src="images/placeholder.png"></div>
+                    <div class="card-content">
+                        <p>ingredient name</p>
                     </div>
-                    <div class="collapsible-body">
-                        <p>Rating</p>
-                        <a href="#">Remove</a>
-                        <a href="#">Modify</a>
-                        <a href="#">View Parents</a>
+                </div>
+            </div>
+            <div class="col s7 offset-s1">
+                <form enctype="multipart/form-data" action="/request" method="POST">
+                    <div class="col s12 file-field input-field">
+                        <div class="btn">
+                            <span>Add Image File</span>
+                            <input name="file" type="file" id="ingredient-img-input" accept="image/*">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
                     </div>
-                </li>
-                <li>
-                    <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn"><i class="material-icons">people</i>roast chicken
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix">restaurant_menu</i>
+                        <input name="name" id="ingredient-name" type="text" class="validate">
+                        <label for="ingredient-name">Ingredient name</label>
                     </div>
-                    <div class="collapsible-body">
-                        <p>Rating</p>
-                        <a href="#">Remove</a>
-                        <a href="#">Modify</a>
-                        <a href="#">View Parents</a>
+                    <div class="action-list">
+                        <ul id="ingredient-actable-actions">
+    <!--                            <li class="col s12 input-field">-->
+    <!--                                <i class="material-icons prefix">chevron_right</i>-->
+    <!--                                <select class="browser-default offset-s1 col s11">-->
+    <!--                                    <option value="">Select an action</option>-->
+    <!--                                    <option value="1">Option 1</option>-->
+    <!--                                    <option value="2">Option 2</option>-->
+    <!--                                    <option value="3">Option 3</option>-->
+    <!--                                </select>-->
+    <!--                            </li>-->
+                        </ul>
+
+                        <a class="col s12" href="javascript:ingredientRequest.addAction()"><i class="material-icons">add</i>Add more actions...</a>
                     </div>
-                </li>
-            </ul>
+                    <button type="submit" class="col s6 offset-s3 btn-large waves-effect waves-orange orange lighten-1"><i class="material-icons left">archive</i>Add</button>
+                </form>
+            </div>
         </div>
-        <div class="col s4">
-            <h5 class="row center">completed recipes</h5>
-            <div id="completed-recipes" class="collection col s12">
-                <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
-                    <p class="left">roast chicken</p>
-                    <p class="secondary-content">Score: 1000</p>
-                </a>
-                <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
-                    <p class="left">roast chicken</p>
-                    <p class="secondary-content">Score: 1000</p>
-                </a>
-                <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
-                    <p class="left">roast chicken</p>
-                    <p class="secondary-content">Score: 1000</p>
-                </a>
+
+        <div id="userAddTool" class="col s12">
+            <div class="col s4">
+                <div class="card">
+                    <div class="card-image"><img src="images/placeholder.png"></div>
+                    <div class="card-content">
+                        <p>tool name</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s7 offset-s1">
+                <form enctype="multipart/form-data" action="/request" method="POST">
+                    <div class="col s12 file-field input-field">
+                        <div class="btn">
+                            <span>Add Image File</span>
+                            <input name="file" type="file" id="tool-img-input" accept="image/*">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix">restaurant</i>
+                        <input name="name" id="tool-name" type="text" class="validate">
+                        <label for="tool-name">Tool name</label>
+                    </div>
+
+                    <div class="action-list">
+                        <ul id="tool-actions">
+    <!--                            <li class="col s12 input-field">-->
+    <!--                                <i class="material-icons prefix">chevron_right</i>-->
+    <!--                                <select class="browser-default offset-s1 col s11">-->
+    <!--                                    <option value="">Select an action</option>-->
+    <!--                                    <option value="1">Option 1</option>-->
+    <!--                                    <option value="2">Option 2</option>-->
+    <!--                                    <option value="3">Option 3</option>-->
+    <!--                                </select>-->
+    <!--                            </li>-->
+                        </ul>
+
+                        <a class="col s12" href="javascript:toolRequest.addAction()"><i class="material-icons">add</i>Add more actions...</a>
+                    </div>
+
+                    <button type="submit" class="col s6 offset-s3 btn-large waves-effect waves-orange orange lighten-1"><i class="material-icons left">archive</i>Add</button>
+                </form>
             </div>
         </div>
     </div>
@@ -94,11 +195,28 @@
 
 <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="/js/ItemRequest.js"></script>
 <script>
     $(document).ready(function () {
         $('.collapsible').collapsible();
         $('select').formSelect();
+        $('.tabs').tabs();
+
+        document.querySelector("#tool-img-input").enctype = 'multipart/form-data';
+        document.querySelector("#ingredient-img-input").enctype = 'multipart/form-data';
     });
+
+    const tool_name = document.querySelector("#tool-name");
+    const tool_img = document.querySelector("#tool-img-input");
+    const tool_actions = document.querySelector("#tool-actions");
+    let toolRequest = new ItemRequest("tool", tool_name, tool_img, tool_actions);
+    toolRequest.addAction();
+
+    const ingredient_name = document.querySelector("#ingredient-name");
+    const ingredient_img = document.querySelector("#ingredient-img-input");
+    const ingredient_actions = document.querySelector("#ingredient-actable-actions");
+    let ingredientRequest = new ItemRequest("ingredient", ingredient_name, ingredient_img, ingredient_actions);
+    ingredientRequest.addAction();
 
 </script>
 </body>

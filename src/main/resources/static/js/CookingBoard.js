@@ -7,7 +7,7 @@ class CookingBoard{
         /** the board element*/
         this.board_ul = board_ul;
 
-        /** the action menu*/
+        /** the recipe steps, if needed*/
         this.recipe = recipe;
 
         /** additional info*/
@@ -19,9 +19,6 @@ class CookingBoard{
         this.actions = [];
         this.saved = true;
 
-        window.onbeforeunload = ()=> {
-            if(this.saved === false) this.pullModal();
-        };
     }
 
     /** MENU ADD ITEM---------------------------------*/
@@ -48,8 +45,8 @@ class CookingBoard{
             img.setAttribute("src", item.imageFileUrl)
             record["img"] = item.imageFileUrl;
         } else {
-            img.setAttribute("src", "images/placeholder.png");    //make a placeholder.png later
-            record["img"] = "images/placeholder.png";
+            img.setAttribute("src", "/images/placeholder.png");    //make a placeholder.png later
+            record["img"] = "/images/placeholder.png";
         }
 
         const card_content = document.createElement("div");
@@ -118,8 +115,8 @@ class CookingBoard{
         }
         this.tools.push(item);
 
-        console.log(item);
-        console.log(item.actions);
+        // console.log(item);
+        // console.log(item.actions);
 
         for(let action of item.actions){
             if(!this.actions.includes(action))
@@ -146,22 +143,24 @@ class CookingBoard{
                 li.setAttribute("oncontextmenu", "return false");
                 li.textContent = action;
 
-                li.onclick = (e) => {
-                    // let item_name = e.target.parentNode.parentNode.previousSibling.firstChild.innerHTML;
+                if(this.recipe) {
+                    li.onclick = (e) => {
+                        // let item_name = e.target.parentNode.parentNode.previousSibling.firstChild.innerHTML;
 
-                    let step = li.innerHTML;
-                    for (const tag of this.items[key].tags) step += " '" + tag + "'";
-                    step += " " + this.items[key].name;
-                    this.recipe.addToRecipe(step);
+                        let step = li.innerHTML;
+                        for (const tag of this.items[key].tags) step += " '" + tag + "'";
+                        step += " " + this.items[key].name;
+                        this.recipe.addToRecipe(step);
 
-                    if(this.items[key].use === "processedItem"){
-                        this.addTag(key, li.innerHTML);
-                    } else {
-                        let newItem = {"name": this.items[key].name, "imageFileUrl": this.items[key].img};
-                        this.addItem(newItem, "processedItem", li.innerHTML);
+                        if (this.items[key].use === "processedItem") {
+                            this.addTag(key, li.innerHTML);
+                        } else {
+                            let newItem = {"name": this.items[key].name, "imageFileUrl": this.items[key].img};
+                            this.addItem(newItem, "processedItem", li.innerHTML);
+                        }
+
+                        this.saved = false;
                     }
-
-                    this.saved = false;
                 }
                 menu_ul.appendChild(li);
             }
@@ -178,12 +177,12 @@ class CookingBoard{
 
     /** MISC------------------------------------*/
     getTools(){
-        console.log(this.tools);
+        // console.log(this.tools);
         return this.tools;
     }
 
     getIngredients(){
-        console.log(this.ingredients);
+        // console.log(this.ingredients);
         return this.ingredients;
     }
 
