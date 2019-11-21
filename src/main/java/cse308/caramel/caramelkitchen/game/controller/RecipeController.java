@@ -48,11 +48,11 @@ public class RecipeController {
     public Map<String, List<SubprocedureComponent>> searchIngredientTool(@RequestBody String search){
         List<SubprocedureComponent> ingredients=new ArrayList<>();
         ingredients.addAll(searchService.getIngredients(search));
-        ingredients=recipeService.findImage(ingredients);
+        ingredients=recipeEditorService.findImage(ingredients);
 
         List<SubprocedureComponent> tools=new ArrayList<>();
         tools.addAll(searchService.getKitchenTools(search));
-        tools=recipeService.findImage(tools);
+        tools=recipeEditorService.findImage(tools);
 
         Map<String, List<SubprocedureComponent>> returnObj = new HashMap<>();
         returnObj.put("ingredients", ingredients);
@@ -63,12 +63,12 @@ public class RecipeController {
     @GetMapping(path={"/ingredient-tool-list"})
     public Map<String, List<SubprocedureComponent>> ingredientToolList(){
         List<SubprocedureComponent> ingredients=new ArrayList<>();
-        ingredients.addAll(recipeService.findAllIngredients());
-        ingredients=recipeService.findImage(ingredients);
+        ingredients.addAll(recipeEditorService.findAllIngredients());
+        ingredients=recipeEditorService.findImage(ingredients);
 
         List<SubprocedureComponent> tools=new ArrayList<>();
-        tools.addAll(recipeService.findAllTools());
-        tools=recipeService.findImage(tools);
+        tools.addAll(recipeEditorService.findAllTools());
+        tools=recipeEditorService.findImage(tools);
 
         Map<String, List<SubprocedureComponent>> returnObj = new HashMap<>();
         returnObj.put("ingredients", ingredients);
@@ -132,7 +132,7 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(value = "/tool/{id}")
     public List<String> getToolActions(@PathVariable String id) {
-        return recipeService.findAllToolActions(id);
+        return recipeEditorService.findAllToolActions(id);
     }
 
     @ResponseBody
@@ -145,6 +145,12 @@ public class RecipeController {
     public List<Recipe> getAllUserRecipes(Principal principal){
         return (List<Recipe>)userDomainService.getUserByUsername(principal.getName()).getRecipesCreated();
     }
+    @ResponseBody
+    @GetMapping(value = "/actions")
+    public List<String> getAllActions() {
+        return recipeEditorService.findAllActions();
+    }
+
 
     /**
      * Return to home after publish
@@ -158,10 +164,9 @@ public class RecipeController {
     }
 
     @ResponseBody
-    @GetMapping(value= "/valid-actions")
-    public List<String> getValidToolActionsForIngredient(@RequestParam("ingredient") String ingredientName, 
-                                                         @RequestParam("tool") String toolName) {
-        return recipeEditorService.retrieveValidToolActions(ingredientName, toolName);
+    @PostMapping(value= "/valid-actions")
+    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, String> pair) {
+        return recipeEditorService.retrieveValidToolActions(pair.get("ingredient"), pair.get("tool"));
     }
 
 }

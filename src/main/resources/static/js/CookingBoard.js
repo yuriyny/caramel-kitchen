@@ -123,46 +123,59 @@ class CookingBoard{
                 this.actions.push(action)
         }
     }
-
-    updateMenu(){
+    async updateMenu(){
         let menu_ul;
-        for(const key in this.items){
-            // const id = "#" + key;
-            if(this.items[key].use === "tool") continue;
-
-            const card = document.getElementById(key);
-            console.log(card);
+        for(const id in this.items){
+            if(this.items[id].use === "tool") continue;
+            const card = document.getElementById(id);
+            // console.log(card);
             menu_ul = card.childNodes[2].firstChild;
             while(menu_ul.firstChild){
                 menu_ul.removeChild(menu_ul.firstChild);
             }
 
-            for(const action of this.actions){
-                const li = document.createElement("li");
-                li.setAttribute("class", "menu-option");
-                li.setAttribute("oncontextmenu", "return false");
-                li.textContent = action;
-
-                if(this.recipe) {
-                    li.onclick = (e) => {
-                        // let item_name = e.target.parentNode.parentNode.previousSibling.firstChild.innerHTML;
-
-                        let step = li.innerHTML;
-                        for (const tag of this.items[key].tags) step += " '" + tag + "'";
-                        step += " " + this.items[key].name;
-                        this.recipe.addToRecipe(step);
-
-                        if (this.items[key].use === "processedItem") {
-                            this.addTag(key, li.innerHTML);
-                        } else {
-                            let newItem = {"name": this.items[key].name, "imageFileUrl": this.items[key].img};
-                            this.addItem(newItem, "processedItem", li.innerHTML);
-                        }
-
-                        this.saved = false;
+            for(const tool of this.tools){
+                let data = {"ingredient": this.items[id].name, "tool": tool.name};
+                const newActions = await fetch("/valid-actions", {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
                     }
+                })
+                    .then((response) => response.json())
+                    .catch(e => {console.log("err ", e)});
+
+                console.log(newActions);
+
+                for(let action of newActions){
+                    const li = document.createElement("li");
+                    li.setAttribute("class", "menu-option");
+                    li.setAttribute("oncontextmenu", "return false");
+                    li.textContent = action;
+
+                    if(this.recipe) {
+                        li.onclick = (e) => {
+                            // let item_name = e.target.parentNode.parentNode.previousSibling.firstChild.innerHTML;
+
+                            let step = li.innerHTML;
+                            for (const tag of this.items[id].tags) step += " '" + tag + "'";
+                            step += " " + this.items[id].name;
+                            this.recipe.addToRecipe(step);
+
+                            if (this.items[id].use === "processedItem") {
+                                this.addTag(id, li.innerHTML);
+                            } else {
+                                let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].img};
+                                this.addItem(newItem, "processedItem", li.innerHTML);
+                            }
+
+                            this.saved = false;
+                        }
+                    }
+                    menu_ul.appendChild(li);
                 }
-                menu_ul.appendChild(li);
             }
 
             if(!menu_ul.firstChild){
@@ -174,6 +187,7 @@ class CookingBoard{
             }
         }
     }
+
 
     /** MISC------------------------------------*/
     getTools(){

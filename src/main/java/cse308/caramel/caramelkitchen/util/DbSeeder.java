@@ -1,11 +1,9 @@
 package cse308.caramel.caramelkitchen.util;
 
+import cse308.caramel.caramelkitchen.game.persistence.*;
+import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
-import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
-import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
-import cse308.caramel.caramelkitchen.game.persistence.Subprocedure;
-import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.user.persistence.Request;
@@ -29,6 +27,8 @@ public class DbSeeder implements CommandLineRunner {
     @Autowired
     RecipeService recipeService;
     @Autowired
+    WhitelistRepository whitelistRepository;
+    @Autowired
     UserDomainService userDomainService;
     //we can use mongotemplate class or repository interface for managing data in mongodb
     private MongoTemplate mongoTemplate;
@@ -45,80 +45,111 @@ public class DbSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        /* ----------------- DROP ALL TABLES ----------------------*/
         this.mongoTemplate.dropCollection(User.class);
         this.mongoTemplate.dropCollection(Request.class);
         //this.mongoTemplate.dropCollection(Role.class);
         this.mongoTemplate.dropCollection(Ingredient.class);
         this.mongoTemplate.dropCollection(KitchenTool.class);
         this.mongoTemplate.dropCollection(Recipe.class);
-
+        this.mongoTemplate.dropCollection(Whitelist.class);
+        /* ----------------- ADD USER ----------------------*/
         User user=new User();
         user.setUsername("user");
         user.setEnabled(true);
         user.setPassword("password");
         userDomainService.saveNewUser(user);
 
-        Ingredient i1 = new Ingredient();
-        i1.setName("salt");
-        i1.setUnitOfMeasure("teaspoon");
-        i1.setQuantity(1);
+        /* ----------------- ADD TOOLS ----------------------*/ //current list of actions [chop,peel,slice,boil,flatten]
+        KitchenTool knife = new KitchenTool();
+        knife.setName("knife");
+        knife.getActions().add("chop");
+        knife.getActions().add("peel");
+        knife.getActions().add("slice");
+        knife.setImageName("knife.png");
 
-        Ingredient i2 = new Ingredient();
-        i2.setName("pepper");
-        i2.setUnitOfMeasure("teaspoon");
-        i2.setQuantity(1);
+        KitchenTool kettle = new KitchenTool();
+        kettle.setName("kettle");
+        kettle.getActions().add("boil");
+        kettle.setImageName("kettle.png");
 
+        KitchenTool rollingPin = new KitchenTool();
+        rollingPin.setName("rolling pin");
+        rollingPin.getActions().add("flatten");
+        rollingPin.setImageName("rollingpin.png");
 
-        Ingredient i3 = new Ingredient();
-        i3.setName("olive oil");
-        i3.setUnitOfMeasure("tablespoon");
-        i3.setQuantity(3);
+        this.mongoTemplate.insert(knife);
+        this.mongoTemplate.insert(kettle);
+        this.mongoTemplate.insert(rollingPin);
 
-        Ingredient i4 = new Ingredient();
-        i4.setName("apple");
-        i4.setImageName("apple.png");
-        i4.setQuantity(1);
+        /* ----------------- ADD INGREDIENTS ----------------------*/
+        Ingredient apple = new Ingredient();
+        apple.setName("apple");
+        apple.setImageName("apple.png");
 
-        this.mongoTemplate.insert(i1);
-        this.mongoTemplate.insert(i2);
-        this.mongoTemplate.insert(i3);
-        this.mongoTemplate.insert(i4);
+        Ingredient carrot = new Ingredient();
+        carrot.setName("carrot");
+        carrot.setImageName("carrot.png");
 
-        KitchenTool e1 = new KitchenTool();
-        e1.setName("knife");
-        e1.getActions().add("Chopping");
-        e1.getActions().add("Peeling");
-        Subprocedure p1 = new Subprocedure();
-        p1.setProcedureName("chopping");
+        Ingredient garlic = new Ingredient();
+        garlic.setName("garlic");
+        garlic.setImageName("garlic.png");
 
-        KitchenTool e2 = new KitchenTool();
-        e2.setName("oven");
-        Subprocedure p2 = new Subprocedure();
-        p2.setProcedureName("baking");
+        Ingredient salt = new Ingredient();
+        salt.setName("salt");
+        salt.setUnitOfMeasure("teaspoon");
+        salt.setImageName("salt.png");
 
-        KitchenTool e3 = new KitchenTool();
-        e3.setName("bowl");
-        e3.getActions().add("Mixing");
-        Subprocedure p3 = new Subprocedure();
-        p3.setProcedureName("mixing");
+        Ingredient pepper = new Ingredient();
+        pepper.setName("pepper");
+        pepper.setUnitOfMeasure("teaspoon");
+        pepper.setImageName("pepper.png");
 
-        mongoTemplate.insert(e1);
-        mongoTemplate.insert(e2);
-        mongoTemplate.insert(e3);
+        this.mongoTemplate.insert(apple);
+        this.mongoTemplate.insert(carrot);
+        this.mongoTemplate.insert(garlic);
+        this.mongoTemplate.insert(salt);
+        this.mongoTemplate.insert(pepper);
 
-        //get all actions from specific tool
-        Collection<String> toolActions = kitchenToolRepository.findById(e1.getId()).get().getActions();
-        //print the result
-        for ( String s : toolActions){
-            System.out.println(s);
-        }
+        /* ----------------- ADD TO WHITELIST ----------------------*/
+        //[chop,peel,slice,boil,flatten]
 
+        Whitelist w1=new Whitelist();
+        w1.setName(apple.getName());
+        w1.getActions().add("slice");
+        w1.getActions().add("peel");
+
+        Whitelist w2=new Whitelist();
+        w2.setName(carrot.getName());
+        w2.getActions().add("chop");
+        w2.getActions().add("peel");
+
+        Whitelist w3=new Whitelist();
+        w3.setName(garlic.getName());
+//        w3.getActions().add("flatten");
+
+        Whitelist w4=new Whitelist();
+        w4.setName(salt.getName());
+//        w4.getActions().add("slice");
+
+        Whitelist w5=new Whitelist();
+        w5.setName(pepper.getName());
+//        w5.getActions().add("add");
+
+        this.mongoTemplate.insert(w1);
+        this.mongoTemplate.insert(w2);
+        this.mongoTemplate.insert(w3);
+        this.mongoTemplate.insert(w4);
+        this.mongoTemplate.insert(w5);
+
+        /* ----------------- SUBPROCEDURE ----------------------*/
 
         Subprocedure chopApple=new Subprocedure();
         chopApple.setProcedureName("Chop Apple");
         chopApple.setInstructions("Chop the apple");
 //        chopApple.setGame(new GameApplication());
 
+        /* ----------------- SAMPLE RECIPE ----------------------*/
         Recipe recipe=new Recipe();
         recipe.setCreator(user.getUsername());
         recipe.setRecipeName("Chopping Apple Recipe");
@@ -127,8 +158,8 @@ public class DbSeeder implements CommandLineRunner {
         recipe.setIsInProgress(false);
         recipe.setIngredients(new ArrayList<>());
         recipe.setKitchenTools(new ArrayList<>());
-        recipe.getIngredients().add(i4);
-        recipe.getKitchenTools().add(e1);
+        recipe.getIngredients().add(apple);
+        recipe.getKitchenTools().add(knife);
         recipeService.saveRecipe(recipe,user.getUsername());
         user.getRecipesCreated().add(recipe);
         userDomainService.saveUser(user);

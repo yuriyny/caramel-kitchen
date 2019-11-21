@@ -109,6 +109,7 @@
                 </div>
             </div>
             <div class="col s7 offset-s1">
+<!--                <form enctype="multipart/form-data" action="/request" method="POST">-->
                 <form enctype="multipart/form-data" action="/request" method="POST">
                     <div class="col s12 file-field input-field">
                         <div class="btn">
@@ -196,14 +197,15 @@
 <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="/js/ItemRequest.js"></script>
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
         $('.collapsible').collapsible();
         $('select').formSelect();
         $('.tabs').tabs();
-
         document.querySelector("#tool-img-input").enctype = 'multipart/form-data';
         document.querySelector("#ingredient-img-input").enctype = 'multipart/form-data';
+        const toast = [[${message}]];
+        if(toast) M.toast({html: toast, displayLength: 2500});
     });
 
     const tool_name = document.querySelector("#tool-name");

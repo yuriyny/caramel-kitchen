@@ -9,10 +9,24 @@ class ItemRequest{
         this.actions = item_actions;
     }
 
-    getAllActions(){
-        //make fetch request here for actions
+    async getAllActions(select){
+        // make fetch request here for actions
+        const actions = await fetch("/actions", {
+            method: "GET",
+            contentType: "text/plain"
+        })
+            .then(response => response.json())
+            .catch((e)=>{console.log("err " + e)});
+        console.log(actions)
 
-        return ["option 1", "option 2", "option 3"];
+        for(let action of actions){
+            const opt = document.createElement("option");
+            opt.value = action;
+            opt.textContent = action;
+            select.appendChild(opt);
+        }
+        // return ["option 1", "option 2", "option 3"];
+        return actions;
     }
 
     addAction(){
@@ -25,20 +39,20 @@ class ItemRequest{
 
         const select = document.createElement("select");
         select.setAttribute("class", "browser-default offset-s1 col s11");
-        select.setAttribute("name", "blacklist");
+        select.setAttribute("name", "listed actions");
 
         const defaultOpt = document.createElement("option");
         defaultOpt.value = "";
         defaultOpt.textContent = "Select an action";
         select.appendChild(defaultOpt);
-
-        const allActions = this.getAllActions();
-        for(let action of allActions){
-            const opt = document.createElement("option");
-            opt.value = action;
-            opt.textContent = action;
-            select.appendChild(opt);
-        }
+        this.getAllActions(select);
+        // const allActions = this.getAllActions(select);
+        // for(let action of allActions){
+        //     const opt = document.createElement("option");
+        //     opt.value = action;
+        //     opt.textContent = action;
+        //     select.appendChild(opt);
+        // }
 
         li.appendChild(icon);
         li.appendChild(select);
