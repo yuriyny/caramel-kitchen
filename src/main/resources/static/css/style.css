@@ -1,4 +1,6 @@
 
+/*@font-face{}*/
+
 *{
     margin: 0;
     padding: 0;
@@ -28,6 +30,7 @@ body{
 
 nav ul li a{
     color: black;
+    height: 64px;
 }
 
 .input-field, h1, h2{
@@ -153,7 +156,7 @@ nav ul li a{
 .action-list{
     position: relative;
     width: 100%;
-    height: 500px;
+    max-height: 300px;
     overflow-y: auto;
 }
 
@@ -201,6 +204,20 @@ nav ul li a{
     min-width: 1540px;
 }
 
+.item-search-result{
+    display: flex;
+    justify-content: space-between;
+}
+
+.sample-img{
+    height: 50px;
+    width: 50px;
+}
+
+.search-result-name{
+    overflow-x: auto;
+}
+
 .card-content{
     user-select: none;
 }
@@ -219,15 +236,16 @@ nav ul li a{
     opacity: 1;
 }
 
-#card-menu-ul{
+.card-menu-ul{
     position: absolute;
-    height: 100%;
+    height: 60%;
     width: 100%;
     overflow-y: auto;
     padding: 10px;
+    padding-left: 10px !important;
 }
 
-#card-menu-ul > .menu-option{
+.card-menu-ul > .menu-option{
     z-index: 1;
     padding: 5px 0;
     margin-bottom: 8px;
@@ -241,8 +259,31 @@ nav ul li a{
     border-radius: 3px;
 }
 
-#card-menu-ul > .menu-option:hover{
+.card-menu-ul > .menu-option:hover{
     background: lightblue;
+}
+
+.card-select{
+    position: absolute;
+    top: 70%;
+    left: 0;
+    height: 30%;
+    width: 100%;
+    background: lightblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+}
+
+.card-select:hover{
+    opacity: 1;
+}
+
+.card-select.selected{
+    opacity: 1;
+    background: rgba(30,144,255,0.4);
+    font-size: 0;
 }
 
 #cooking-board{
@@ -252,15 +293,15 @@ nav ul li a{
 }
 
 .ingredient{
-    background: rgba(0,225,0,0.6)
+    background: rgba(0,225,0,0.6);
 }
 
 .processedItem{
-    background: rgba(225,255,0,0.6)
+    background: rgba(225,255,0,0.6);
 }
 
 .comment{
-    background: rgba(0,0,225, 0.6)
+    background: rgba(0,0,225, 0.6);
 }
 
 .recipe-step{

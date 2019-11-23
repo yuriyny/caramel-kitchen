@@ -12,16 +12,21 @@ class CookingBoard{
 
         /** additional info*/
         this.identifier = 0;
-        this.items = {};    //let this be a list of hashes with {DOM id : {item name, imageFileUrl, use, tags}}
+        this.items = {};    //let this be a list of hashes with {DOM id : {item name, imageFileUrl, use, tags, quantity, selected}}
         this.tools = [];
         this.ingredients = [];
         // this.processedItems = [];
         this.actions = [];
+        // this.actionPair = {};
         this.saved = true;
 
     }
 
     /** MENU ADD ITEM---------------------------------*/
+    /**
+     * item param should have name
+     *      additional optional info: quantity, imageFileUrl
+     */
     addItem(item, use, tag=[]){
         // console.log(use);
         let record = {};
@@ -29,6 +34,8 @@ class CookingBoard{
         if(tag.length > 0) record["tags"] = [tag];
         else record["tags"] = [];
         record["use"] = use;
+        record["quantity"] = item.quantity ? item.quantity : 1;
+        record["selected"] = item.selected ? true : false;
 
         const wrapper = document.createElement("div");
         wrapper.setAttribute("class", "col s4 m3 l2");
@@ -53,13 +60,17 @@ class CookingBoard{
         card_content.setAttribute("class", "card-content center");
 
         const content = document.createElement("p");
-        content.textContent = item.name;
+        if(use === "ingredient"){
+            content.textContent = record.quantity + " " + item.name;
+        } else {
+            content.textContent = item.name;
+        }
 
         const card_menu = document.createElement("div");
         card_menu.setAttribute("class", "card-menu");
 
         const card_menu_ul = document.createElement("ul");
-        card_menu_ul.setAttribute("id", "card-menu-ul");
+        card_menu_ul.setAttribute("class", "card-menu-ul");
 
         if(use === "ingredient"){
             card.classList.add("ingredient");
@@ -73,12 +84,23 @@ class CookingBoard{
             content.textContent += ": " + tag;
         } else { console.log("item use not defined"); }
 
+        const card_select = document.createElement("div");
+        card_select.setAttribute("class", "card-select");
+        if(item.selected) card_select.classList.add("selected");
+        card_select.textContent = "Select";
+        card_select.onclick = (e) => {
+            e.target.classList.toggle("selected");
+            this.items[e.target.parentNode.id].selected = !this.items[e.target.parentNode.id].selected;
+            this.groupItems();
+        };
+
         card_menu.appendChild(card_menu_ul);
         card_content.appendChild(content);
         card_img.appendChild(img);
         card.appendChild(card_img);
         card.appendChild(card_content);
         card.appendChild(card_menu);
+        card.appendChild(card_select);
         wrapper.appendChild(card);
         this.board_ul.appendChild(wrapper);
 
@@ -97,7 +119,7 @@ class CookingBoard{
         this.items[itemKey].tags.push(tag);
     }
 
-    /**add to ingredient list*/
+    /**add to requested ingredient list*/
     addIngredient(item){
         // if(!this.ingredients.includes(item.name)) this.ingredients.push(item);
         for(const ingredient of this.ingredients){
@@ -106,7 +128,7 @@ class CookingBoard{
         this.ingredients.push(item);
     }
 
-    /**add to tools list as known by action menu */
+    /**add to requested tools list as known by action menu */
     addTool(item){
         // if(!this.tools.includes(name)) this.tools.push(name);
         let newTool = true;
@@ -115,14 +137,12 @@ class CookingBoard{
         }
         this.tools.push(item);
 
-        // console.log(item);
-        // console.log(item.actions);
-
         for(let action of item.actions){
             if(!this.actions.includes(action))
                 this.actions.push(action)
         }
     }
+
     async updateMenu(){
         let menu_ul;
         for(const id in this.items){
@@ -147,7 +167,15 @@ class CookingBoard{
                     .then((response) => response.json())
                     .catch(e => {console.log("err ", e)});
 
-                console.log(newActions);
+                // if(!this.actionPair[tool.name]) {
+                //     this.actionPair[tool.name] = newActions;
+                // } else {
+                //     let updateList = [...this.actionPair[tool.name], ...newActions];
+                //     this.actionPair[tool.name] = updateList.filter((a,b) => updateList.indexOf(a) === b);
+                //     console.log(this.actionPair);
+                // }
+
+                // console.log(newActions);
 
                 for(let action of newActions){
                     const li = document.createElement("li");
@@ -155,25 +183,23 @@ class CookingBoard{
                     li.setAttribute("oncontextmenu", "return false");
                     li.textContent = action;
 
-                    if(this.recipe) {
-                        li.onclick = (e) => {
-                            // let item_name = e.target.parentNode.parentNode.previousSibling.firstChild.innerHTML;
+                    li.onclick = (e) => {
+                        let step = li.innerHTML;
+                        for (const tag of this.items[id].tags) step += " '" + tag + "'";
+                        step += " " + this.items[id].name;
+                        this.recipe.addToRecipe(step);
 
-                            let step = li.innerHTML;
-                            for (const tag of this.items[id].tags) step += " '" + tag + "'";
-                            step += " " + this.items[id].name;
-                            this.recipe.addToRecipe(step);
-
-                            if (this.items[id].use === "processedItem") {
-                                this.addTag(id, li.innerHTML);
-                            } else {
-                                let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].img};
-                                this.addItem(newItem, "processedItem", li.innerHTML);
-                            }
-
-                            this.saved = false;
+                        if (this.items[id].use === "processedItem") {
+                            this.addTag(id, li.innerHTML);
+                        } else {
+                            let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].img};
+                            this.addItem(newItem, "processedItem", li.innerHTML);
                         }
+
+                        // this.useTool(li.innerHTML);
+                        this.saved = false;
                     }
+
                     menu_ul.appendChild(li);
                 }
             }
@@ -188,15 +214,67 @@ class CookingBoard{
         }
     }
 
+    // useTool(action){
+    //     for(const tool in this.actionPair){
+    //         if(this.actionPair[tool].indexOf(action) > -1){
+    //             for(const id in this.items){
+    //                 if(this.items[id].name === tool){
+    //                     let card = document.getElementById(id);
+    //                     card.parentNode.parentNode.removeChild(card.parentNode);
+    //                     delete this.items[id];
+    //                     delete this.actionPair[tool];
+    //                     this.tools.filter(item => item.name !== tool)
+    //
+    //                     this.updateMenu();
+    //                     return;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-    /** MISC------------------------------------*/
+    groupItems(){
+        let groups = {};
+        for(const id in this.items) {
+            if(this.items[id].selected === true && this.items[id].use === "ingredient"){
+                if(groups[this.items[id].name]){
+                    groups[this.items[id].name].push(id);
+                } else {
+                    groups[this.items[id].name] = [id];
+                }
+            }
+        }
+
+        for(const [name, ids] of Object.entries(groups)){
+            if(ids.length === 1) continue;
+
+            let newQuant = 0;
+            let itemImg = this.items[ids[0]].img;
+            for(const id of ids){
+                newQuant += this.items[id].quantity;
+                const card = document.getElementById(id);
+                card.parentNode.parentNode.removeChild(card.parentNode);
+                delete this.items[id];
+            }
+            let newItem = {"name":name, "imageFileUrl":itemImg, "quantity":newQuant, "selected":true};
+            this.addItem(newItem, "ingredient", []);
+        }
+    }
+
+    resetSelectedItems(){
+        for(const id in this.items) {
+            if(this.items[id].selected === true){
+                const card = document.getElementById(id);
+                id.classList.remove("selected");
+            }
+        }
+    }
+
     getTools(){
-        // console.log(this.tools);
         return this.tools;
     }
 
     getIngredients(){
-        // console.log(this.ingredients);
         return this.ingredients;
     }
 

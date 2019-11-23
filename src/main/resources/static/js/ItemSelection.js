@@ -26,20 +26,12 @@ class ItemSelection{
             .then(response => response.json())
             .catch((e)=>{console.log("err " + e)});
 
-        // let customItem = true;
         for(let item of items.ingredients){
             this.addSearchResult(item, "ingredient");
-            // if(item.name === keyword) customItem = false;
         }
         for(let item of items.tools){
             this.addSearchResult(item, "tool");
-            // if(item.name === keyword) customItem = false;
         }
-
-        // if(customItem){
-        //     let custom = {"name" : keyword, "imageFileUrl" : null};
-        //     this.addSearchResult(custom, "ingredient");
-        // }
     }
 
     async searchAllQuery(){
@@ -68,11 +60,20 @@ class ItemSelection{
 
     addSearchResult(item, category){
         const li = document.createElement("li");
-        li.setAttribute("class", "collection-item");
-        li.textContent = item.name;
+        li.setAttribute("class", "collection-item item-search-result");
+
+        const img = document.createElement("img");
+        img.setAttribute("class", "sample-img");
+        img.setAttribute("src", item.imageFileUrl);
+
+        const p = document.createElement("p");
+        p.setAttribute("class", "search-result-name");
+        p.textContent = item.name;
         // let newItem = {"name": item.name, "imageFileUrl": item.imageFileUrl, "use": category};
 
         li.onclick = () => this.cookingBoard.addItem(item, category);
+        li.appendChild(img);
+        li.appendChild(p);
         this.search_ul.appendChild(li);
     }
 }
