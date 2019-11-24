@@ -64,11 +64,11 @@ public class RecipeController {
     public Map<String, List<SubprocedureComponent>> ingredientToolList(){
         List<SubprocedureComponent> ingredients=new ArrayList<>();
         ingredients.addAll(recipeEditorService.findAllIngredients());
-        ingredients=recipeEditorService.findImage(ingredients);
+        ingredients=recipeService.sortList(recipeEditorService.findImage(ingredients));
 
         List<SubprocedureComponent> tools=new ArrayList<>();
         tools.addAll(recipeEditorService.findAllTools());
-        tools=recipeEditorService.findImage(tools);
+        tools=recipeService.sortList(recipeEditorService.findImage(tools));
 
         Map<String, List<SubprocedureComponent>> returnObj = new HashMap<>();
         returnObj.put("ingredients", ingredients);
@@ -160,6 +160,16 @@ public class RecipeController {
     public ModelAndView publishRedirect(@PathVariable String name){
         ModelAndView modelAndView = new ModelAndView("/home");
         modelAndView.addObject("message", "You have successfully published a lab: " + name);
+        return modelAndView;
+    }
+    /**
+     * Return to home after publish
+     */
+    @ResponseBody
+    @GetMapping(value = "/home/save/{name}")
+    public ModelAndView saveRedirect(@PathVariable String name){
+        ModelAndView modelAndView = new ModelAndView("/home");
+        modelAndView.addObject("message", "You have successfully saved a lab: " + name);
         return modelAndView;
     }
 

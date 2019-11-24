@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,10 +23,16 @@ public class Recipe {
     private Collection<Ingredient> ingredients;
     @DBRef
     private Collection<KitchenTool> kitchenTools;
-    //unfinished recipe = true
     //completed recipe sets this field to false
     private Boolean isInProgress = true;
     private List<Subprocedure> subprocedureList;
+
+    public Recipe(){
+        ingredients=new ArrayList<>();
+        kitchenTools=new ArrayList<>();
+        subprocedureList=new ArrayList<>();
+    }
+
 /*    should we create a list of <instruction class>
     which will have field like step_description,
     step_number, equipment/ingredients needed?*/

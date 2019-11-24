@@ -40,19 +40,20 @@ class Prompt {
         data["isInProgress"] = true;
         console.log(data);
 
-        // const send = await fetch("/create-recipe", {
-        //     method: "POST",
-        //     body: JSON.stringify(data),
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "Accept": "application/json"
-        //     }
-        // })
-        //     .then(response => "success")
-        //     .catch((e)=>{console.log("err " + e)});
-        // console.log(send);
+        const send = await fetch("/create-recipe", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+            .then(response => "success")
+            .catch((e)=>{console.log("err " + e)});
+        console.log(send);
 
         this.cookingBoard.setSavedStatus(true);
+        window.location.href = "/home/save/" + data["recipeName"];
     }
 
     async publishRecipe(){

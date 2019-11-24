@@ -78,38 +78,116 @@ public class DbSeeder implements CommandLineRunner {
         rollingPin.getActions().add("flatten");
         rollingPin.setImageName("rollingpin.png");
 
+        KitchenTool teaspoon = new KitchenTool();
+        teaspoon.setName("teaspoon");
+        teaspoon.getActions().add("measure");
+        teaspoon.setUnitOfMeasure("teaspoon");
+
+        KitchenTool tablespoon = new KitchenTool();
+        tablespoon.setName("tablespoon");
+        tablespoon.getActions().add("measure");
+        tablespoon.setUnitOfMeasure("tablespoon");
+
+        KitchenTool measuringCup = new KitchenTool();
+        measuringCup.setName("measuring cup");
+        measuringCup.getActions().add("measure");
+        measuringCup.setUnitOfMeasure("cup");
+
+        KitchenTool mixingBowl = new KitchenTool();
+        mixingBowl.setName("bowl");
+        mixingBowl.getActions().add("mix");
+        mixingBowl.getActions().add("marinate");
+
+        KitchenTool mixingSpoon = new KitchenTool();
+        mixingSpoon.setName("mixing spoon");
+        mixingBowl.getActions().add("mix");
+
+        KitchenTool pan = new KitchenTool();
+        pan.setName("pan");
+        pan.getActions().add("sauté");
+        pan.setImageName("pan.png");
+
+        KitchenTool pot = new KitchenTool();
+        pot.setName("pot");
+        pot.getActions().add("boil");
+        pot.setImageName("pot.png");
+
+        KitchenTool spatula = new KitchenTool();
+        spatula.setName("spatula");
+        spatula.getActions().add("flip");
+        spatula.getActions().add("stir");
+
         this.mongoTemplate.insert(knife);
         this.mongoTemplate.insert(kettle);
         this.mongoTemplate.insert(rollingPin);
+        this.mongoTemplate.insert(teaspoon);
+        this.mongoTemplate.insert(tablespoon);
+        this.mongoTemplate.insert(measuringCup);
+        this.mongoTemplate.insert(mixingBowl);
+        this.mongoTemplate.insert(mixingSpoon);
+        this.mongoTemplate.insert(pan);
+        this.mongoTemplate.insert(pot);
+        this.mongoTemplate.insert(spatula);
 
         /* ----------------- ADD INGREDIENTS ----------------------*/
         Ingredient apple = new Ingredient();
         apple.setName("apple");
         apple.setImageName("apple.png");
+        apple.setType("fruit");
 
         Ingredient carrot = new Ingredient();
         carrot.setName("carrot");
         carrot.setImageName("carrot.png");
+        carrot.setType("vegetable");
 
         Ingredient garlic = new Ingredient();
         garlic.setName("garlic");
         garlic.setImageName("garlic.png");
+        garlic.setType("vegetable");
 
         Ingredient salt = new Ingredient();
         salt.setName("salt");
-        salt.setUnitOfMeasure("teaspoon");
+        salt.getUnitOfMeasure().add("teaspoon");
+        salt.getUnitOfMeasure().add("tablespoon");
         salt.setImageName("salt.png");
+        salt.setType("spice");
 
         Ingredient pepper = new Ingredient();
         pepper.setName("pepper");
-        pepper.setUnitOfMeasure("teaspoon");
+        pepper.getUnitOfMeasure().add("teaspoon");
+        pepper.getUnitOfMeasure().add("tablespoon");
         pepper.setImageName("pepper.png");
+        pepper.setType("spice");
+
+        Ingredient steak = new Ingredient();
+        steak.setName("steak");
+        steak.setImageName("steak.png");
+        steak.setType("meat");
+
+        Ingredient orange = new Ingredient();
+        orange.setName("orange");
+        orange.setImageName("orange.png");
+        orange.setType("fruit");
+
+        Ingredient broccoli = new Ingredient();
+        broccoli.setName("broccoli");
+        broccoli.setImageName("broccoli.png");
+        broccoli.setType("vegetable");
+
+        Ingredient chicken = new Ingredient();
+        chicken.setName("chicken");
+        chicken.setImageName("chicken.png");
+        chicken.setType("meat");
 
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
         this.mongoTemplate.insert(salt);
         this.mongoTemplate.insert(pepper);
+        this.mongoTemplate.insert(steak);
+        this.mongoTemplate.insert(orange);
+        this.mongoTemplate.insert(broccoli);
+        this.mongoTemplate.insert(chicken);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -130,17 +208,40 @@ public class DbSeeder implements CommandLineRunner {
 
         Whitelist w4=new Whitelist();
         w4.setName(salt.getName());
-//        w4.getActions().add("slice");
+        w4.getActions().add("season");
 
         Whitelist w5=new Whitelist();
         w5.setName(pepper.getName());
-//        w5.getActions().add("add");
+        w5.getActions().add("season");
+
+        Whitelist w6=new Whitelist();
+        w6.setName(steak.getName());
+        w6.getActions().add("season");
+        w6.getActions().add("chop");
+
+        Whitelist w7=new Whitelist();
+        w7.setName(orange.getName());
+        w7.getActions().add("slice");
+
+        Whitelist w8=new Whitelist();
+        w8.setName(broccoli.getName());
+        w8.getActions().add("chop");
+
+        Whitelist w9=new Whitelist();
+        w9.setName(chicken.getName());
+        w9.getActions().add("season");
+        w9.getActions().add("boil");
+        w9.getActions().add("chop");
 
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
         this.mongoTemplate.insert(w3);
         this.mongoTemplate.insert(w4);
         this.mongoTemplate.insert(w5);
+        this.mongoTemplate.insert(w6);
+        this.mongoTemplate.insert(w7);
+        this.mongoTemplate.insert(w8);
+        this.mongoTemplate.insert(w9);
 
         /* ----------------- SUBPROCEDURE ----------------------*/
 
@@ -153,11 +254,8 @@ public class DbSeeder implements CommandLineRunner {
         Recipe recipe=new Recipe();
         recipe.setCreator(user.getUsername());
         recipe.setRecipeName("Chopping Apple Recipe");
-        recipe.setSubprocedureList(new ArrayList<>());
         recipe.getSubprocedureList().add(chopApple);
         recipe.setIsInProgress(false);
-        recipe.setIngredients(new ArrayList<>());
-        recipe.setKitchenTools(new ArrayList<>());
         recipe.getIngredients().add(apple);
         recipe.getKitchenTools().add(knife);
         recipeService.saveRecipe(recipe,user.getUsername());

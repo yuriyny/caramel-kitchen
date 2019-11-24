@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,5 +16,9 @@ public class KitchenTool extends SubprocedureComponent{
     @Id
     private String id;
     private String unitOfMeasure;
-    private Collection<String> actions = new ArrayList<>();
+    private Collection<String> actions;
+
+    public KitchenTool(){
+        actions=new ArrayList<>();
+    }
 }
