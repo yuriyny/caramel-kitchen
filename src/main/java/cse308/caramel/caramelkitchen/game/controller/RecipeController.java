@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class RecipeController {
@@ -138,7 +139,7 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(path={"/get-all-user-recipes/{id}"})
     public List<Recipe> getAllUserRecipes(@PathVariable String id){
-        return (List<Recipe>)userDomainService.getUserByUsername(id).getRecipesCreated();
+        return userDomainService.getUserByUsername(id).getRecipesCreated().stream().filter(obj->!obj.getIsInProgress()).collect(Collectors.toList());
     }
     @ResponseBody
     @GetMapping(path={"/get-all-user-recipes"})
