@@ -57,27 +57,27 @@
             <div class="col s4">
                 <h5 class="row center">user recipes</h5>
                 <ul id="user-recipes" class="collapsible col s12" data-collapsible="accordian">
-                    <li>
-                        <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">apple
-                            pie
-                        </div>
-                        <div class="collapsible-body">
-                            <p>Rating</p>
-                            <a href="#">Remove</a>
-                            <a href="#">Modify</a>
-                            <a href="#">View Parents</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn"><i class="material-icons">people</i>roast chicken
-                        </div>
-                        <div class="collapsible-body">
-                            <p>Rating</p>
-                            <a href="#">Remove</a>
-                            <a href="#">Modify</a>
-                            <a href="#">View Parents</a>
-                        </div>
-                    </li>
+<!--                    <li>-->
+<!--                        <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">apple-->
+<!--                            pie-->
+<!--                        </div>-->
+<!--                        <div class="collapsible-body">-->
+<!--                            <p>Rating</p>-->
+<!--                            <a href="#">Remove</a>-->
+<!--                            <a href="#">Modify</a>-->
+<!--                            <a href="#">View Parents</a>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn"><i class="material-icons">people</i>roast chicken-->
+<!--                        </div>-->
+<!--                        <div class="collapsible-body">-->
+<!--                            <p>Rating</p>-->
+<!--                            <a href="#">Remove</a>-->
+<!--                            <a href="#">Modify</a>-->
+<!--                            <a href="#">View Parents</a>-->
+<!--                        </div>-->
+<!--                    </li>-->
                 </ul>
             </div>
             <div class="col s4">
@@ -197,6 +197,7 @@
 <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="/js/ItemRequest.js"></script>
+<script src="/js/RecipeInteract.js"></script>
 <script th:inline="javascript">
     $(document).ready(function () {
         $('.collapsible').collapsible();
@@ -219,6 +220,10 @@
     const ingredient_actions = document.querySelector("#ingredient-actable-actions");
     let ingredientRequest = new ItemRequest("ingredient", ingredient_name, ingredient_img, ingredient_actions);
     ingredientRequest.addAction();
+
+    const recipe_ul = document.querySelector("#user-recipes");
+    let recipeInteract = new RecipeInteract(recipe_ul);
+    recipeInteract.loadRecipes();
 
 </script>
 </body>
