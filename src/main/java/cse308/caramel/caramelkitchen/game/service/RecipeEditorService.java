@@ -1,9 +1,6 @@
 package cse308.caramel.caramelkitchen.game.service;
 
-import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
-import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
-import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
-import cse308.caramel.caramelkitchen.game.persistence.Whitelist;
+import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
 import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
@@ -57,6 +54,26 @@ public class RecipeEditorService {
         }
         return list;
     }
+
+    public List<KitchenTool> findImageTool(List<KitchenTool> list){
+        for (KitchenTool kitchenTool : list){
+            if(kitchenTool.getImageName()!=null){
+                String URL=s3Services.getImageUrl(kitchenTool.getImageName());
+                kitchenTool.setImageFileUrl(URL);
+            }
+        }
+        return list;
+    }
+    public List<Ingredient> findImageIngredient(List<Ingredient> list){
+        for (Ingredient ingredient : list){
+            if(ingredient.getImageName()!=null){
+                String URL=s3Services.getImageUrl(ingredient.getImageName());
+                ingredient.setImageFileUrl(URL);
+            }
+        }
+        return list;
+    }
+
     public void saveIngredient(Ingredient ingredient){
         ingredientRepository.save(ingredient);
     }

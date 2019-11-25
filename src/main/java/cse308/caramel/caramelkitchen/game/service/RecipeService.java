@@ -16,6 +16,8 @@ public class RecipeService {
     RecipeRepository recipeRepository;
     @Autowired
     UserDomainService userDomainService;
+    @Autowired
+    RecipeEditorService recipeEditorService;
 
     public void deleteRecipe(Recipe recipe){
         recipeRepository.delete(recipe);
@@ -24,8 +26,11 @@ public class RecipeService {
     public List<Recipe> findAllPublishedRecipe(){
         return (List<Recipe>)recipeRepository.findAllPublishedRecipes();
     }
-    public Recipe findRecipe(String id){
-        return recipeRepository.findById(id).get();
+    public Recipe findRecipe(String id){//add images along with retrieving recipe
+        Recipe recipe=recipeRepository.findById(id).get();
+        recipe.setIngredients(recipeEditorService.findImageIngredient((List<Ingredient>)recipe.getIngredients()));
+        recipe.setKitchenTools(recipeEditorService.findImageTool((List<KitchenTool>)recipe.getKitchenTools()));
+        return recipe;
     }
     public Recipe saveRecipe(Recipe recipe, String userName){
         if(recipe.getCreator()==null){//for testing with dbseeder

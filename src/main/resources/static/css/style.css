@@ -338,7 +338,7 @@ nav ul li a{
 
 #item-search-results{
     overflow-y: scroll;
-    height: 70%;
+    height: 500px;
 }
 
 .clear-btn{
