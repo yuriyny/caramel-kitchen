@@ -1,9 +1,12 @@
 package cse308.caramel.caramelkitchen.game.model;
 
-import java.io.File;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class GameApplication {
     String id;
-    File presentationFile; // css
-    File jsFile; // js
+    String presentationFilePath; // css
+    String jsFilePath; // js
 }

@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.game.service;
 
+import cse308.caramel.caramelkitchen.game.model.GameApplication;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
@@ -32,9 +33,17 @@ public class RecipeService {
         recipe.setKitchenTools(recipeEditorService.findImageTool((List<KitchenTool>)recipe.getKitchenTools()));
         return recipe;
     }
-    public Recipe saveRecipe(Recipe recipe, String userName){
+    public Recipe saveRecipe(Recipe recipe, String username){
         if(recipe.getCreator()==null){//for testing with dbseeder
-            recipe.setCreator(userName);
+            recipe.setCreator(username);
+        }
+        for(Subprocedure s : recipe.getSubprocedureList()) {
+            Game game = new Game();
+            game.setId(s.getProcedureName().hashCode());
+            game.setRecipe(recipe);
+            game.setUsername(username);
+
+            s.setGame(game);
         }
         recipeRepository.save(recipe);
         return recipe;

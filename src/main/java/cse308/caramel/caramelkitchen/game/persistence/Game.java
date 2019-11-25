@@ -9,7 +9,7 @@ import java.util.Collection;
 @Getter
 @Setter
 public class Game {
-    private String gameName;
+    private int id;
     private String username;
     private Collection<Double> score;
     @DBRef

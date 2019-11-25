@@ -10,6 +10,6 @@ import lombok.Setter;
 public class Subprocedure {
     private String procedureName;//chopping
     private String instructions;
-    private GameApplication game;
+    private Game game;
     //private int instructionNumber;//step number
 }

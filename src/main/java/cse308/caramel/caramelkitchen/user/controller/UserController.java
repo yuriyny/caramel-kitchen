@@ -68,12 +68,12 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(path={"/user-list"})
-    public List<User> userList(){
+    public List<User> userList() {
         return userDomainService.getAllCreators();
     }
     @ResponseBody
     @PostMapping(path={"/search-user"})
-    public List<User> searchUser(@RequestBody String search){
+    public List<User> searchUser(@RequestBody String search) {
         return searchService.getCreators(search);
     }
 }
