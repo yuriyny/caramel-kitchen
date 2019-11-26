@@ -11,5 +11,6 @@ public interface S3Services {
         public String getImageUrl(String imageName);
         public void uploadFileObject(String keyName, File file);
         public void uploadMultipartFileObject(String keyName, MultipartFile file) throws IOException;
+        public void removeFile(String keyName);
 }
 
