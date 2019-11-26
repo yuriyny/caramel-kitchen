@@ -25,9 +25,11 @@ public class Recipe {
     @DBRef
     private Collection<KitchenTool> kitchenTools;
     //completed recipe sets this field to false
-    private Boolean isInProgress = true;
+    private Boolean isPublished = true;
     private List<Subprocedure> subprocedureList;
 
+    // + maintain another list that contains subprocedures any playing user MUST complete to pass the recipe
+    private List<Subprocedure> requiredSubproceduresList;
     public Recipe(){
         ingredients=new ArrayList<>();
         kitchenTools=new ArrayList<>();

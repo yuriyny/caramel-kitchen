@@ -34,4 +34,12 @@ public class GameService {
         gameRepository.save(game);
     }
 
+    public boolean isGameInProgress(Recipe recipe, User user) {
+        return user.getGamesInProgress().stream().anyMatch(game -> game.getRecipe().getId() == recipe.getId());
+    }
+
+    public void saveGame(Game game) {
+        gameRepository.save(game);
+    }
+
 }

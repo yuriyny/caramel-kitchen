@@ -6,6 +6,7 @@ import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.service.GameService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.game.service.SubprocedureManager;
+import cse308.caramel.caramelkitchen.user.persistence.User;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,8 +38,15 @@ public class GameController {
     public ModelAndView playGame(@PathVariable String id, Principal principal){
         Recipe recipe=recipeService.findRecipe(id);
         //create new game, set all necessary game info, store game in user
-        Game game=gameService.createGame(recipe);
-        userDomainService.saveInProgressGameToUser(principal.getName(),game);
+        Game game;
+        User currentUser = userDomainService.getUserByUsername(principal.getName());
+        if(gameService.isGameInProgress(recipe, currentUser)) {
+            game = gameService.getGame(id);
+        }
+        else {
+            game=gameService.createGame(recipe);
+            userDomainService.saveInProgressGameToUser(principal.getName(),game);
+        }
 
         //return view of recipe
         ModelAndView modelAndView = new ModelAndView("/playlab");
@@ -65,6 +73,7 @@ public class GameController {
     @ResponseBody
     @PostMapping(path={"/finish-game"})
     public void finishedGame (@RequestBody Game game,Principal principal){
+        gameService.saveGame(game);
         userDomainService.saveFinishedGameToUser(principal.getName(),game);
     }
 }

@@ -127,7 +127,7 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(path={"/get-all-user-recipes/{id}"})
     public List<Recipe> getAllUserRecipes(@PathVariable String id){
-        return userDomainService.getUserByUsername(id).getRecipesCreated().stream().filter(obj->!obj.getIsInProgress()).collect(Collectors.toList());
+        return userDomainService.getUserByUsername(id).getRecipesCreated().stream().filter(obj->!obj.getIsPublished()).collect(Collectors.toList());
     }
     @ResponseBody
     @GetMapping(path={"/get-all-user-recipes"})

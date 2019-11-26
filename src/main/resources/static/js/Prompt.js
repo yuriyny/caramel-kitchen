@@ -37,7 +37,7 @@ class Prompt {
 
     async saveRecipe(){
         let data = this.getRecipeInfo();
-        data["isInProgress"] = true;
+        data["isPublished"] = false;
         console.log(data);
 
         const send = await fetch("/create-recipe", {
@@ -58,7 +58,7 @@ class Prompt {
 
     async publishRecipe(){
         let data = this.getRecipeInfo();
-        data["isInProgress"] = false;
+        data["isPublished"] = false;
         console.log(data);
 
         if(!data["recipeName"]){
