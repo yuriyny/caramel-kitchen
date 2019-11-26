@@ -258,8 +258,8 @@ public class DbSeeder implements CommandLineRunner {
         recipe.setIsInProgress(false);
         recipe.getIngredients().add(apple);
         recipe.getKitchenTools().add(knife);
-//        recipeService.saveRecipe(recipe,user.getUsername());
-//        user.getRecipesCreated().add(recipe);
+        recipeService.saveRecipe(recipe,user.getUsername());
+        user.getRecipesCreated().add(recipe);
 //        userDomainService.saveUser(user);
 
 

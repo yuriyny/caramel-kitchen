@@ -115,18 +115,6 @@ public class RecipeController {
     }
 
     /**
-     * This method will direct user to the playlab page with the recipe of their choice
-     * @param id    recipe id that is selected by the user
-     * @return
-     */
-    @ResponseBody
-    @GetMapping(path="/play/{id}")
-    public ModelAndView playRecipe(@PathVariable String id){
-        ModelAndView modelAndView = new ModelAndView("/playlab");
-        modelAndView.addObject("recipe",recipeService.findRecipe(id));
-        return modelAndView;
-    }
-    /**
      * Returns all actions associated with a tool
      * GET
      */

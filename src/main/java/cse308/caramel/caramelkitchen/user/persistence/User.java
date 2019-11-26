@@ -25,7 +25,9 @@ public class User {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING, dropDups = true)
     private String password;
     private boolean enabled;
+    @DBRef
     private Collection<Game> gamesPlayed;
+    @DBRef
     private Collection<Game> gamesInProgress;
     @DBRef
     private Collection<Recipe> recipesCreated;

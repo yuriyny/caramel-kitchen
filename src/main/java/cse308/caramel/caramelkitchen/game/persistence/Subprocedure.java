@@ -1,15 +1,14 @@
 package cse308.caramel.caramelkitchen.game.persistence;
 
 
-import cse308.caramel.caramelkitchen.game.model.GameApplication;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
 public class Subprocedure {
-    private String procedureName;//chopping
+    private String procedureName;//This is the action name. This is also the game to call for
     private String instructions;
-    private Game game;
+//    private String miniGame;
     //private int instructionNumber;//step number
 }

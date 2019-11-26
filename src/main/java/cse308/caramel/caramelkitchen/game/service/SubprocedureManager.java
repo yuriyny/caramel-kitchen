@@ -17,11 +17,11 @@ public class SubprocedureManager {
         return gameApplication;
     }
 
-    public void updateRecipeProgress(GameState gameState){
-
-    }
-
-    public void restartRecipeProgress(GameState gameState){
-
-    }
+//    public void updateRecipeProgress(GameState gameState){
+//
+//    }
+//
+//    public void restartRecipeProgress(GameState gameState){
+//
+//    }
 }

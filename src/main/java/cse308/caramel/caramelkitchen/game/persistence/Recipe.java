@@ -18,6 +18,7 @@ public class Recipe {
     private String id;
     private String recipeName;
     private String creator;//creator/user id
+    private String parentId;
     private double rating;
     @DBRef
     private Collection<Ingredient> ingredients;

@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.user.service;
 
+import cse308.caramel.caramelkitchen.game.persistence.Game;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.user.persistence.Role;
 import cse308.caramel.caramelkitchen.user.persistence.User;
@@ -72,6 +73,24 @@ public class UserDomainService implements UserDetailsService { //removed id beca
             throw new UsernameNotFoundException("username not found");
         }
     }
+    public void saveInProgressGameToUser(String username, Game game){
+        User user=getUserByUsername(username);
+        user.getGamesInProgress().add(game);
+        userRepository.save(user);
+    }
+    public void saveFinishedGameToUser(String username, Game game){
+        //remove from in progress if exist
+        User user=getUserByUsername(username);
+        for(Game g:user.getGamesInProgress()){
+            if (g.getId()==game.getId()){
+                user.getGamesInProgress().remove(g);
+            }
+        }
+        //add game to finished
+        user.getGamesPlayed().add(game);
+        userRepository.save(user);
+    }
+
     private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
         Set<GrantedAuthority> roles = new HashSet<>();
         userRoles.forEach((role) -> {
