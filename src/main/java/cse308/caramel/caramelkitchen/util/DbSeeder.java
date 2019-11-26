@@ -281,7 +281,7 @@ public class DbSeeder implements CommandLineRunner {
         //this command download the previously uploaded file
         s3Services.downloadFile(downloadKey);*/
 
-        System.out.println("Pre-Signed URL: " + s3Services.getImageUrl("apple.png"));
+        //System.out.println("Pre-Signed URL: " + s3Services.getImageUrl("apple.png"));
 
 
 
