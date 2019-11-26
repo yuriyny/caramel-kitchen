@@ -58,7 +58,7 @@ class Prompt {
 
     async publishRecipe(){
         let data = this.getRecipeInfo();
-        data["isPublished"] = false;
+        data["isPublished"] = true;
         console.log(data);
 
         if(!data["recipeName"]){

@@ -255,7 +255,7 @@ public class DbSeeder implements CommandLineRunner {
         recipe.setCreator(user.getUsername());
         recipe.setRecipeName("Chopping Apple Recipe");
         recipe.getSubprocedureList().add(chopApple);
-        recipe.setIsInProgress(false);
+        recipe.setIsPublished(true);
         recipe.getIngredients().add(apple);
         recipe.getKitchenTools().add(knife);
         recipeService.saveRecipe(recipe,user.getUsername());
