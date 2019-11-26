@@ -245,22 +245,22 @@ public class DbSeeder implements CommandLineRunner {
 
         /* ----------------- SUBPROCEDURE ----------------------*/
 
-        Subprocedure chopApple=new Subprocedure();
-        chopApple.setProcedureName("Chop Apple");
-        chopApple.setInstructions("Chop the apple");
-//        chopApple.setGame(new GameApplication());
+        Subprocedure chopCarrot=new Subprocedure();
+        chopCarrot.setProcedureName("chop");
+        chopCarrot.setInstructions("Chop 1 carrot");
+//        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- SAMPLE RECIPE ----------------------*/
         Recipe recipe=new Recipe();
         recipe.setCreator(user.getUsername());
-        recipe.setRecipeName("Chopping Apple Recipe");
-        recipe.getSubprocedureList().add(chopApple);
+        recipe.setRecipeName("Chopping Carrot Recipe");
+        recipe.getSubprocedureList().add(chopCarrot);
         recipe.setIsPublished(true);
-        recipe.getIngredients().add(apple);
+        recipe.getIngredients().add(carrot);
         recipe.getKitchenTools().add(knife);
         recipeService.saveRecipe(recipe,user.getUsername());
         user.getRecipesCreated().add(recipe);
-//        userDomainService.saveUser(user);
+        userDomainService.saveUser(user);
 
 
 //        mongoTemplate.insert(recipe);
