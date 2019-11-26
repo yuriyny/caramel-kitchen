@@ -80,9 +80,9 @@
 <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('select').formSelect();
-        $('input#input_text, textarea#feedback').characterCounter();
+    document.addEventListener('DOMContentLoaded', function() {
+        let materialize_select = document.querySelectorAll('select');
+        let select = M.FormSelect.init(materialize_select);
     });
 
 </script>

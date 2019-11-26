@@ -112,21 +112,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="/js/HomeSearch.js"></script>
 <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        let materialize_collapsible = document.querySelectorAll(".collapsible");
+        let collapsible = M.Collapsible.init(materialize_collapsible);
+
+        let materialize_select = document.querySelectorAll(".select");
+        let select = M.FormSelect.init(materialize_select);
+    });
+
     const search_input = document.querySelector("#search-keyword");
     const search_category = document.querySelector("#search-category");
     const search_ul = document.querySelector("#search-results");
     const search_btn = document.querySelector("#search-btn");
     const generalSearch = new HomeSearch(search_input, search_category, search_ul, search_btn);
+    generalSearch.searchQuery();
 
-    $(document).ready(function () {
-        $('.collapsible').collapsible();
-        $('select').formSelect();
-        generalSearch.searchQuery();
-
-        const toast = [[${message}]];
-        if(toast) M.toast({html: toast, displayLength: 2500});
-    });
-
+    const toast = [[${message}]];
+    if(toast) M.toast({html: toast, displayLength: 2500});
 
 </script>
 </body>

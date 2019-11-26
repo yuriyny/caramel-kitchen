@@ -123,6 +123,14 @@
 <script src="/js/ItemSelection.js"></script>
 <script src="/js/Prompt.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let materialize_select = document.querySelectorAll('select');
+        let select = M.FormSelect.init(materialize_select);
+
+        let materialize_modal = document.querySelectorAll('.modal');
+        let modal = M.Modal.init(materialize_modal, {dismissible: false});
+    });
+
     const recipe_ul = document.querySelector("#recipe_ul");
     const comment_input = document.querySelector("#recipe_comment");
     const recipe = new Instructions(recipe_ul, []);
@@ -138,19 +146,12 @@
     const search_input = document.querySelector("#item-search-keyword");
     const search_ul = document.querySelector("#item-search-results");
     const itemSelection = new ItemSelection(search_input, search_ul, cookingBoard);
+    itemSelection.searchAllQuery();
 
     const recipe_name = document.querySelector("#recipe-name");
     const recipe_target = document.querySelector("#recipe-target");
     const recipe_desc = document.querySelector("#recipe-desc");
     const prompt = new Prompt(recipe_name, recipe_target, recipe_desc, recipe, cookingBoard);
-
-    $(document).ready(function () {
-        $(".modal").modal({
-            dismissible: false
-        });
-        $('select').formSelect();
-        itemSelection.searchAllQuery();
-    });
 
     $('#nav-mobile a').map( function() {
         $(this).click(function() {

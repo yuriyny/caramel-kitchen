@@ -199,15 +199,22 @@
 <script src="/js/ItemRequest.js"></script>
 <script src="/js/RecipeInteract.js"></script>
 <script th:inline="javascript">
-    $(document).ready(function () {
-        $('.collapsible').collapsible();
-        $('select').formSelect();
-        $('.tabs').tabs();
-        document.querySelector("#tool-img-input").enctype = 'multipart/form-data';
-        document.querySelector("#ingredient-img-input").enctype = 'multipart/form-data';
-        const toast = [[${message}]];
-        if(toast) M.toast({html: toast, displayLength: 2500});
+    document.addEventListener('DOMContentLoaded', function() {
+        let materialize_collapsible = document.querySelectorAll(".collapsible");
+        let collapsible = M.Collapsible.init(materialize_collapsible);
+
+        let materialize_select = document.querySelectorAll(".select");
+        let select = M.FormSelect.init(materialize_select);
+
+        const materialize_tab = document.querySelectorAll(".tabs");
+        const tab = M.Tabs.init(materialize_tab);
     });
+
+
+    document.querySelector("#tool-img-input").enctype = 'multipart/form-data';
+    document.querySelector("#ingredient-img-input").enctype = 'multipart/form-data';
+    const toast = [[${message}]];
+    if(toast) M.toast({html: toast, displayLength: 2500});
 
     const tool_name = document.querySelector("#tool-name");
     const tool_img = document.querySelector("#tool-img-input");

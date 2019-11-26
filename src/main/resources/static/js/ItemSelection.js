@@ -64,14 +64,21 @@ class ItemSelection{
 
         const img = document.createElement("img");
         img.setAttribute("class", "sample-img");
-        img.setAttribute("src", item.imageFileUrl);
+        if(item.imageFileUrl != null) {
+            img.setAttribute("src", item.imageFileUrl);
+        } else {
+            img.setAttribute("src", "/images/placeholder.png");
+        }
 
         const p = document.createElement("p");
         p.setAttribute("class", "search-result-name");
         p.textContent = item.name;
         // let newItem = {"name": item.name, "imageFileUrl": item.imageFileUrl, "use": category};
 
-        li.onclick = () => this.cookingBoard.addItem(item, category);
+        li.onclick = () => {
+            this.cookingBoard.addItem(item, category);
+            this.cookingBoard.updateMenu();
+        }
         li.appendChild(img);
         li.appendChild(p);
         this.search_ul.appendChild(li);

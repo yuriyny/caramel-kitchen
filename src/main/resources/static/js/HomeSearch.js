@@ -62,6 +62,7 @@ class HomeSearch{
                 .catch((e) => {
                     console.log("err " + e)
                 });
+            console.log(recipeResults);
             for (let result of recipeResults) {
                 this.createRecipeResultLi(result);
             }

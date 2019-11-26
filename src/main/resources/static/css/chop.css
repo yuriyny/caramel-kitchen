@@ -20,7 +20,7 @@ body > p{
 }
 @keyframes showScore{
     0% {opacity: 0; transform: scale(0); top: 0;}
-    100% {opacity: 1; transform: scale(1); top: -100%;}
+    100% {opacity: 1; transform: scale(1); top: -40%;}
 }
 
 
@@ -58,10 +58,11 @@ body > p{
 
 
 #subroutine_b{
-    margin: 50px;
-    position: relative;
-    width: 600px;
-    height: 60px;
+    margin: 40px 10px;
+    position: absolute;
+    width: 80%;
+    top: 220px;
+    height: 220px;
     background: none;
 }
 #meter_b{
@@ -74,8 +75,7 @@ body > p{
 }
 #target{
     position: absolute;
-    height: 130%;
-    top: -10%;
+    height: 100%;
     width: 0;
     left: 530px;
     transform: translateX(-50%);
@@ -89,7 +89,7 @@ body > p{
     animation: shrink 1.2s ease-out forwards;
 }
 @keyframes shrink{
-    0% {width: 30%}
+    0% {width: 300px}
     100% {width: 0}
 }
 

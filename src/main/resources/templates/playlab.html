@@ -87,7 +87,7 @@
 <!--                            <div>placeholder</div>-->
 <!--                        </li>-->
 
-                        <li class="recipe-step" th:each="step:${recipe.subprocedureList}" th:text="${step.procedureName}"></li>
+                        <li class="recipe-step" th:each="step:${game.recipe.subprocedureList}" th:text="${step.instructions}"></li>
                     </ul>
                 </div>
             </div>
@@ -99,23 +99,31 @@
 <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="/js/CookingBoard.js"></script>
+<script src="/js/Instructions.js"></script>
 <script th:inline="javascript">
-    $(document).ready(function () {
-        $('.tabs').tabs();
-
+    document.addEventListener('DOMContentLoaded', function() {
+        const materialize_tab = document.querySelectorAll(".tabs");
+        const tab = M.Tabs.init(materialize_tab);
     });
 
-    let recipe = [[${recipe}]];
-    console.log(recipe);
+    let recipe_score = 0;
+
+    let game = [[${game}]];
+    console.log(game);
+
+    const user_recipe_ul = document.querySelector("#recipe_ul");
+    const user_recipe = new Instructions(user_recipe_ul, []);
 
     const item_board = document.querySelector("#item-board");
-    const itemBoard = new CookingBoard(item_board, null);
-    for(let tool of recipe.kitchenTools){
+    const game_area = document.querySelector("#gameView");
+    const itemBoard = new CookingBoard(item_board, user_recipe, game_area);
+    for(let tool of game.recipe.kitchenTools){
         itemBoard.addItem(tool, "tool");
     }
-    for(let ingredient of recipe.ingredients){
+    for(let ingredient of game.recipe.ingredients){
         itemBoard.addItem(ingredient, "ingredient");
     }
+    itemBoard.updateMenu();
 </script>
 
 </body>

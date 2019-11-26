@@ -3,12 +3,15 @@
  * utensils and ingredients.
  */
 class CookingBoard{
-    constructor(board_ul, recipe){
+    constructor(board_ul, recipe, game_area=null){
         /** the board element*/
         this.board_ul = board_ul;
 
         /** the recipe steps, if needed*/
         this.recipe = recipe;
+
+        /** place for minigames*/
+        this.game_area = game_area;
 
         /** additional info*/
         this.identifier = 0;
@@ -19,7 +22,6 @@ class CookingBoard{
         this.actions = [];
         // this.actionPair = {};
         this.saved = true;
-
     }
 
     /** MENU ADD ITEM---------------------------------*/
@@ -38,7 +40,7 @@ class CookingBoard{
         record["selected"] = item.selected ? true : false;
 
         const wrapper = document.createElement("div");
-        wrapper.setAttribute("class", "col s4 m3 l2");
+        wrapper.setAttribute("class", "col s2");
 
         const card = document.createElement("div");
         card.setAttribute("class", "card waves-effect waves-teal active-item");
@@ -107,7 +109,6 @@ class CookingBoard{
         this.items[this.identifier] = record;
         this.identifier++;
 
-        this.updateMenu();
         console.log(this.items);
     }
 
@@ -167,6 +168,10 @@ class CookingBoard{
                     .then((response) => response.json())
                     .catch(e => {console.log("err ", e)});
 
+                // console.log(this.items[id].name);
+                // console.log(newActions);
+                // console.log(this.tools);
+
                 // if(!this.actionPair[tool.name]) {
                 //     this.actionPair[tool.name] = newActions;
                 // } else {
@@ -183,21 +188,31 @@ class CookingBoard{
                     li.setAttribute("oncontextmenu", "return false");
                     li.textContent = action;
 
-                    li.onclick = (e) => {
-                        let step = li.innerHTML;
-                        for (const tag of this.items[id].tags) step += " '" + tag + "'";
-                        step += " " + this.items[id].name;
-                        this.recipe.addToRecipe(step);
+                    if(!this.game_area) {
+                        li.onclick = (e) => {
+                            let action = e.target.textContent;
+                            let target = e.target.parentNode.parentNode.previousSibling.firstChild.textContent;
+                            this.recipe.addToRecipe(action, target);
 
-                        if (this.items[id].use === "processedItem") {
-                            this.addTag(id, li.innerHTML);
-                        } else {
-                            let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].img};
-                            this.addItem(newItem, "processedItem", li.innerHTML);
+                            if (this.items[id].use === "processedItem") {
+                                this.addTag(id, action);
+                            } else {
+                                let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].img};
+                                this.addItem(newItem, "processedItem", action);
+                                this.updateMenu();
+                            }
+
+                            // this.useTool(li.innerHTML);
+                            this.saved = false;
+                        };
+                    } else {
+                        li.onclick = (e) => {
+                            const action = e.target.textContent;
+                            // const action = "test";
+                            const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
+                            tab_instance.select("gameView");
+                            this.playGame(action);
                         }
-
-                        // this.useTool(li.innerHTML);
-                        this.saved = false;
                     }
 
                     menu_ul.appendChild(li);
@@ -212,6 +227,28 @@ class CookingBoard{
                 menu_ul.appendChild(li);
             }
         }
+    }
+
+    async playGame(action){
+        const path = "/game-app/" + action;
+        const game = await fetch(path, {
+            method: "GET",
+            contentType: "text/plain"
+        })
+            .then(response => response.json())
+            .catch((e)=>{console.log("err " + e)});
+
+        console.log(game);
+        let head = document.getElementsByTagName("head")[0];
+        let gameScript = document.createElement("script");
+        gameScript.type = "text/javascript";
+        gameScript.src = "/" + game.jsFilePath;
+        let gameLink = document.createElement("link");
+        gameLink.rel = "stylesheet";
+        gameLink.type = "text/css";
+        gameLink.href = "/" + game.presentationFilePath;
+        head.appendChild(gameLink);
+        head.appendChild(gameScript);
     }
 
     // useTool(action){
@@ -258,6 +295,7 @@ class CookingBoard{
             }
             let newItem = {"name":name, "imageFileUrl":itemImg, "quantity":newQuant, "selected":true};
             this.addItem(newItem, "ingredient", []);
+            this.updateMenu();
         }
     }
 

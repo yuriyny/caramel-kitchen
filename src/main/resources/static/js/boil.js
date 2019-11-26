@@ -1,3 +1,7 @@
+
+
+
+
 //-----------SUBROUTINE_A------------//
 const subroutine_a = $("#subroutine_a");
 const meter = $("#meter_a");
