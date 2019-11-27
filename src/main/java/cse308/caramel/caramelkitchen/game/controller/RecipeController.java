@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
@@ -162,12 +163,17 @@ public class RecipeController {
         return modelAndView;
     }
 
+//    @ResponseBody
+//    @PostMapping(value= "/valid-actions")
+//    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, String> pair) {
+//        return recipeEditorService.retrieveValidToolActions(pair.get("ingredient"), pair.get("tool"));
+//    }
+
     @ResponseBody
     @PostMapping(value= "/valid-actions")
-    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, String> pair) {
-        return recipeEditorService.retrieveValidToolActions(pair.get("ingredient"), pair.get("tool"));
+    public List<String> getValidToolActionsForIngredient(@RequestBody List<String>ingredientIds, @RequestBody List<String>toolIds, @RequestBody List<IntermediateIngredient>intermediates) {
+        return recipeEditorService.retrieveValidToolActions(ingredientIds,toolIds,intermediates);
     }
-
 }
 
 
