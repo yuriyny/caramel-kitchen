@@ -96,24 +96,32 @@ public class RecipeEditorService {
                 return allActions.stream().filter(action->ingredientWL.getActions().contains(action)).collect(Collectors.toList());
         }
         //if has liquid or spice ingredient somewhere and bowl is available, then marinate
-        else if(ingredients.size()+intermediates.size()>1 && tools.size()==1 && tools.stream().allMatch(obj->obj.getName()=="bowl")){
+        else if(ingredients.size()+intermediates.size()>1 && tools.size()==1 && tools.stream().allMatch(obj->obj.getName().equals("bowl"))){
             //if previous action was mix and liquid/spice was present in that mix, then allow marinate
-            if(intermediates.size()>0 && intermediates.stream().anyMatch(obj-> obj.getTag() =="mix" && (obj.getIngredients().stream().anyMatch(ingredient -> ingredient.getType()=="liquid")||obj.getIngredients().stream().anyMatch(ingredient -> ingredient.getType()=="spice")))){
+            if(intermediates.size()>0 && intermediates.stream().anyMatch(obj-> obj.getTag().equals("mix") && (obj.getIngredients().stream().anyMatch(ingredient -> ingredient.getType().equals("liquid"))||obj.getIngredients().stream().anyMatch(ingredient -> ingredient.getType().equals("spice"))))){
                 return new ArrayList<>(Collections.singleton("mix"));
             }
             //if current list has a liquid or spice
-            if(ingredients.stream().anyMatch(obj->obj.getType()=="liquid")|| ingredients.stream().anyMatch(obj->obj.getType()=="spice")){
+            if(ingredients.stream().anyMatch(obj->obj.getType().equals("liquid"))|| ingredients.stream().anyMatch(obj->obj.getType().equals("spice"))){
                 return new ArrayList<>(Collections.singleton("mix"));
             }
         }
         //if list of ingredients+intermediate size >1, and bowl and spoon is there, then  add mix
-        else if(ingredients.size()+intermediates.size()>1 && tools.size()==2 && tools.stream().anyMatch(obj->obj.getName()=="bowl") && tools.stream().anyMatch(obj->obj.getName()=="spoon")){
+        else if(ingredients.size()+intermediates.size()>1 && tools.size()==2 && tools.stream().anyMatch(obj->obj.getName().equals("bowl")) && tools.stream().anyMatch(obj->obj.getName().equals("spoon"))){
             return new ArrayList<>(Collections.singleton("mix"));
         }
         //if spice is in the ingredient and the other ingredient isn't spice, have option to add spice
-        else if(ingredients.size()+intermediates.size()==2 && ingredients.stream().anyMatch(obj->obj.getType()=="spice")&&!ingredients.stream().allMatch(obj->obj.getType()=="spice")){
-            List<Ingredient> i=ingredients.stream().filter(obj->obj.getType()=="spice").collect(Collectors.toList());
+        else if(ingredients.size()+intermediates.size()==2 && ingredients.stream().anyMatch(obj->obj.getType().equals("spice"))&&!ingredients.stream().allMatch(obj->obj.getType().equals("spice"))){
+            List<Ingredient> i=ingredients.stream().filter(obj->obj.getType().equals("spice")).collect(Collectors.toList());
             return new ArrayList<>(Collections.singleton("add"+i.get(0)));
+        }
+        //if pan or pot and exists liquid, then boil is an option
+        else if((tools.stream().anyMatch(tool->tool.getName().equals("pan")) || tools.stream().anyMatch(tool->tool.getName().equals("pot"))) && ingredients.stream().anyMatch(obj->obj.getType().equals("liquid"))){
+            return new ArrayList<>(Collections.singleton("boil"));
+        }
+        //if pan and spatula and exists non liquid and non spice ingredient and oil exists, then saute is an option (NOT FINISHED)
+        else if(tools.stream().anyMatch(tool->tool.getName().equals("pan")) && tools.stream().anyMatch(tool->tool.getName().equals("spatula")) && ingredients.stream().anyMatch(ingredient -> ingredient.getType().equals("oil")) ){
+            return new ArrayList<>(Collections.singleton("boil"));
         }
         return new ArrayList<>();
 
