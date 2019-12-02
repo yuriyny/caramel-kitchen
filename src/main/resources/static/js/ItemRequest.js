@@ -2,11 +2,26 @@
  * create selection for "blacklist"?
  */
 class ItemRequest{
-    constructor(use, item_name, item_img_input, item_actions){
+    constructor(use, item_card, item_name, item_img_input, item_actions){
         this.use = use;
-        this.name = item_name;
-        this.img_input = item_img_input;
         this.actions = item_actions;
+
+        item_img_input.onchange = () =>{
+            let preview = item_card.children[0].firstChild;
+            let file = item_img_input.files[0];
+            let reader = new FileReader();
+
+            reader.onloadend = function(){
+                preview.src = reader.result;
+            }
+
+            if(file) { reader.readAsDataURL(file); }
+            else { preview.src = "/images/placeholder.png;"}
+        }
+
+        item_name.addEventListener("input", () =>{
+            item_card.children[1].children[0].textContent = item_name.value;
+        });
     }
 
     async getAllActions(select){

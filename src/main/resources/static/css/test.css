@@ -1,1 +1,50 @@
-123{}
+#game{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 60%;
+    margin: 50px auto;
+}
+
+.glow{
+    border-radius: 50%;
+    box-shadow: 0 0 30px 10px rgba(0,255,0,0.6);
+    background-color: rgba(0,255,0,0.6);
+}
+
+#ingredient-image{
+    position: absolute;
+    height: 220px;
+    width: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.game-comp{
+    width: 150px;
+    height: 150px;
+}
+
+#game i{
+    user-select: none;
+    font-size: 150px !important;
+}
+
+#count-down-bar{
+    height: 50px;
+    background: transparent;
+    position: relative;
+}
+
+#progress{
+    position: absolute;
+    height: 100%;
+    background: black;
+    animation: progression 3s;
+    animation-timing-function: linear;
+}
+
+@keyframes progression {
+    from{width: 0;}
+    to{width: 100%;}
+}

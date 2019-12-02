@@ -218,7 +218,16 @@ nav ul li a{
     overflow-x: auto;
 }
 
+.active-item > .card-image{
+    height: 145px;
+}
+
+.active-item > .card-image > img{
+    height: 100%;
+}
+
 .card-content{
+    height: 40%;
     user-select: none;
 }
 
@@ -280,10 +289,11 @@ nav ul li a{
     opacity: 1;
 }
 
-.card-select.selected{
-    opacity: 1;
-    background: rgba(30,144,255,0.4);
-    font-size: 0;
+.active-item.selected{
+    /*opacity: 1;*/
+    /*background: rgba(30,144,255,0.4);*/
+    box-shadow: -1px 1px 6px 6px rgba(0,0,155,0.4);
+    /*font-size: 0;*/
 }
 
 #cooking-board{
@@ -389,12 +399,6 @@ nav ul li a{
     min-width: 1540px;
 }
 
-#kitchen_sidebar_ingredients{
-    margin-top: 10px;
-    width: 96%;
-    font-size: 1.5em;
-}
-
 .kitchen_sidebar_info{
     margin: 10px 0 0 0;
     width: 96%;
@@ -405,6 +409,44 @@ nav ul li a{
 #item-board{
     overflow-y: auto;
     padding-top: 8px;
+}
+
+#ingredient-area{
+    overflow-y: auto;
+    height: 300px;
+}
+
+#tool-area{
+    overflow-y: auto;
+    height: 300px;
+}
+
+#processedItem-area{
+    overflow-y: auto;
+    height: 660px;
+}
+
+#game-area{
+    margin-top: 2%;
+    position: absolute;
+    height: 85%;
+    width: 80%;
+    border: 2px solid black;
+    text-align: center;
+}
+
+.completed{
+    background-color: rgba(0,225,0, 0.6);
+    text-decoration: line-through;
+}
+
+#mistake-counter{
+    position: relative;
+    margin: 10px auto;
+    padding: 10px;
+    width: 50%;
+    margin-right: 20px;
+    float: right;
 }
 
 

@@ -22,6 +22,9 @@ class CookingBoard{
         this.actions = [];
         // this.actionPair = {};
         this.saved = true;
+
+        this.relevent_id = null;
+        this.relevent_action = null;
     }
 
     /** MENU ADD ITEM---------------------------------*/
@@ -40,7 +43,8 @@ class CookingBoard{
         record["selected"] = item.selected ? true : false;
 
         const wrapper = document.createElement("div");
-        wrapper.setAttribute("class", "col s2");
+        if(Array.isArray(this.board_ul)){ wrapper.setAttribute("class", "col s4"); }
+        else { wrapper.setAttribute("class", "col s2"); }
 
         const card = document.createElement("div");
         card.setAttribute("class", "card waves-effect waves-teal active-item");
@@ -88,10 +92,10 @@ class CookingBoard{
 
         const card_select = document.createElement("div");
         card_select.setAttribute("class", "card-select");
-        if(item.selected) card_select.classList.add("selected");
+        if(item.selected) card.classList.add("selected");
         card_select.textContent = "Select";
         card_select.onclick = (e) => {
-            e.target.classList.toggle("selected");
+            e.target.parentNode.classList.toggle("selected");
             this.items[e.target.parentNode.id].selected = !this.items[e.target.parentNode.id].selected;
             this.groupItems();
         };
@@ -104,7 +108,15 @@ class CookingBoard{
         card.appendChild(card_menu);
         card.appendChild(card_select);
         wrapper.appendChild(card);
-        this.board_ul.appendChild(wrapper);
+
+        if(Array.isArray(this.board_ul)){
+            if(use === "ingredient") this.board_ul[0].appendChild(wrapper);
+            else if(use === "tool") this.board_ul[1].appendChild(wrapper);
+            else if(use === "processedItem") this.board_ul[2].appendChild(wrapper);
+            else{ console.log("invalid case"); }
+        } else {
+            this.board_ul.appendChild(wrapper);
+        }
 
         this.items[this.identifier] = record;
         this.identifier++;
@@ -168,52 +180,34 @@ class CookingBoard{
                     .then((response) => response.json())
                     .catch(e => {console.log("err ", e)});
 
-                // console.log(this.items[id].name);
-                // console.log(newActions);
-                // console.log(this.tools);
-
-                // if(!this.actionPair[tool.name]) {
-                //     this.actionPair[tool.name] = newActions;
-                // } else {
-                //     let updateList = [...this.actionPair[tool.name], ...newActions];
-                //     this.actionPair[tool.name] = updateList.filter((a,b) => updateList.indexOf(a) === b);
-                //     console.log(this.actionPair);
-                // }
-
-                // console.log(newActions);
-
                 for(let action of newActions){
                     const li = document.createElement("li");
                     li.setAttribute("class", "menu-option");
                     li.setAttribute("oncontextmenu", "return false");
                     li.textContent = action;
 
-                    if(!this.game_area) {
-                        li.onclick = (e) => {
-                            let action = e.target.textContent;
+                    li.onclick = (e) => {
+                        if(!this.game_area) {
                             let target = e.target.parentNode.parentNode.previousSibling.firstChild.textContent;
-                            this.recipe.addToRecipe(action, target);
 
-                            if (this.items[id].use === "processedItem") {
-                                this.addTag(id, action);
-                            } else {
-                                let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].img};
-                                this.addItem(newItem, "processedItem", action);
-                                this.updateMenu();
-                            }
+                            if(this.recipe){ this.recipe.addToRecipe(action, target); }
 
-                            // this.useTool(li.innerHTML);
+                            this.performAction(id, action);
                             this.saved = false;
-                        };
-                    } else {
-                        li.onclick = (e) => {
+                        } else {
+                            this.relevent_id = id;
+                            this.relevent_action = e.target.textContent;
+
+                            let item = e.target.parentNode.parentNode.parentNode;
+                            item.classList.add("game-in-progress");
+
                             const action = e.target.textContent;
                             // const action = "test";
                             const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
                             tab_instance.select("gameView");
                             this.playGame(action);
                         }
-                    }
+                    };
 
                     menu_ul.appendChild(li);
                 }
@@ -227,6 +221,28 @@ class CookingBoard{
                 menu_ul.appendChild(li);
             }
         }
+    }
+
+    performAction(id=this.relevent_id, action=this.relevent_action){
+        if (this.items[id].use === "processedItem") {
+            this.addTag(id, action, []);
+        } else {
+            let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].img};
+            this.addItem(newItem, "processedItem", action);
+            this.updateMenu();
+        }
+
+        if(this.game_area){
+            user_recipe.confirmStep(action, this.items[id].name, this.items[id].quantity);
+        }
+
+        this.relevent_id = null;
+        this.relevent_action = null;
+    }
+
+    failedAction(){
+        this.relevent_id = null;
+        this.relevent_action = null;
     }
 
     async playGame(action){
@@ -249,6 +265,9 @@ class CookingBoard{
         gameLink.href = "/" + game.presentationFilePath;
         head.appendChild(gameLink);
         head.appendChild(gameScript);
+
+        current_game_script = gameScript;
+        current_game_css = gameLink;
     }
 
     // useTool(action){

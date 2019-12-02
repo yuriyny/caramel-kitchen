@@ -31,11 +31,13 @@ class Instructions{
         else{li.setAttribute("class", "recipe-step");}
 
         const p = document.createElement("p");
+        action = action.charAt(0).toUpperCase() + action.substring(1);
         if(type === "instruction") {
             p.textContent = action + " " + target;
         } else {
             p.textContent = action;
         }
+        // p.textContent = p.textContent.split(" ").map(e => e[0].toUpperCase() + e.slice(1)).join(" ")
 
         const icon = document.createElement("i");
         icon.setAttribute("class", "material-icons right clear-btn");
@@ -68,5 +70,25 @@ class Instructions{
         }
 
         return recipe;
+    }
+
+    confirmStep(action, target, quantity=1){
+        let instruction = "";
+        action = action.charAt(0).toUpperCase() + action.substring(1);
+        instruction = action + " " + quantity + " " + target;
+        console.log("target instruction is: " + instruction);
+        for(let i = 0; i< this.recipe_ul.children.length; i++){
+            console.log("comparing with : " + this.recipe_ul.children[i].textContent);
+            if(this.recipe_ul.children[i].textContent === instruction){
+                this.recipe_ul.children[i].classList.add("completed");
+                return;
+            }
+            if(!this.recipe_ul.children[i].classList.contains("completed")){
+                break;
+            }
+        }
+        console.log(this.recipe_ul.children);
+
+        M.toast({html: "That wasn't the correct action though!", displayLength: 1500});
     }
 }

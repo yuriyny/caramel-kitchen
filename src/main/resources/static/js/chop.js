@@ -1,90 +1,152 @@
 {
-    const game_area_div = document.querySelector("#gameView");
+    const game_area_div = document.querySelector("#game-area");
 
-    const wrapper = document.createElement("div");
-    wrapper.setAttribute("id", "subroutine_b");
+    const title = document.createElement("h1");
+    title.textContent = "title placeholder";
 
-    const meter = document.createElement("div");
-    meter.setAttribute("id", "meter_b");
+    const instructions = document.createElement("h3");
+    instructions.textContent = "Don't be impatient! Click when the bar turn green!";
 
-    const target_div = document.createElement("div");
-    target_div.setAttribute("id", "target");
+    const counter = document.createElement("h1");
+    counter.textContent = "countdown";
+    let timer = null;
 
-    const score = document.createElement("p");
-    score.setAttribute("class", "score");
-    score.textContent = "score";
+    game_area_div.appendChild(title);
+    game_area_div.appendChild(instructions);
+    game_area_div.appendChild(counter);
 
-    target_div.appendChild(score);
-    wrapper.appendChild(meter);
-    wrapper.appendChild(target_div);
-    game_area_div.append(wrapper);
+    let score = 0;
+    countdown(3);
 
+    function countdown(value){
+        counter.textContent = "Game will start in " + value;
+        if(value < 1){
+            clearTimeout(timer);
+            // counter.textContent = "placeholder";
+            counter.parentNode.removeChild(counter);
+            loadGame();
+        } else {
+            value--;
+            timer = setTimeout(() => countdown(value), 1000);
+        }
+    }
 
-    //-----------SUBROUTINE_B------------//
-    const subroutine_b = $("#subroutine_b");
-    const meter_blank = $("#meter_blank");
-    const target = $("#target");
-    const initWidth = 300;
-    let iters = 0;
-    const iterLimit = 5;
+    function loadGame(){
+        const game = document.createElement("div");
+        game.setAttribute("id", "game");
 
-    let targetVal = Math.floor(Math.random() * 501) + 50;
-    $("#target").css("left", targetVal);
-    $("#target").addClass("shrink_animation");
+        const ingredient_img = document.createElement("img");
+        ingredient_img.setAttribute("id", "ingredient-image");
+        const img = document.getElementsByClassName("game-in-progress")[0].firstChild.firstChild.src;
+        ingredient_img.setAttribute("src", img);
+        ingredient_img.setAttribute("draggable", false);
 
-    $("#target").mousedown(function () {
-        if ($("#target").width() === 0) return;
+        const target1 = document.createElement("div");
+        target1.setAttribute("id", "target1");
+        target1.setAttribute("class", "target");
 
-        iters++;
-        let targetwidth = parseFloat(window.getComputedStyle($("#target")[0]).getPropertyValue("width"));
-        let value = (1 - (targetwidth / initWidth)).toFixed(2);
-        $("#target > p")[0].textContent = value;
-        recipe_score += parseFloat(value);
-        $("#target > p").show();
-        // $("#target > p").css("animation-play-state", "running");
-        $("#target > p").addClass("showScore_animation");
-        $("#target").removeClass("shrink_animation");
+        const target2 = document.createElement("div");
+        target2.setAttribute("id", "target2");
+        target2.setAttribute("class", "target");
 
-        setTimeout(function () {
-            if (iters < iterLimit) {
-                let targetVal = Math.floor(Math.random() * 501) + 50;
-                $("#target").css("left", targetVal);
-                // $("#target")[0].style.animation = '';
-                $("#target").addClass("shrink_animation");
-            } else {
-                endGame();
-            }
-            $("#target > p").css("display", "none");
-        }, 1000);
-    })
-    $("#target")[0].addEventListener("animationend", function () {
-        if ($("#target")[0] !== event.target) return;  //if picks up the slider p animation, ignore this.
+        const target3 = document.createElement("div");
+        target3.setAttribute("id", "target3");
+        target3.setAttribute("class", "target");
 
-        iters++;
-        $("#target > p")[0].textContent = "Failed";
-        $("#target > p").show();
-        // $("#target > p").css("animation-play-state", "running");
-        $("#target > p").addClass("showScore_animation");
-        $("#target").removeClass("shrink_animation");
+        const target4 = document.createElement("div");
+        target4.setAttribute("id", "target4");
+        target4.setAttribute("class", "target");
 
-        setTimeout(function () {
-            if (iters < iterLimit) {
-                let targetVal = Math.floor(Math.random() * 501) + 50;
-                $("#target").css("left", targetVal);
-                $("#target").addClass("shrink_animation");
-            } else {
-                endGame();
-            }
-            $("#target > p").css("display", "none");
-        }, 1000);
-    }, false);
+        const target5 = document.createElement("div");
+        target5.setAttribute("id", "target5");
+        target5.setAttribute("class", "target");
 
+        game.appendChild(ingredient_img);
+        game.appendChild(target1);
+        game.appendChild(target2);
+        game.appendChild(target3);
+        game.appendChild(target4);
+        game.appendChild(target5);
 
-    function endGame() {
+        game_area_div.appendChild(game);
+
+        playGame();
+    }
+
+    function playGame(){
+        const init_width = 350 * 0.4;
+        const chopAt = [350 * 0.83, 350 * 0.67, 350 * 0.5, 350 * 0.33, 350 * 0.16];
+        let target_cnt = 1;
+        let targets = [$("#target1"), $("#target2"), $("#target3"), $("#target4"), $("#target5")]
+        $("#target" + target_cnt).css("left", chopAt.pop());
+        $("#target" + target_cnt).addClass("shrink_animation");
+
+        for(let target of targets) {
+            target.mousedown(function () {
+                if ($("#target" + target_cnt).width() === 0) return;
+
+                let targetwidth = parseFloat(window.getComputedStyle($("#target" + target_cnt)[0]).getPropertyValue("width"));
+                if (targetwidth < init_width * 0.6) {
+                    score++;
+                } else {
+                    $("#target" + target_cnt).addClass("fail");
+                }
+                $("#target" + target_cnt).css("-webkit-animation-play-state", "paused");
+                // $("#target").removeClass("shrink_animation");
+
+                setTimeout(function () {
+                    if (chopAt.length) {
+                        target_cnt++;
+                        $("#target" + target_cnt).css("left", chopAt.pop());
+                        $("#target" + target_cnt).addClass("shrink_animation");
+                    } else {
+                        endGame();
+                    }
+                }, 400);
+            });
+
+            target[0].addEventListener("animationend", function () {
+
+                $("#target" + target_cnt).css("-webkit-animation-play-state", "paused");
+                // $("#target").removeClass("shrink_animation");
+
+                setTimeout(function () {
+                    if (chopAt.length) {
+                        target_cnt++;
+                        $("#target" + target_cnt).css("left", chopAt.pop());
+                        $("#target" + target_cnt).addClass("shrink_animation");
+                    } else {
+                        endGame();
+                    }
+                }, 400);
+            }, false);
+        }
+    }
+
+    function endGame(){
         const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
         tab_instance.select("items");
-        let sub = document.querySelector("#subroutine_b");
-        sub.parentNode.removeChild(sub);
-        console.log("recipe score is now " + recipe_score);
+
+        while(game_area_div.firstChild){game_area_div.removeChild(game_area_div.firstChild);}
+
+        console.log("you scored " + score);
+
+        if(score > 3){
+            M.toast({html: 'Good job!'});
+            itemBoard.performAction();
+        } else {
+            const elem = document.getElementById("mistakes");
+            let val = parseInt(elem.textContent) + 1;
+            elem.textContent = val;
+            M.toast({html: 'You can do better. Try again!'});
+            itemBoard.failedAction();
+        }
+
+        for(let item of document.getElementsByClassName("game-in-progress")){
+            item.classList.remove("game-in-progress");
+        }
+
+        current_game_css.parentNode.removeChild(current_game_css);
+        current_game_script.parentNode.removeChild(current_game_script);
     }
 }

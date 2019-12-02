@@ -9,7 +9,7 @@
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
 
     <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!--Import materialize.css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -48,31 +48,57 @@
         </div>
 
         <div class="col s10" id="items">
-            <div id="item-board" class="row">
-<!--                <div class="col s4 m3 l2">-->
-<!--                    <div class="ingredient card waves-effect waves-light active-item">-->
-<!--                        <div class="card-image"><img src="images/placeholder.png"></div>-->
-<!--                        <div class="card-content center"><p>apple</p></div>-->
-<!--                        <div class="card-menu">-->
-<!--                            <ul id="card-menu-ul">-->
-<!--                                <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
-<!--                                <li class="menu-option" oncontextmenu="return false">Menu-option</li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+            <div class="row">
+                <div id="item-search" class="col s3">
+                    <h4>Item Search</h4>
+                    <div class="col s12 input-field">
+                        <input id="item-search-keyword" type="text">
+                        <label for="item-search-keyword">search for...</label>
+                    </div>
+                    <ul id="item-search-results" class="col s12 collection">
+                        <!--                <li class="collection-item">item</li>-->
+                    </ul>
+                </div>
+                <div class="col s9">
+                    <div id="item-board" class="row">
+                        <div class="col s6">
+                            <div id="ingredient-area" class="row">
+
+                            </div>
+                            <div id="tool-area" class="row">
+
+                            </div>
+                        </div>
+                        <div id="processedItem-area" class="col s6">
+
+                        </div>
+        <!--                <div class="col s4 m3 l2">-->
+        <!--                    <div class="ingredient card waves-effect waves-light active-item">-->
+        <!--                        <div class="card-image"><img src="images/placeholder.png"></div>-->
+        <!--                        <div class="card-content center"><p>apple</p></div>-->
+        <!--                        <div class="card-menu">-->
+        <!--                            <ul id="card-menu-ul">-->
+        <!--                                <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
+        <!--                                <li class="menu-option" oncontextmenu="return false">Menu-option</li>-->
+        <!--                            </ul>-->
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="col s10" id="gameView">
-
+            <div id="game-area">
+<!--                <h1>temp</h1>-->
+<!--                <h2>instruction</h2>-->
+<!--                <h1>countdown</h1>-->
+            </div>
         </div>
 
         <div class="col s2">
             <div id="kitchen_sidebar" class="row">
-                <div id="kitchen_sidebar_ingredients" class="col s12 waves-effect waves-orange btn-large orange lighten-2">
-                    Ingredients
-                </div>
 <!--                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Timer</span>-->
 <!--                </div>-->
 <!--                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Score</span>-->
@@ -90,6 +116,10 @@
                         <li class="recipe-step" th:each="step:${game.recipe.subprocedureList}" th:text="${step.instructions}"></li>
                     </ul>
                 </div>
+                <div id="mistake-counter" class="card-panel orange lighten-2 col s12">
+                    Mistakes: <span id="mistakes">0</span>
+                </div>
+                <a class="waves-effect waves-light btn-large col s12">Finish</a>
             </div>
         </div>
     </div>
@@ -100,6 +130,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="/js/CookingBoard.js"></script>
 <script src="/js/Instructions.js"></script>
+<script src="/js/ItemSelection.js"></script>
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const materialize_tab = document.querySelectorAll(".tabs");
@@ -111,19 +142,32 @@
     let game = [[${game}]];
     console.log(game);
 
+    let current_game_script = null;
+    let current_game_css = null;
+
     const user_recipe_ul = document.querySelector("#recipe_ul");
-    const user_recipe = new Instructions(user_recipe_ul, []);
+    const user_recipe_steps = [[${game.recipe.subprocedureList}]];
+    const user_recipe = new Instructions(user_recipe_ul, user_recipe_steps);
 
     const item_board = document.querySelector("#item-board");
+    const ingredient_area = document.querySelector("#ingredient-area");
+    const tool_area = document.querySelector("#tool-area");
+    const processedItem_area = document.querySelector("#processedItem-area");
+    const board_areas = [ingredient_area, tool_area, processedItem_area];
     const game_area = document.querySelector("#gameView");
-    const itemBoard = new CookingBoard(item_board, user_recipe, game_area);
-    for(let tool of game.recipe.kitchenTools){
-        itemBoard.addItem(tool, "tool");
-    }
-    for(let ingredient of game.recipe.ingredients){
-        itemBoard.addItem(ingredient, "ingredient");
-    }
-    itemBoard.updateMenu();
+    const itemBoard = new CookingBoard(board_areas, null, game_area);
+    // for(let tool of game.recipe.kitchenTools){
+    //     itemBoard.addItem(tool, "tool");
+    // }
+    // for(let ingredient of game.recipe.ingredients){
+    //     itemBoard.addItem(ingredient, "ingredient");
+    // }
+    // itemBoard.updateMenu();
+
+    const search_input = document.querySelector("#item-search-keyword");
+    const search_ul = document.querySelector("#item-search-results");
+    const itemSelection = new ItemSelection(search_input, search_ul, itemBoard);
+    itemSelection.searchAllQuery();
 </script>
 
 </body>
