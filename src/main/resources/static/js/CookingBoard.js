@@ -183,6 +183,8 @@ class CookingBoard{
                     .then((response) => response.json())
                     .catch(e => {console.log("err ", e)});
 
+                console.log(newActions);
+
                 for(let action of newActions){
                     if(actionList.includes(action)) continue;
 
