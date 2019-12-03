@@ -25,22 +25,21 @@ class ItemRequest{
     }
 
     async getAllActions(select){
-        // make fetch request here for actions
         const actions = await fetch("/actions", {
             method: "GET",
             contentType: "text/plain"
         })
             .then(response => response.json())
             .catch((e)=>{console.log("err " + e)});
-        console.log(actions)
+        // console.log(actions);
 
-        for(let action of actions){
+        let uniqueActions = [... new Set(actions)];
+        for(let action of uniqueActions){
             const opt = document.createElement("option");
             opt.value = action;
             opt.textContent = action;
             select.appendChild(opt);
         }
-        // return ["option 1", "option 2", "option 3"];
         return actions;
     }
 

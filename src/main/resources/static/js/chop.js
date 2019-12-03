@@ -5,7 +5,7 @@
     title.textContent = "title placeholder";
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Don't be impatient! Click when the bar turn green!";
+    instructions.textContent = "Click when the bars when they turn green!";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";

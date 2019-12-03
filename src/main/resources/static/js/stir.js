@@ -5,7 +5,7 @@
     title.textContent = "title placeholder";
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Click when the heat has spread enough!";
+    instructions.textContent = "Mash your arrow keys to stir!";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
@@ -22,7 +22,7 @@
         counter.textContent = "Game will start in " + value;
         if(value < 1){
             clearTimeout(timer);
-            // counter.textContent = "placeholder";
+            // counter.textContent = "MASH!";
             counter.parentNode.removeChild(counter);
             loadGame();
         } else {
@@ -32,8 +32,21 @@
     }
 
     function loadGame(){
+        const countdownBar = document.createElement("div");
+        countdownBar.setAttribute("id", "count-down-bar");
+
+        const progress = document.createElement("div");
+        progress.setAttribute("id", "progress");
+
         const game = document.createElement("div");
         game.setAttribute("id", "game");
+
+        const leftDiv = document.createElement("div");
+        leftDiv.setAttribute("class", "game-comp glow");
+        leftDiv.setAttribute("id", "left-indicator");
+        const leftArrow = document.createElement("i");
+        leftArrow.setAttribute("class", "material-icons");
+        leftArrow.textContent = "keyboard_arrow_left";
 
         const ingredient_img = document.createElement("img");
         ingredient_img.setAttribute("id", "ingredient-image");
@@ -41,37 +54,54 @@
         ingredient_img.setAttribute("src", img);
         ingredient_img.setAttribute("draggable", false);
 
-        const fog = document.createElement("div");
-        fog.setAttribute("id", "fog");
+        const rightDiv = document.createElement("div");
+        rightDiv.setAttribute("class", "game-comp");
+        rightDiv.setAttribute("id", "right-indicator");
+        const rightArrow = document.createElement("i");
+        rightArrow.setAttribute("class", "material-icons");
+        rightArrow.textContent = "keyboard_arrow_right";
 
+        countdownBar.appendChild(progress);
+        leftDiv.appendChild(leftArrow);
+        rightDiv.appendChild(rightArrow);
+        game.appendChild(leftDiv);
         game.appendChild(ingredient_img);
-        game.appendChild(fog);
+        game.appendChild(rightDiv);
 
+        game_area_div.appendChild(countdownBar);
         game_area_div.appendChild(game);
 
         playGame();
     }
 
     function playGame(){
-        const delay = Math.floor((Math.random() * 4) + 3);
-        // document.getElementById("fog").style["animation-duration"] = "10s";
-        $("#fog").css("-webkit-animation-duration", delay + "s");
-        $("#fog").addClass("expand_animation");
+        document.addEventListener("keydown", shake);
+        setTimeout(endGame, 3000);
+    }
 
-        $("#game").mousedown(function () {
-            let fogOpacity = parseFloat(window.getComputedStyle($("#fog")[0]).getPropertyValue("opacity"));
-            if(fogOpacity > 0.26 && fogOpacity < 0.33){
-                score++;
-            }
-            endGame();
-        });
-
-        $("#fog")[0].addEventListener("animationend", function(){
-            endGame();
-        });
+    function shake(e){
+        const left = document.getElementById("left-indicator");
+        const right = document.getElementById("right-indicator");
+        const img = document.getElementById("ingredient-image");
+        const shift = Math.floor((Math.random() * 1) + 2);
+        if(e.key === "ArrowLeft" && left.classList.contains("glow")){
+            score++;
+            img.style.left = (50 - shift) + "%";
+            left.classList.remove("glow");
+            right.classList.add("glow");
+        }
+        else if(e.key === "ArrowRight" && right.classList.contains("glow")){
+            score++;
+            img.style.left = (50 + shift) + "%";
+            right.classList.remove("glow");
+            left.classList.add("glow");
+        }
+        console.log("score: " + score);
     }
 
     function endGame(){
+        document.removeEventListener("keydown", shake);
+
         const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
         tab_instance.select("items");
 
@@ -79,7 +109,7 @@
 
         console.log("you scored " + score);
 
-        if(score > 0){
+        if(score > 25){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
         } else {

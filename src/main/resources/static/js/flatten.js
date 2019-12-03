@@ -5,11 +5,12 @@
     title.textContent = "title placeholder";
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Click when the heat has spread enough!";
+    instructions.textContent = "Mash space to flatten the ingredient!";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
     let timer = null;
+    let game_interval = null;
 
     game_area_div.appendChild(title);
     game_area_div.appendChild(instructions);
@@ -32,6 +33,12 @@
     }
 
     function loadGame(){
+        const countdownBar = document.createElement("div");
+        countdownBar.setAttribute("id", "count-down-bar");
+
+        const progress = document.createElement("div");
+        progress.setAttribute("id", "progress");
+
         const game = document.createElement("div");
         game.setAttribute("id", "game");
 
@@ -41,45 +48,53 @@
         ingredient_img.setAttribute("src", img);
         ingredient_img.setAttribute("draggable", false);
 
-        const fog = document.createElement("div");
-        fog.setAttribute("id", "fog");
-
+        countdownBar.appendChild(progress);
         game.appendChild(ingredient_img);
-        game.appendChild(fog);
 
+        game_area_div.appendChild(countdownBar);
         game_area_div.appendChild(game);
 
         playGame();
     }
 
     function playGame(){
-        const delay = Math.floor((Math.random() * 4) + 3);
-        // document.getElementById("fog").style["animation-duration"] = "10s";
-        $("#fog").css("-webkit-animation-duration", delay + "s");
-        $("#fog").addClass("expand_animation");
-
-        $("#game").mousedown(function () {
-            let fogOpacity = parseFloat(window.getComputedStyle($("#fog")[0]).getPropertyValue("opacity"));
-            if(fogOpacity > 0.26 && fogOpacity < 0.33){
-                score++;
-            }
-            endGame();
-        });
-
-        $("#fog")[0].addEventListener("animationend", function(){
-            endGame();
-        });
+        document.addEventListener("keydown", flatten);
+        game_interval = window.setInterval(unflatten, 25);
+        timer = setTimeout(() => endGame(false), 3000);
     }
 
-    function endGame(){
+    function unflatten(){
+        const img = document.getElementById("ingredient-image");
+        let height = img.offsetHeight;
+        let width = img.offsetWidth;
+        if(img.height < 280) {
+            img.style.height = (height + 1) + "px";
+            img.style.width = (width - 1) + "px";
+        }
+    }
+
+    function flatten(e){
+        const img = document.getElementById("ingredient-image");
+        let newHeight = img.offsetHeight - 25;
+        let newWidth = img.offsetWidth + 25;
+        if(e.keyCode === 32){
+            if(newHeight < 0) endGame(true);
+            img.style.height = newHeight + "px";
+            img.style.width = newWidth + "px";
+        }
+    }
+
+    function endGame(success){
+        clearTimeout(game_interval);
+        clearTimeout(timer);
+        document.removeEventListener("keydown", flatten);
+
         const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
         tab_instance.select("items");
 
         while(game_area_div.firstChild){game_area_div.removeChild(game_area_div.firstChild);}
 
-        console.log("you scored " + score);
-
-        if(score > 0){
+        if(success){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
         } else {
@@ -97,4 +112,5 @@
         current_game_css.parentNode.removeChild(current_game_css);
         current_game_script.parentNode.removeChild(current_game_script);
     }
+
 }

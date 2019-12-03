@@ -122,6 +122,8 @@ class CookingBoard{
         this.identifier++;
 
         console.log(this.items);
+        console.log(this.tools);
+        console.log(this.actions);
     }
 
     addTag(itemKey, tag) {
@@ -167,6 +169,7 @@ class CookingBoard{
                 menu_ul.removeChild(menu_ul.firstChild);
             }
 
+            let actionList = [];
             for(const tool of this.tools){
                 let data = {"ingredient": this.items[id].name, "tool": tool.name};
                 const newActions = await fetch("/valid-actions", {
@@ -181,6 +184,8 @@ class CookingBoard{
                     .catch(e => {console.log("err ", e)});
 
                 for(let action of newActions){
+                    if(actionList.includes(action)) continue;
+
                     const li = document.createElement("li");
                     li.setAttribute("class", "menu-option");
                     li.setAttribute("oncontextmenu", "return false");
@@ -202,13 +207,14 @@ class CookingBoard{
                             item.classList.add("game-in-progress");
 
                             const action = e.target.textContent;
-                            // const action = "test";
+                            // const action = "drizzle";
                             const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
                             tab_instance.select("gameView");
                             this.playGame(action);
                         }
                     };
 
+                    actionList.push(action);
                     menu_ul.appendChild(li);
                 }
             }
