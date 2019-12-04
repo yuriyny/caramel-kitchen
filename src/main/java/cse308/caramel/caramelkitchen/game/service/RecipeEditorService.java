@@ -80,13 +80,15 @@ public class RecipeEditorService {
         ingredientRepository.save(ingredient);
     }
 
-    public List<String> retrieveValidToolActions(List<String> ingredientIds,List<String> toolIds,  List<IntermediateIngredient>intermediates) {
+    public List<String> retrieveValidToolActions(List<String> ingredientIds,List<String> toolIds,  List<IntermediateIngredient> intermediates) {
 
         List<Ingredient>ingredients=new ArrayList<>();
-        ingredientIds.stream().forEach(obj->ingredients.add(ingredientRepository.findById(obj).get()));
+        ingredientIds.stream().forEach(obj->{
+            ingredients.add(ingredientRepository.findByName(obj).get());
+        });
 
         List<KitchenTool>tools=new ArrayList<>();
-        toolIds.stream().forEach(obj->tools.add(kitchenToolRepository.findById(obj).get()));
+        toolIds.stream().forEach(obj->tools.add(kitchenToolRepository.findByName(obj).get()));
 
         //if size of ingredients ==1 and size of intermediates==0 and size of tools==1 check whitelist
         if(ingredients.size()==1 && intermediates.size()==0 && tools.size()==1){

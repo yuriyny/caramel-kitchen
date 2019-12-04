@@ -7,11 +7,14 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Repository
 public interface IngredientRepository extends MongoRepository<Ingredient, String> {
     @Query("{}")
-    Collection<KitchenTool> findAllIngredients();
+    Collection<Ingredient> findAllIngredients();
     @Query("{name : {$regex: ?0, $options: 'i'}}")
-    Collection<KitchenTool> findAllIngredientsContainingString(String name);
+    Collection<Ingredient> findAllIngredientsContainingString(String name);
+    @Query("{name: ?0}")
+    Optional<Ingredient> findByName (String name);
 }

@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.search.service;
 
+import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
 import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
@@ -31,7 +32,7 @@ public class SearchService {
     public List<Recipe> getPublishedRecipes(String search){
         return new ArrayList<>(recipeRepository.findAllRecipesContainingString(search));
     }
-    public List<KitchenTool> getIngredients(String search){
+    public List<Ingredient> getIngredients(String search){
         return new ArrayList<>(ingredientRepository.findAllIngredientsContainingString(search));
     }
     public List<KitchenTool> getKitchenTools(String search){

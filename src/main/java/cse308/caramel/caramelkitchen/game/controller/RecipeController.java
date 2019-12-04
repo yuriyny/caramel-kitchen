@@ -198,9 +198,10 @@ public class RecipeController {
 
     @ResponseBody
     @PostMapping(value= "/valid-actions")
-    public List<String> getValidToolActionsForIngredient(@RequestBody List<String>ingredientIds, @RequestBody List<String>toolIds, @RequestBody List<IntermediateIngredient>intermediates) {
-        return recipeEditorService.retrieveValidToolActions(ingredientIds,toolIds,intermediates);
+    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, List<?>> pair) {
+        return recipeEditorService.retrieveValidToolActions((List<String>) pair.get("ingredient"), (List<String>) pair.get("tool"), (List<IntermediateIngredient>) pair.get("intermediateIngredient"));
     }
+
 }
 
 

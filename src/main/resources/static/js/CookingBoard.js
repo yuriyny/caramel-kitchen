@@ -171,7 +171,7 @@ class CookingBoard{
 
             let actionList = [];
             for(const tool of this.tools){
-                let data = {"ingredient": this.items[id].name, "tool": tool.name};
+                let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
                 const newActions = await fetch("/valid-actions", {
                     method: "POST",
                     body: JSON.stringify(data),
