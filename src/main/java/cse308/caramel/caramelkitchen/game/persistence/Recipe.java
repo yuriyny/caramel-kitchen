@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.game.persistence;
 
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -24,14 +25,15 @@ public class Recipe {
     private Collection<Ingredient> ingredients;
     @DBRef
     private Collection<KitchenTool> kitchenTools;
-    //completed recipe sets this field to false
+    private Collection<IntermediateIngredient> intermediateIngredients;
     private Boolean isPublished = true;
     private List<Subprocedure> subprocedureList;
-
     // + maintain another list that contains subprocedures any playing user MUST complete to pass the recipe
     private List<Subprocedure> requiredSubproceduresList;
+
     public Recipe(){
         ingredients=new ArrayList<>();
+        intermediateIngredients=new ArrayList<>();
         kitchenTools=new ArrayList<>();
         subprocedureList=new ArrayList<>();
     }

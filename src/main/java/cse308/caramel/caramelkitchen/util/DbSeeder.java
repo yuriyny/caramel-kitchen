@@ -262,6 +262,17 @@ public class DbSeeder implements CommandLineRunner {
         user.getRecipesCreated().add(recipe);
         userDomainService.saveUser(user);
 
+        Recipe recipe1=new Recipe();
+        recipe1.setCreator(user.getUsername());
+        recipe1.setRecipeName("Chopping Carrot 2 Recipe");
+        recipe1.getSubprocedureList().add(chopCarrot);
+        recipe1.setIsPublished(true);
+        recipe1.getIngredients().add(carrot);
+        recipe1.getKitchenTools().add(knife);
+        recipe1.setParentId(recipe.getId());
+        recipeService.saveRecipe(recipe1,user.getUsername());
+        user.getRecipesCreated().add(recipe1);
+        userDomainService.saveUser(user);
 
 //        mongoTemplate.insert(recipe);
 

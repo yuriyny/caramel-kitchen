@@ -1,6 +1,7 @@
 package cse308.caramel.caramelkitchen.game.service;
 
 import cse308.caramel.caramelkitchen.game.model.GameState;
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.Game;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.repository.GameRepository;
@@ -23,11 +24,11 @@ public class GameService {
         gameRepository.save(game);
         return game;
     }
-    public void saveGameProgress(String gameId, String recipeId, List<String>stepsCompleted,List<Double> scores){
+    public void saveGameProgress(String gameId, String recipeId, List<IntermediateIngredient> intermediateIngredients,List<Double> scores){
         GameState gameState=new GameState();
         gameState.setGameId(gameId);
         gameState.setRecipeId(recipeId);
-        gameState.setStepsCompleted(stepsCompleted);
+        gameState.setIntermediateIngredients(intermediateIngredients);
         gameState.setScores(scores);
         Game game=getGame(gameId);
         game.setGameState(gameState);

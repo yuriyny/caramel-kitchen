@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
@@ -91,7 +92,7 @@ public class RecipeController {
      * @param recipe
      */
     @ResponseBody
-    @PostMapping(path={"/create-recipe"})
+    @PostMapping(path={"/create-recipe","/extend-recipe"})
     public void createRecipe(@RequestBody Recipe recipe,Principal principal){
         recipe=recipeService.saveRecipe(recipe,principal.getName());
         userDomainService.addRecipeToUser(principal.getName(),recipe);
@@ -103,11 +104,38 @@ public class RecipeController {
         userDomainService.deleteRecipeFromUser(recipe);
     }
 
+//    @ResponseBody
+//    @PostMapping(path={"/extend-recipe"})
+//    public void extendRecipe(Recipe recipe){
+////        RecipeRevisionHistory recipeRevisionHistory=new RecipeRevisionHistory();
+//
+//    }
     @ResponseBody
-    @PostMapping(path={"/extend-recipe"})
-    public void extendRecipe(Recipe recipe){
-//        RecipeRevisionHistory recipeRevisionHistory=new RecipeRevisionHistory();
+    @PostMapping(path={"/get-recipe-history"})
+    public List<Recipe>getRecipeHistory(@RequestBody String recipeId){
+        Recipe recipe=recipeService.findRecipe(recipeId);
+        if(recipe.getParentId()==null){
+            List<Recipe>returnList=new ArrayList<>();
+            returnList.add(recipe);
+            return returnList;
+        }else{
+            List<Recipe> parentRecipeList=getRecipeHistory(recipe.getParentId());
+            parentRecipeList.add(recipe);
+            return parentRecipeList;
+        }
+    }
 
+    @ResponseBody
+    @PostMapping(path={"/get-recipe-children"})
+    public List<Recipe>getRecipeChildren(@RequestBody String recipeId){
+        List<Recipe>returnRecipe=new ArrayList<>();
+        List<Recipe>recipes=recipeService.findAllPublishedRecipe();
+        for(Recipe recipe:recipes){
+            if(recipe.getParentId()!=null && recipe.getParentId().equals(recipeId)){
+                returnRecipe.add(recipe);
+            }
+        }
+        return returnRecipe;
     }
 
     public Recipe getRecipeContent(String s){
@@ -162,12 +190,17 @@ public class RecipeController {
         return modelAndView;
     }
 
+//    @ResponseBody
+//    @PostMapping(value= "/valid-actions")
+//    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, String> pair) {
+//        return recipeEditorService.retrieveValidToolActions(pair.get("ingredient"), pair.get("tool"));
+//    }
+
     @ResponseBody
     @PostMapping(value= "/valid-actions")
-    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, String> pair) {
-        return recipeEditorService.retrieveValidToolActions(pair.get("ingredient"), pair.get("tool"));
+    public List<String> getValidToolActionsForIngredient(@RequestBody List<String>ingredientIds, @RequestBody List<String>toolIds, @RequestBody List<IntermediateIngredient>intermediates) {
+        return recipeEditorService.retrieveValidToolActions(ingredientIds,toolIds,intermediates);
     }
-
 }
 
 
