@@ -5,7 +5,7 @@
     title.textContent = "title placeholder";
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Click when the bars when they turn green!";
+    instructions.textContent = "Press space when the bar is closest to the center!";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
@@ -41,32 +41,11 @@
         ingredient_img.setAttribute("src", img);
         ingredient_img.setAttribute("draggable", false);
 
-        const target1 = document.createElement("div");
-        target1.setAttribute("id", "target1");
-        target1.setAttribute("class", "target");
-
-        const target2 = document.createElement("div");
-        target2.setAttribute("id", "target2");
-        target2.setAttribute("class", "target");
-
-        const target3 = document.createElement("div");
-        target3.setAttribute("id", "target3");
-        target3.setAttribute("class", "target");
-
-        const target4 = document.createElement("div");
-        target4.setAttribute("id", "target4");
-        target4.setAttribute("class", "target");
-
-        const target5 = document.createElement("div");
-        target5.setAttribute("id", "target5");
-        target5.setAttribute("class", "target");
+        const target = document.createElement("div");
+        target.setAttribute("id", "target");
 
         game.appendChild(ingredient_img);
-        game.appendChild(target1);
-        game.appendChild(target2);
-        game.appendChild(target3);
-        game.appendChild(target4);
-        game.appendChild(target5);
+        game.appendChild(target);
 
         game_area_div.appendChild(game);
 
@@ -74,64 +53,29 @@
     }
 
     function playGame(){
-        const init_width = 350 * 0.4;
-        const chopAt = [350 * 0.83, 350 * 0.67, 350 * 0.5, 350 * 0.33, 350 * 0.16];
-        let target_cnt = 1;
-        let targets = [$("#target1"), $("#target2"), $("#target3"), $("#target4"), $("#target5")]
-        $("#target" + target_cnt).css("left", chopAt.pop());
-        $("#target" + target_cnt).addClass("shrink_animation");
+        document.addEventListener("keydown", chopDown);
+    }
 
-        for(let target of targets) {
-            target.mousedown(function () {
-                if ($("#target" + target_cnt).width() === 0) return;
-
-                let targetwidth = parseFloat(window.getComputedStyle($("#target" + target_cnt)[0]).getPropertyValue("width"));
-                if (targetwidth < init_width * 0.6) {
-                    score++;
-                } else {
-                    $("#target" + target_cnt).addClass("fail");
-                }
-                $("#target" + target_cnt).css("-webkit-animation-play-state", "paused");
-                // $("#target").removeClass("shrink_animation");
-
-                setTimeout(function () {
-                    if (chopAt.length) {
-                        target_cnt++;
-                        $("#target" + target_cnt).css("left", chopAt.pop());
-                        $("#target" + target_cnt).addClass("shrink_animation");
-                    } else {
-                        endGame();
-                    }
-                }, 400);
-            });
-
-            target[0].addEventListener("animationend", function () {
-
-                $("#target" + target_cnt).css("-webkit-animation-play-state", "paused");
-                // $("#target").removeClass("shrink_animation");
-
-                setTimeout(function () {
-                    if (chopAt.length) {
-                        target_cnt++;
-                        $("#target" + target_cnt).css("left", chopAt.pop());
-                        $("#target" + target_cnt).addClass("shrink_animation");
-                    } else {
-                        endGame();
-                    }
-                }, 400);
-            }, false);
+    function chopDown(e){
+        const width = 350;
+        const targetPos = parseFloat(window.getComputedStyle($("#target")[0]).getPropertyValue("left"));
+        console.log(targetPos);
+        if(targetPos > width * 0.35 && targetPos < width * 0.65){
+            endGame(true);
+        } else {
+            endGame(false);
         }
     }
 
-    function endGame(){
+    function endGame(success){
+        document.removeEventListener("keydown", chopDown);
+
         const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
         tab_instance.select("items");
 
         while(game_area_div.firstChild){game_area_div.removeChild(game_area_div.firstChild);}
 
-        console.log("you scored " + score);
-
-        if(score > 3){
+        if(success){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
         } else {
