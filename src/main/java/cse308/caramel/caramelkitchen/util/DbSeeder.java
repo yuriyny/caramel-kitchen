@@ -106,6 +106,7 @@ public class DbSeeder implements CommandLineRunner {
         KitchenTool pan = new KitchenTool();
         pan.setName("pan");
         pan.getActions().add("sauté");
+        pan.getActions().add("fry");
         pan.setImageName("pan.png");
 
         KitchenTool pot = new KitchenTool();
@@ -231,6 +232,7 @@ public class DbSeeder implements CommandLineRunner {
         w6.setName(steak.getName());
         w6.getActions().add("season");
         w6.getActions().add("slice");
+        w6.getActions().add("fry");
 
         Whitelist w7=new Whitelist();
         w7.setName(orange.getName());
@@ -337,6 +339,9 @@ public class DbSeeder implements CommandLineRunner {
         Subprocedure applyButter = new Subprocedure();
         applyButter.setProcedureName("spread");
         applyButter.setInstructions("Spread Butter");
+        Subprocedure frySteak = new Subprocedure();
+        frySteak.setProcedureName("fry");
+        frySteak.setInstructions("Fry Steak");
 //        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- Fried Flank Steak RECIPE ----------------------*/
@@ -348,6 +353,7 @@ public class DbSeeder implements CommandLineRunner {
         steakrecipe.getSubprocedureList().add(applyPepper);
         steakrecipe.getSubprocedureList().add(applyDryMustard);
         steakrecipe.getSubprocedureList().add(applyButter);
+        steakrecipe.getSubprocedureList().add(frySteak);
         steakrecipe.setIsPublished(true);
         steakrecipe.getIngredients().add(steak);
         steakrecipe.getIngredients().add(salt);
