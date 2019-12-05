@@ -66,6 +66,7 @@ public class DbSeeder implements CommandLineRunner {
         knife.getActions().add("chop");
         knife.getActions().add("peel");
         knife.getActions().add("slice");
+        knife.getActions().add("spread");
         knife.setImageName("knife.png");
 
         KitchenTool kettle = new KitchenTool();
@@ -179,6 +180,16 @@ public class DbSeeder implements CommandLineRunner {
         chicken.setImageName("chicken.png");
         chicken.setType("meat");
 
+        Ingredient dryMustard = new Ingredient();
+        dryMustard.setName("dry mustard");
+        dryMustard.setImageName("drymustard.png");
+        dryMustard.setType("spice");
+
+        Ingredient butter = new Ingredient();
+        butter.setName("butter");
+        butter.setImageName("butter.png");
+        butter.setType("dairy");
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -188,6 +199,8 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(orange);
         this.mongoTemplate.insert(broccoli);
         this.mongoTemplate.insert(chicken);
+        this.mongoTemplate.insert(butter);
+        this.mongoTemplate.insert(dryMustard);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -217,7 +230,7 @@ public class DbSeeder implements CommandLineRunner {
         Whitelist w6=new Whitelist();
         w6.setName(steak.getName());
         w6.getActions().add("season");
-        w6.getActions().add("chop");
+        w6.getActions().add("slice");
 
         Whitelist w7=new Whitelist();
         w7.setName(orange.getName());
@@ -233,6 +246,14 @@ public class DbSeeder implements CommandLineRunner {
         w9.getActions().add("boil");
         w9.getActions().add("chop");
 
+        Whitelist w10 = new Whitelist();
+        w10.setName(butter.getName());
+        w10.getActions().add("spread");
+
+        Whitelist w11 = new Whitelist();
+        w11.setName(dryMustard.getName());
+        w11.getActions().add("spice");
+
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
         this.mongoTemplate.insert(w3);
@@ -242,6 +263,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w7);
         this.mongoTemplate.insert(w8);
         this.mongoTemplate.insert(w9);
+        this.mongoTemplate.insert(w10);
 
         /* ----------------- SUBPROCEDURE ----------------------*/
 
@@ -260,19 +282,8 @@ public class DbSeeder implements CommandLineRunner {
         recipe.getKitchenTools().add(knife);
         recipeService.saveRecipe(recipe,user.getUsername());
         user.getRecipesCreated().add(recipe);
-        userDomainService.saveUser(user);
+        //userDomainService.saveUser(user);
 
-        Recipe recipe1=new Recipe();
-        recipe1.setCreator(user.getUsername());
-        recipe1.setRecipeName("Chopping Carrot 2 Recipe");
-        recipe1.getSubprocedureList().add(chopCarrot);
-        recipe1.setIsPublished(true);
-        recipe1.getIngredients().add(carrot);
-        recipe1.getKitchenTools().add(knife);
-        recipe1.setParentId(recipe.getId());
-        recipeService.saveRecipe(recipe1,user.getUsername());
-        user.getRecipesCreated().add(recipe1);
-        userDomainService.saveUser(user);
 
 //        mongoTemplate.insert(recipe);
 
@@ -293,6 +304,63 @@ public class DbSeeder implements CommandLineRunner {
         s3Services.downloadFile(downloadKey);*/
 
         //System.out.println("Pre-Signed URL: " + s3Services.getImageUrl("apple.png"));
+
+
+        //==================NEW RECIPE: FRIED FLANK STEAK ===================================
+        //INGREDIENTS:
+        //1.STEAK
+        //2.SALT
+        //3.PEPPER
+        //4.DRY MUSTARD
+        //5.BUTTER
+        //TOOLS:
+        //1.KNIFE
+        //2.PAN
+        //INSTRUCTIONS:
+        //1.CUT STEAK
+        //2.APPLY SALT
+        //3.APPLY PEPPER
+        //4.APPLY DRY MUSTARD
+        //5.APPLY BUTTER
+        Subprocedure cutSteak = new Subprocedure();
+        cutSteak.setProcedureName("slice");
+        cutSteak.setInstructions("Slice Steak");
+        Subprocedure applySalt = new Subprocedure();
+        applySalt.setProcedureName("apply");
+        applySalt.setInstructions("Apply Salt");
+        Subprocedure applyPepper = new Subprocedure();
+        applyPepper.setProcedureName("apply");
+        applyPepper.setInstructions("Apply Pepper");
+        Subprocedure applyDryMustard = new Subprocedure();
+        applyDryMustard.setProcedureName("apply");
+        applyDryMustard.setInstructions("Apply Dry Mustard");
+        Subprocedure applyButter = new Subprocedure();
+        applyButter.setProcedureName("spread");
+        applyButter.setInstructions("Spread Butter");
+//        chopCarrot.setGame(new GameApplication());
+
+        /* ----------------- Fried Flank Steak RECIPE ----------------------*/
+        Recipe steakrecipe = new Recipe();
+        steakrecipe.setCreator(user.getUsername());
+        steakrecipe.setRecipeName("Fried Flank Steak");
+        steakrecipe.getSubprocedureList().add(cutSteak);
+        steakrecipe.getSubprocedureList().add(applySalt);
+        steakrecipe.getSubprocedureList().add(applyPepper);
+        steakrecipe.getSubprocedureList().add(applyDryMustard);
+        steakrecipe.getSubprocedureList().add(applyButter);
+        steakrecipe.setIsPublished(true);
+        steakrecipe.getIngredients().add(steak);
+        steakrecipe.getIngredients().add(salt);
+        steakrecipe.getIngredients().add(pepper);
+        steakrecipe.getIngredients().add(dryMustard);
+        steakrecipe.getIngredients().add(butter);
+        steakrecipe.getKitchenTools().add(knife);
+        steakrecipe.getKitchenTools().add(pan);
+        recipeService.saveRecipe(steakrecipe,user.getUsername());
+        user.getRecipesCreated().add(steakrecipe);
+        userDomainService.saveUser(user);
+
+
 
 
 
