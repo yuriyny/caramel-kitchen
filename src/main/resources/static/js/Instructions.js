@@ -32,6 +32,8 @@ class Instructions{
 
         const p = document.createElement("p");
         action = action.charAt(0).toUpperCase() + action.substring(1);
+        if(target.split(" ")[0] === "1") target = target.substr(2);
+
         if(type === "instruction") {
             p.textContent = action + " " + target;
         } else {
@@ -74,12 +76,16 @@ class Instructions{
 
     confirmStep(action, target, quantity=1){
         let instruction = "";
-        action = action.charAt(0).toUpperCase() + action.substring(1);
-        instruction = action + " " + quantity + " " + target;
-        console.log("target instruction is: " + instruction);
+        // action = action.charAt(0).toUpperCase() + action.substring(1);
+        if(quantity === 1){
+            instruction = action + " " + target;
+        } else {
+            instruction = action + " " + quantity + " " + target;
+        }
+        // console.log("target instruction is: " + instruction);
         for(let i = 0; i< this.recipe_ul.children.length; i++){
-            console.log("comparing with : " + this.recipe_ul.children[i].textContent);
-            if(this.recipe_ul.children[i].textContent === instruction){
+            // console.log("comparing with : " + this.recipe_ul.children[i].textContent);
+            if(this.recipe_ul.children[i].textContent.toUpperCase() === instruction.toUpperCase()){
                 this.recipe_ul.children[i].classList.add("completed");
                 return;
             }
@@ -87,7 +93,7 @@ class Instructions{
                 break;
             }
         }
-        console.log(this.recipe_ul.children);
+        // console.log(this.recipe_ul.children);
 
         M.toast({html: "That wasn't the correct action though!", displayLength: 1500});
     }

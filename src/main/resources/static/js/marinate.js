@@ -1,4 +1,8 @@
 {
+    const return_tab = document.getElementById("return-tab");
+    return_tab.innerHTML = "Exit game";
+    return_tab.addEventListener("mouseup", exitGame);
+
     const game_area_div = document.querySelector("#game-area");
 
     const title = document.createElement("h1");
@@ -10,11 +14,15 @@
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
     let timer = null;
-    let game_interval = null;
+    let move_timer = null;
+
+    const game_elements = document.createElement("div");
+    game_elements.setAttribute("id", "game_elements");
 
     game_area_div.appendChild(title);
     game_area_div.appendChild(instructions);
     game_area_div.appendChild(counter);
+    game_area_div.appendChild(game_elements);
 
     let score = 0;
     let max_score = 0;
@@ -55,7 +63,10 @@
         game.appendChild(target_area);
         game.appendChild(player);
 
-        game_area_div.appendChild(game);
+        game_elements.appendChild(game);
+
+        score = 0;
+        max_score = 0;
 
         playGame();
     }
@@ -82,7 +93,7 @@
             if((parseInt($("#player").css("left")) + ($("#player").width() / 2)) <= 339)
                 $("#player").css("left", "+=4")
         }
-        setTimeout(move_controller, 10);
+        move_timer = setTimeout(move_controller, 10);
     }
 
     function shrinkArea(){
@@ -109,9 +120,39 @@
     }
 
     function endGame(){
+        if(score > max_score * 0.6){
+            M.toast({html: 'Good job!'});
+            itemBoard.performAction();
+            exitGame();
+        } else {
+            const elem = document.getElementById("mistakes");
+            let val = parseInt(elem.textContent) + 1;
+            elem.textContent = val;
+            const counter = document.getElementById("mistake-counter");
+            counter.classList.remove("mistake-notice");
+            void counter.offsetWidth;
+            counter.classList.add("mistake-notice");
+            M.toast({html: 'You can do better. Try again!'});
+            resetGame();
+        }
+    }
+
+    function resetGame(){
+        while(game_elements.firstChild){ game_elements.removeChild(game_elements.firstChild); }
+        clearTimeout(move_timer);
+        clearInterval(timer);
+        loadGame();
+    }
+
+    function customClean(){
+        clearTimeout(move_timer);
         clearInterval(timer);
         keyState = {};
         $(document).unbind();
+    }
+
+    function exitGame(){
+        customClean();
 
         const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
         tab_instance.select("items");
@@ -120,20 +161,13 @@
 
         console.log("you scored " + score + " out of " + max_score);
 
-        if(score > max_score * 0.6){
-            M.toast({html: 'Good job!'});
-            itemBoard.performAction();
-        } else {
-            const elem = document.getElementById("mistakes");
-            let val = parseInt(elem.textContent) + 1;
-            elem.textContent = val;
-            M.toast({html: 'You can do better. Try again!'});
-            itemBoard.failedAction();
-        }
-
         for(let item of document.getElementsByClassName("game-in-progress")){
             item.classList.remove("game-in-progress");
         }
+
+        itemBoard.clearAction();
+        return_tab.innerHTML = "Your Items";
+        return_tab.removeEventListener("mouseup", exitGame);
 
         current_game_css.parentNode.removeChild(current_game_css);
         current_game_script.parentNode.removeChild(current_game_script);

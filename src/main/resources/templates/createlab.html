@@ -44,20 +44,26 @@
         </div>
 
         <div class="col s8">
-            <div id="cooking-board" class="row">
-<!--                            <div class="col s4 m3 l2">-->
-<!--                                <div class="ingredient card waves-effect waves-light active-item">-->
-<!--                                    <div class="card-image"><img src="/images/placeholder.png"></div>-->
-<!--                                    <div class="card-content center"><p>apple</p></div>-->
-<!--                                    <div class="card-menu">-->
-<!--                                        <ul class="card-menu-ul">-->
-<!--                                            <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
-<!--                                            <li class="menu-option" oncontextmenu="return false">Menu-opt</li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                    <div class="card-select">Select</div>-->
-<!--                                </div>-->
-<!--                            </div>-->
+            <div class="row">
+                <div id="item-descriptor">
+<!--                    <input type="number" class="item-quantity-input browser-default"><span>placeholder lines</span>-->
+                </div>
+
+                <div id="cooking-board" class="row">
+    <!--                            <div class="col s4 m3 l2">-->
+    <!--                                <div class="ingredient card waves-effect waves-light active-item">-->
+    <!--                                    <div class="card-image"><img src="/images/placeholder.png"></div>-->
+    <!--                                    <div class="card-content center"><p>apple</p></div>-->
+    <!--                                    <div class="card-menu">-->
+    <!--                                        <ul class="card-menu-ul">-->
+    <!--                                            <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
+    <!--                                            <li class="menu-option" oncontextmenu="return false">Menu-opt</li>-->
+    <!--                                        </ul>-->
+    <!--                                    </div>-->
+    <!--                                    <div class="card-select">Select</div>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+                </div>
             </div>
         </div>
 
@@ -141,7 +147,8 @@
     // const customMenu = new ActionMenu(context_menu, context_menu_ul, recipe);
 
     const cooking_board = document.querySelector("#cooking-board");
-    const cookingBoard = new CookingBoard(cooking_board, recipe);
+    const item_descriptor = document.querySelector("#item-descriptor");
+    const cookingBoard = new CookingBoard(cooking_board, recipe, null, item_descriptor);
 
     const search_input = document.querySelector("#item-search-keyword");
     const search_ul = document.querySelector("#item-search-results");

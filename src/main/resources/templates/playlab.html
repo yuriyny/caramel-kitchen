@@ -42,7 +42,7 @@
     <!--            </div>-->
 <!--            </div>-->
             <ul class="tabs">
-                <li class="tab col s3"><a class="active" href="#items">Your Items</a></li>
+                <li class="tab col s3"><a id="return-tab" class="active" href="#items">Your Items</a></li>
                 <li class="tab col s3"><a href="#gameView">Game</a></li>
             </ul>
         </div>
@@ -60,30 +60,36 @@
                     </ul>
                 </div>
                 <div class="col s9">
-                    <div id="item-board" class="row">
-                        <div class="col s6">
-                            <div id="ingredient-area" class="row">
+                    <div class="row" style="height: 640px;">
+                        <div id="item-descriptor">
+                            <!--                    <input type="number" class="item-quantity-input"><span>placeholder lines</span>-->
+                        </div>
+
+                        <div id="item-board" class="row">
+                            <div class="col s6">
+                                <div id="ingredient-area" class="row">
+
+                                </div>
+                                <div id="tool-area" class="row">
+
+                                </div>
+                            </div>
+                            <div id="processedItem-area" class="col s6">
 
                             </div>
-                            <div id="tool-area" class="row">
-
-                            </div>
+            <!--                <div class="col s4 m3 l2">-->
+            <!--                    <div class="ingredient card waves-effect waves-light active-item">-->
+            <!--                        <div class="card-image"><img src="images/placeholder.png"></div>-->
+            <!--                        <div class="card-content center"><p>apple</p></div>-->
+            <!--                        <div class="card-menu">-->
+            <!--                            <ul id="card-menu-ul">-->
+            <!--                                <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
+            <!--                                <li class="menu-option" oncontextmenu="return false">Menu-option</li>-->
+            <!--                            </ul>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
                         </div>
-                        <div id="processedItem-area" class="col s6">
-
-                        </div>
-        <!--                <div class="col s4 m3 l2">-->
-        <!--                    <div class="ingredient card waves-effect waves-light active-item">-->
-        <!--                        <div class="card-image"><img src="images/placeholder.png"></div>-->
-        <!--                        <div class="card-content center"><p>apple</p></div>-->
-        <!--                        <div class="card-menu">-->
-        <!--                            <ul id="card-menu-ul">-->
-        <!--                                <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
-        <!--                                <li class="menu-option" oncontextmenu="return false">Menu-option</li>-->
-        <!--                            </ul>-->
-        <!--                        </div>-->
-        <!--                    </div>-->
-        <!--                </div>-->
                     </div>
                 </div>
             </div>
@@ -116,10 +122,10 @@
                         <li class="recipe-step" th:each="step:${game.recipe.subprocedureList}" th:text="${step.instructions}"></li>
                     </ul>
                 </div>
-                <div id="mistake-counter" class="card-panel orange lighten-2 col s12">
+                <div id="mistake-counter" class="card-panel col s12">
                     Mistakes: <span id="mistakes">0</span>
                 </div>
-                <a class="waves-effect waves-light btn-large col s12">Finish</a>
+                <a class="waves-effect waves-light btn-large col s12" style="width: 95%">Finish</a>
             </div>
         </div>
     </div>
@@ -155,7 +161,8 @@
     const processedItem_area = document.querySelector("#processedItem-area");
     const board_areas = [ingredient_area, tool_area, processedItem_area];
     const game_area = document.querySelector("#gameView");
-    const itemBoard = new CookingBoard(board_areas, null, game_area);
+    const item_descriptor = document.querySelector("#item-descriptor");
+    const itemBoard = new CookingBoard(board_areas, user_recipe, game_area, item_descriptor);
     // for(let tool of game.recipe.kitchenTools){
     //     itemBoard.addItem(tool, "tool");
     // }

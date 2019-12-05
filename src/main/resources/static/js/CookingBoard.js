@@ -3,7 +3,7 @@
  * utensils and ingredients.
  */
 class CookingBoard{
-    constructor(board_ul, recipe, game_area=null){
+    constructor(board_ul, recipe, game_area=null, descriptor=null){
         /** the board element*/
         this.board_ul = board_ul;
 
@@ -12,6 +12,9 @@ class CookingBoard{
 
         /** place for minigames*/
         this.game_area = game_area;
+
+        /** shown text output*/
+        this.descriptor = descriptor;
 
         /** additional info*/
         this.identifier = 0;
@@ -81,6 +84,7 @@ class CookingBoard{
         if(use === "ingredient"){
             card.classList.add("ingredient");
             this.addIngredient(item);
+            record["unitOfMeasure"] = item.unitOfMeasure;
         }
         else if(use === "tool"){
             this.addTool(item);
@@ -98,6 +102,7 @@ class CookingBoard{
             e.target.parentNode.classList.toggle("selected");
             this.items[e.target.parentNode.id].selected = !this.items[e.target.parentNode.id].selected;
             this.groupItems();
+            this.setDescriptor();
         };
 
         card_menu.appendChild(card_menu_ul);
@@ -121,9 +126,9 @@ class CookingBoard{
         this.items[this.identifier] = record;
         this.identifier++;
 
-        console.log(this.items);
+        // console.log(this.items);
         console.log(this.tools);
-        console.log(this.actions);
+        // console.log(this.actions);
     }
 
     addTag(itemKey, tag) {
@@ -241,14 +246,14 @@ class CookingBoard{
         }
 
         if(this.game_area){
-            user_recipe.confirmStep(action, this.items[id].name, this.items[id].quantity);
+            this.recipe.confirmStep(action, this.items[id].name, this.items[id].quantity);
         }
 
         this.relevent_id = null;
         this.relevent_action = null;
     }
 
-    failedAction(){
+    clearAction(){
         this.relevent_id = null;
         this.relevent_action = null;
     }
@@ -278,24 +283,66 @@ class CookingBoard{
         current_game_css = gameLink;
     }
 
-    // useTool(action){
-    //     for(const tool in this.actionPair){
-    //         if(this.actionPair[tool].indexOf(action) > -1){
-    //             for(const id in this.items){
-    //                 if(this.items[id].name === tool){
-    //                     let card = document.getElementById(id);
-    //                     card.parentNode.parentNode.removeChild(card.parentNode);
-    //                     delete this.items[id];
-    //                     delete this.actionPair[tool];
-    //                     this.tools.filter(item => item.name !== tool)
-    //
-    //                     this.updateMenu();
-    //                     return;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    setDescriptor(){
+        if(!this.descriptor) return;
+
+        let selectedItems = [];
+        let selectedIDs = [];
+        for(const id in this.items) {
+            if(this.items[id].selected === true){
+                selectedItems.push(this.items[id]);
+                selectedIDs.push(id);
+            }
+        }
+
+        while(this.descriptor.firstChild){
+            this.descriptor.removeChild(this.descriptor.firstChild);
+        }
+        if(selectedItems.length === 1){
+            if(selectedItems[0].use === "tool"){
+                let span = document.createElement("span");
+                span.textContent = "A " + selectedItems[0].name;
+                this.descriptor.appendChild(span);
+            }
+            else if(selectedItems[0].use === "ingredient"){
+                let input = document.createElement("input");
+                input.setAttribute("type", "number");
+                input.setAttribute("class", "item-quantity-input browser-default");
+                input.setAttribute("value", selectedItems[0].quantity);
+                input.setAttribute("min", "1");
+                input.addEventListener("mouseup", (e)=>{this.updateQuantity(selectedIDs[0], e.target.value)});
+                input.addEventListener("keyup", (e)=>{this.updateQuantity(selectedIDs[0], e.target.value)});
+
+                let span = document.createElement("span");
+                span.textContent = "";
+                if(selectedItems[0].unitOfMeasure && selectedItems[0].unitOfMeasure[0])
+                    span.textContent += selectedItems[0].unitOfMeasure[0];
+                span.textContent += " units of " + selectedItems[0].name + "[s]";
+
+                this.descriptor.appendChild(input);
+                this.descriptor.appendChild(span);
+            }
+            else if(selectedItems[0].use === "processedItem"){
+                let span = document.createElement("span");
+                span.textContent = "A " + selectedItems[0].name + " that has tags:";
+                for(let tag of selectedItems[0].tags){
+                    span.textContent += " " + tag;
+                }
+                this.descriptor.appendChild(span);
+            }
+        } else if(selectedItems.length === 0){
+            //do nothing
+        }
+    }
+
+    updateQuantity(id, quantity){
+        if(!quantity) return;
+
+        let card = document.getElementById(id);
+        this.items[id].quantity = parseInt(quantity);
+
+        card.children[1].textContent = quantity + " " + this.items[id].name;
+    }
 
     groupItems(){
         let groups = {};

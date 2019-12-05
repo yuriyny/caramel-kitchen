@@ -156,7 +156,7 @@ nav ul li a{
 .action-list{
     position: relative;
     width: 100%;
-    max-height: 300px;
+    max-height: 450px;
     overflow-y: auto;
 }
 
@@ -296,10 +296,31 @@ nav ul li a{
     /*font-size: 0;*/
 }
 
+#item-descriptor{
+    height: 60px;
+    border: 2px solid #f57c00;
+    margin: 10px;
+    font-size: 1.4em;
+    padding: 8px 15px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+#item-descriptor > span{
+    font-size: 1.2em;
+}
+
+.item-quantity-input{
+    width: 60px !important;
+    outline: none;
+    border: none;
+}
+
 #cooking-board{
     overflow-y: auto;
-    height: 720px;
+    height: 620px;
     padding-top: 8px;
+    margin: 10px;
 }
 
 .ingredient{
@@ -337,7 +358,7 @@ nav ul li a{
     overflow-y: auto;
     padding-left: 0;
     background-color: lightblue;
-    transform: skew(0deg, -1deg);
+    /*transform: skew(0deg, -1deg);*/
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
@@ -409,21 +430,22 @@ nav ul li a{
 #item-board{
     overflow-y: auto;
     padding-top: 8px;
+    width: 100%;
 }
 
 #ingredient-area{
     overflow-y: auto;
-    height: 300px;
+    height: 280px;
 }
 
 #tool-area{
     overflow-y: auto;
-    height: 300px;
+    height: 280px;
 }
 
 #processedItem-area{
     overflow-y: auto;
-    height: 660px;
+    height: 600px;
 }
 
 #game-area{
@@ -442,11 +464,23 @@ nav ul li a{
 
 #mistake-counter{
     position: relative;
-    margin: 10px auto;
+    margin: 30px auto 10px auto;
     padding: 10px;
-    width: 50%;
-    margin-right: 20px;
-    float: right;
+    width: 80%;
+    height: 60px;
+    border-radius: 10px;
+    font-size: 1.6em;
+    background-color: transparent;
+    user-select: none;
+}
+
+.mistake-notice{
+    animation: red-alert 1.3s ease-out forwards;
+}
+
+@keyframes red-alert{
+    0%{box-shadow: none}
+    50%{box-shadow: inset -20px 0 14px 34px red}
 }
 
 
