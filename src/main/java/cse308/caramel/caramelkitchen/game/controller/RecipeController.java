@@ -1,6 +1,7 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
+import cse308.caramel.caramelkitchen.game.persistence.Game;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
@@ -159,9 +160,22 @@ public class RecipeController {
     }
     @ResponseBody
     @GetMapping(path={"/get-all-user-recipes"})
-    public List<Recipe> getAllUserRecipes(Principal principal){
+    public List<Recipe> getAllCreatedUserRecipes(Principal principal){
         return (List<Recipe>)userDomainService.getUserByUsername(principal.getName()).getRecipesCreated();
     }
+
+    @ResponseBody
+    @GetMapping(path={"/get-user-completed-recipes"})
+    public List<Game> getAllCompletedUserRecipes(Principal principal){
+        return (List<Game>)userDomainService.getUserByUsername(principal.getName()).getGamesPlayed();
+    }
+
+    @ResponseBody
+    @GetMapping(path={"/get-all-user-in-progress-recipes"})
+    public List<Game> getAllInProgressUserRecipes(Principal principal){
+        return (List<Game>)userDomainService.getUserByUsername(principal.getName()).getGamesInProgress();
+    }
+
     @ResponseBody
     @GetMapping(value = "/actions")
     public List<String> getAllActions() {

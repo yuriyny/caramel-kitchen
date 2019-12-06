@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+u<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 
 <head>
@@ -23,8 +23,8 @@
     <div class="nav-wrapper amber lighten-4">
         <a href="#" class="brand-logo" tabindex="-1"></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">home</i>Home</p></a></li>
             <li><a th:href="@{/createlab}"><p style="display: inline-flex"><i class="material-icons">content_copy</i>Create Lab</p></a></li>
-            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">search</i>Home</p></a></li>
             <li><a th:href="@{/aboutus}"><p style="display: inline-flex"><i class="material-icons">people</i>About Us</p></a></li>
             <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
         </ul>
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="col s4">
-                <h5 class="row center">user recipes</h5>
+                <h5 class="row center">Uploaded Recipes</h5>
                 <ul id="user-recipes" class="collapsible col s12" data-collapsible="accordian">
 <!--                    <li>-->
 <!--                        <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">apple-->
@@ -81,20 +81,15 @@
                 </ul>
             </div>
             <div class="col s4">
-                <h5 class="row center">completed recipes</h5>
-                <div id="completed-recipes" class="collection col s12">
-                    <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
-                        <p class="left">roast chicken</p>
-                        <p class="secondary-content">Score: 1000</p>
-                    </a>
-                    <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
-                        <p class="left">roast chicken</p>
-                        <p class="secondary-content">Score: 1000</p>
-                    </a>
-                    <a href="#!" class="btn-large waves-effect waves-light custom-collapsible-btn">
-                        <p class="left">roast chicken</p>
-                        <p class="secondary-content">Score: 1000</p>
-                    </a>
+                <h5 class="row center">Recipes in progress</h5>
+                <div id="inprogress-recipes" class="collapsible col s12" data-collapsible="accordian">
+
+                </div>
+            </div>
+            <div class="col s4">
+                <h5 class="row center">Completed Recipes</h5>
+                <div id="completed-recipes" class="collapsible col s12" data-collapsible="accordian">
+
                 </div>
             </div>
         </div>
@@ -230,9 +225,17 @@
     let ingredientRequest = new ItemRequest("ingredient", ingredient_card, ingredient_name, ingredient_img, ingredient_actions);
     ingredientRequest.addAction();
 
-    const recipe_ul = document.querySelector("#user-recipes");
-    let recipeInteract = new RecipeInteract(recipe_ul);
-    recipeInteract.loadRecipes();
+    const created_recipe_ul = document.querySelector("#user-recipes");
+    let createdRecipeInteract = new RecipeInteract(created_recipe_ul);
+    createdRecipeInteract.loadCreatedRecipes();
+
+    const inprogress_recipe_ul = document.querySelector("inprogress-recipes");
+    let inProgressRecipeInteract = new RecipeInteract(inprogress_recipe_ul);
+    inProgressRecipeInteract.loadInprogressRecipes();
+
+    const completed_recipe_ul = document.querySelector("completed-recipes");
+    let completedRecipeInteract = new RecipeInteract(completed_recipe_ul);
+    completedRecipeInteract.loadCompletedRecipes();
 
 </script>
 </body>
