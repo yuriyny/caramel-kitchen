@@ -21,7 +21,7 @@ class Prompt {
         let data = this.getRecipeInfo();
         data["isPublished"] = false;
 
-        const send = await fetch("/create-recipe", {
+        const send = await fetch("/save-recipe", {
             method: "POST",
             body: JSON.stringify(data),
             headers: {

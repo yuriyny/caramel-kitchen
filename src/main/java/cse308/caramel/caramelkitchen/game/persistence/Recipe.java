@@ -26,7 +26,7 @@ public class Recipe {
     @DBRef
     private Collection<KitchenTool> kitchenTools;
     private Collection<IntermediateIngredient> intermediateIngredients;
-    private Boolean isPublished = true;
+    private Boolean isPublished;
     private List<Subprocedure> subprocedureList;
     // + maintain another list that contains subprocedures any playing user MUST complete to pass the recipe
     private List<Subprocedure> requiredSubproceduresList;

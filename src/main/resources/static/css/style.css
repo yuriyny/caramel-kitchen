@@ -185,12 +185,16 @@ nav ul li a{
     border: none;
 }
 
-.custom-collapsible-btn{
+.custom-collapsible-btn-published{
     background: #FFC107 !important;
     margin-bottom: 15px;
     border: none;
 }
-
+.custom-collapsible-btn-saved{
+    background: #8A7639 !important;
+    margin-bottom: 15px;
+    border: none;
+}
 #completed-recipes{
     border: none;
 }
@@ -199,7 +203,7 @@ nav ul li a{
 /*--CREATELAB-----------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 
-.createlab-container{
+.create-container{
     margin-top: 60px;
     min-height: 740px;
     min-width: 1540px;

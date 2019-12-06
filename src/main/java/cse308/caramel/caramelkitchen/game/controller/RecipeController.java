@@ -8,16 +8,16 @@ import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.search.service.SearchService;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -88,14 +88,30 @@ public class RecipeController {
 
     }
 
+    @ResponseBody
+    @GetMapping(value={"/create","/edit/{recipeId}"})
+    public ModelAndView getRecipeCreationPage(@PathVariable Optional<String> recipeId) {
+        ModelAndView modelAndView = new ModelAndView("createlab");
+        if(recipeId.isPresent()) {
+            Recipe recipe = recipeService.findRecipe(recipeId.get());
+            if (recipe == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Recipe not found"
+                );
+            }
+            modelAndView.addObject("recipe", recipe);
+        }
+        return modelAndView;
+    }
+
     /**
      * This method takes in a recipe and saves it. Works for save and publish.
      * @param recipe
      */
     @ResponseBody
-    @PostMapping(path={"/create-recipe","/extend-recipe"})
+    @PostMapping(path={"/save-recipe","/create-recipe"})
     public void createRecipe(@RequestBody Recipe recipe,Principal principal){
-        recipe=recipeService.saveRecipe(recipe,principal.getName());
+        recipe = recipeService.saveRecipe(recipe,principal.getName());
         userDomainService.addRecipeToUser(principal.getName(),recipe);
     }
     @ResponseBody
@@ -113,8 +129,8 @@ public class RecipeController {
 //    }
     @ResponseBody
     @PostMapping(path={"/get-recipe-history"})
-    public List<Recipe>getRecipeHistory(@RequestBody String recipeId){
-        Recipe recipe=recipeService.findRecipe(recipeId);
+    public List<Recipe> getRecipeHistory(@RequestBody String recipeId){
+        Recipe recipe = recipeService.findRecipe(recipeId);
         if(recipe.getParentId()==null){
             List<Recipe>returnList=new ArrayList<>();
             returnList.add(recipe);
@@ -128,7 +144,7 @@ public class RecipeController {
 
     @ResponseBody
     @PostMapping(path={"/get-recipe-children"})
-    public List<Recipe>getRecipeChildren(@RequestBody String recipeId){
+    public List<Recipe> getRecipeChildren(@RequestBody String recipeId){
         List<Recipe>returnRecipe=new ArrayList<>();
         List<Recipe>recipes=recipeService.findAllPublishedRecipe();
         for(Recipe recipe:recipes){

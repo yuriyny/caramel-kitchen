@@ -24,7 +24,7 @@ u<!DOCTYPE html>
         <a href="#" class="brand-logo" tabindex="-1"></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">home</i>Home</p></a></li>
-            <li><a th:href="@{/createlab}"><p style="display: inline-flex"><i class="material-icons">content_copy</i>Create Lab</p></a></li>
+            <li><a th:href="@{/create}"><p style="display: inline-flex"><i class="material-icons">content_copy</i>Create Lab</p></a></li>
             <li><a th:href="@{/aboutus}"><p style="display: inline-flex"><i class="material-icons">people</i>About Us</p></a></li>
             <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
         </ul>
@@ -55,7 +55,7 @@ u<!DOCTYPE html>
                 </div>
             </div>
             <div class="col s4">
-                <h5 class="row center">Uploaded Recipes</h5>
+                <h5 class="row center">Created Recipes</h5>
                 <ul id="user-recipes" class="collapsible col s12" data-collapsible="accordian">
 <!--                    <li>-->
 <!--                        <div class="collapsible-header btn-large waves-effect waves-light custom-collapsible-btn">apple-->
@@ -81,13 +81,13 @@ u<!DOCTYPE html>
                 </ul>
             </div>
             <div class="col s4">
-                <h5 class="row center">Recipes in progress</h5>
+                <h5 class="row center">In progress</h5>
                 <div id="inprogress-recipes" class="collapsible col s12" data-collapsible="accordian">
 
                 </div>
             </div>
             <div class="col s4">
-                <h5 class="row center">Completed Recipes</h5>
+                <h5 class="row center">Completed</h5>
                 <div id="completed-recipes" class="collapsible col s12" data-collapsible="accordian">
 
                 </div>

@@ -56,7 +56,12 @@ class RecipeInteract{
    addRecipe(recipe){
        const li = document.createElement("li");
        const col_header = document.createElement("div");
-       col_header.setAttribute("class", "collapsible-header btn-large waves-effect waves-light custom-collapsible-btn");
+       if (recipe.isPublished) {
+            col_header.setAttribute("class", "collapsible-header btn-large waves-effect waves-light custom-collapsible-btn-published");
+       } else {
+            col_header.setAttribute("class", "collapsible-header btn-large waves-effect waves-light custom-collapsible-btn-saved");
+       }
+
        col_header.textContent = recipe.recipeName;
 
        const col_body = document.createElement("div");
@@ -65,18 +70,21 @@ class RecipeInteract{
        const rating = document.createElement("p");
        rating.textContent = "Rating: " + recipe.rating;
 
+       const edit = document.createElement("a");
+       edit.textContent = "Modify";
+       edit.setAttribute("href", "/edit/"+ recipe.id);
+
        const remove = document.createElement("a");
        remove.textContent = "Remove";
        remove.setAttribute("href", "#");
        remove.onclick = (e) => {
-           this.removeRecipe(e.target.parentNode.parentNode);
+           if(confirm('Are you sure you want to remove selected recipe?')){
+                this.removeRecipe(e.target.parentNode.parentNode);
+           }
        }
 
-       const modify = document.createElement("a");
-       modify.textContent = "Modify";
-       modify.setAttribute("href", "#");
-
        col_body.appendChild(rating);
+       col_body.appendChild(edit);
        col_body.appendChild(remove);
        li.appendChild(col_header);
        li.appendChild(col_body);
@@ -100,7 +108,6 @@ class RecipeInteract{
 
            col_body.appendChild(creator);
            col_body.appendChild(rating);
-           col_body.appendChild(remove);
            li.appendChild(col_header);
            li.appendChild(col_body);
            this.recipe_ul.appendChild(li);
@@ -127,7 +134,6 @@ class RecipeInteract{
 
               col_body.appendChild(creator);
               col_body.appendChild(rating);
-              col_body.appendChild(remove);
               li.appendChild(col_header);
               li.appendChild(col_body);
               this.recipe_ul.appendChild(li);

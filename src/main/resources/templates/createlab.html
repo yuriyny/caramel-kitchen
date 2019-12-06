@@ -30,7 +30,7 @@
     </div>
 </nav>
 
-<div class="container custom-box createlab-container">
+<div class="container custom-box create-container">
     <div class="row">
         <div id="item-search" class="col s2">
             <h4>Item Search</h4>
@@ -157,7 +157,8 @@
             if(cookingBoard.getSavedStatus() === false)
                 return window.confirm("You have unsaved work. Are you sure you want to leave?");
         });
-    })
+    });
+    let ingredients = [[${recipe.ingredients}]];
 </script>
 
 </body>
