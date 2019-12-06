@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 
@@ -272,6 +273,7 @@ public class DbSeeder implements CommandLineRunner {
         Subprocedure chopCarrot=new Subprocedure();
         chopCarrot.setProcedureName("chop");
         chopCarrot.setInstructions("Chop 1 carrot");
+        chopCarrot.setTargetIngredients(Arrays.asList(carrot));
 //        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- SAMPLE RECIPE ----------------------*/
@@ -327,21 +329,27 @@ public class DbSeeder implements CommandLineRunner {
         Subprocedure cutSteak = new Subprocedure();
         cutSteak.setProcedureName("slice");
         cutSteak.setInstructions("Slice Steak");
+        cutSteak.setTargetIngredients(Arrays.asList(steak));
         Subprocedure applySalt = new Subprocedure();
         applySalt.setProcedureName("apply");
         applySalt.setInstructions("Apply Salt");
+        applySalt.setTargetIngredients(Arrays.asList(salt));
         Subprocedure applyPepper = new Subprocedure();
         applyPepper.setProcedureName("apply");
         applyPepper.setInstructions("Apply Pepper");
+        applyPepper.setTargetIngredients(Arrays.asList(pepper));
         Subprocedure applyDryMustard = new Subprocedure();
         applyDryMustard.setProcedureName("apply");
         applyDryMustard.setInstructions("Apply Dry Mustard");
+        applyDryMustard.setTargetIngredients(Arrays.asList(dryMustard));
         Subprocedure applyButter = new Subprocedure();
         applyButter.setProcedureName("spread");
         applyButter.setInstructions("Spread Butter");
+        applyButter.setTargetIngredients(Arrays.asList(butter));
         Subprocedure frySteak = new Subprocedure();
         frySteak.setProcedureName("fry");
         frySteak.setInstructions("Fry Steak");
+        frySteak.setTargetIngredients(Arrays.asList(steak));
 //        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- Fried Flank Steak RECIPE ----------------------*/
