@@ -6,7 +6,8 @@
     const game_area_div = document.querySelector("#game-area");
 
     const title = document.createElement("h1");
-    title.textContent = "title placeholder";
+    title.setAttribute("style", "text-transform: capitalize");
+    title.textContent = itemBoard.relevent_action + " " + itemBoard.getNameByID(itemBoard.relevent_id);
 
     const instructions = document.createElement("h3");
     instructions.textContent = "Mash space to flatten the ingredient!";

@@ -10,11 +10,13 @@
     title.textContent = itemBoard.relevent_action + " " + itemBoard.getNameByID(itemBoard.relevent_id);
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Mash your arrow keys to stir!";
+    instructions.textContent = "Keep the ingredient over the heat, but don't burn it!";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
     let timer = null;
+    let move_timer = null;
+    let game_timer = null;
 
     const game_elements = document.createElement("div");
     game_elements.setAttribute("id", "game_elements");
@@ -25,13 +27,16 @@
     game_area_div.appendChild(game_elements);
 
     let score = 0;
+    let max_score = 0;
+    let ingredient_shift = 0;
+    let keyState = {};
     countdown(3);
 
     function countdown(value){
         counter.textContent = "Game will start in " + value;
         if(value < 1){
             clearTimeout(timer);
-            // counter.textContent = "MASH!";
+            // counter.textContent = "placeholder";
             counter.parentNode.removeChild(counter);
             loadGame();
         } else {
@@ -50,67 +55,97 @@
         const game = document.createElement("div");
         game.setAttribute("id", "game");
 
-        const leftDiv = document.createElement("div");
-        leftDiv.setAttribute("class", "game-comp glow");
-        leftDiv.setAttribute("id", "left-indicator");
-        const leftArrow = document.createElement("i");
-        leftArrow.setAttribute("class", "material-icons");
-        leftArrow.textContent = "keyboard_arrow_left";
-
         const ingredient_img = document.createElement("img");
         ingredient_img.setAttribute("id", "ingredient-image");
         const img = document.getElementsByClassName("game-in-progress")[0].firstChild.firstChild.src;
         ingredient_img.setAttribute("src", img);
         ingredient_img.setAttribute("draggable", false);
 
-        const rightDiv = document.createElement("div");
-        rightDiv.setAttribute("class", "game-comp");
-        rightDiv.setAttribute("id", "right-indicator");
-        const rightArrow = document.createElement("i");
-        rightArrow.setAttribute("class", "material-icons");
-        rightArrow.textContent = "keyboard_arrow_right";
+        const glow = document.createElement("div");
+        glow.setAttribute("id", "glow");
+
+        const ingredient_item = document.createElement("div");
+        ingredient_item.setAttribute("id", "ingredient-item");
+
+        const player = document.createElement("div");
+        player.setAttribute("id", "player");
 
         countdownBar.appendChild(progress);
-        leftDiv.appendChild(leftArrow);
-        rightDiv.appendChild(rightArrow);
-        game.appendChild(leftDiv);
-        game.appendChild(ingredient_img);
-        game.appendChild(rightDiv);
+        ingredient_item.appendChild(ingredient_img);
+        ingredient_item.appendChild(glow);
+
+        game.appendChild(ingredient_item);
+        game.appendChild(player);
 
         game_elements.appendChild(countdownBar);
         game_elements.appendChild(game);
 
         score = 0;
+        max_score = 0;
+
         playGame();
     }
 
     function playGame(){
-        document.addEventListener("keydown", shake);
-        setTimeout(endGame, 3000);
+        $(document).keydown(function(e){
+            keyState[e.keyCode || e.which] = true;
+        });
+        $(document).keyup(function(e){
+            keyState[e.keyCode || e.which] = false;
+        });
+
+        move_controller();
+
+        timer = window.setInterval(moveIngredient, 25);
+        game_timer = setTimeout(endGame, 4000);
     }
 
-    function shake(e){
-        const left = document.getElementById("left-indicator");
-        const right = document.getElementById("right-indicator");
-        const img = document.getElementById("ingredient-image");
-        const shift = Math.floor((Math.random() * 1) + 2);
-        if(e.key === "ArrowLeft" && left.classList.contains("glow")){
-            score++;
-            img.style.left = (50 - shift) + "%";
-            left.classList.remove("glow");
-            right.classList.add("glow");
+    function move_controller() {
+        if (keyState[37] || keyState[65]){
+            if((parseInt($("#player").css("left"))) >= 1)
+                $("#player").css("left", "-=6")
         }
-        else if(e.key === "ArrowRight" && right.classList.contains("glow")){
-            score++;
-            img.style.left = (50 + shift) + "%";
-            right.classList.remove("glow");
-            left.classList.add("glow");
+        if (keyState[39] || keyState[68]){
+            if((parseInt($("#player").css("left"))) <= 799)
+                $("#player").css("left", "+=6")
         }
-        console.log("score: " + score);
+        move_timer = setTimeout(move_controller, 10);
     }
+
+    function moveIngredient(){
+        let ingredient_width = $("#ingredient-item").width();
+        let ingredient_pos = parseInt($("#ingredient-item").css("left"));
+
+        let controller_width = $("#player").width();
+        let controller_pos = parseInt($("#player").css("left"));
+
+        let controller_right = (controller_pos + (controller_width/2));
+        let controller_left = (controller_pos - (controller_width/2));
+        let ingredient_right = (ingredient_pos + (ingredient_width/2));
+        let ingredient_left = (ingredient_pos - (ingredient_width/2));
+        if(controller_left > ingredient_right || controller_right < ingredient_left){
+            $("#glow").css("opacity", "-=0.01");
+        } else {
+            $("#glow").css("opacity", "+=0.01");
+            if(parseFloat($("#glow").css("opacity")) === 1){
+                endGame();
+            }
+        }
+
+        ingredient_shift += Math.floor(Math.random() * 3) - 1;
+        if(Math.abs(ingredient_shift) > 10) ingredient_shift = 0;
+        if((ingredient_pos - (ingredient_width/2)) <= 1) ingredient_shift = Math.abs(ingredient_shift);
+        if((ingredient_pos + (ingredient_width/2)) >= 799) ingredient_shift = Math.abs(ingredient_shift) * -1;
+        if(ingredient_shift > 0){
+            $("#ingredient-item").css("left", "+=1");
+        } else if(ingredient_shift < 0){
+            $("#ingredient-item").css("left", "-=1");
+        }
+    }
+
 
     function endGame(){
-        if(score > 25){
+        if(parseFloat($("#glow").css("opacity")) > 0.7 && parseFloat($("#glow").css("opacity")) < 0.99){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
             exitGame();
@@ -129,11 +164,18 @@
 
     function resetGame(){
         while(game_elements.firstChild){ game_elements.removeChild(game_elements.firstChild); }
+        clearTimeout(move_timer);
+        clearInterval(timer);
+        clearTimeout(game_timer);
         loadGame();
     }
 
     function customClean(){
-        document.removeEventListener("keydown", shake);
+        clearTimeout(move_timer);
+        clearInterval(timer);
+        clearTimeout(game_timer);
+        keyState = {};
+        $(document).unbind();
     }
 
     function exitGame(){
@@ -143,8 +185,6 @@
         tab_instance.select("items");
 
         while(game_area_div.firstChild){game_area_div.removeChild(game_area_div.firstChild);}
-
-        console.log("you scored " + score);
 
         for(let item of document.getElementsByClassName("game-in-progress")){
             item.classList.remove("game-in-progress");
@@ -157,4 +197,5 @@
         current_game_css.parentNode.removeChild(current_game_css);
         current_game_script.parentNode.removeChild(current_game_script);
     }
+
 }

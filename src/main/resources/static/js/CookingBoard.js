@@ -19,11 +19,7 @@ class CookingBoard{
         /** additional info*/
         this.identifier = 0;
         this.items = {};    //let this be a list of hashes with {DOM id : {item name, imageFileUrl, use, tags, quantity, selected}}
-        this.tools = [];
-        this.ingredients = [];
-        // this.processedItems = [];
-        this.actions = [];
-        // this.actionPair = {};
+
         this.saved = true;
 
         this.relevent_id = null;
@@ -36,9 +32,11 @@ class CookingBoard{
      *      additional optional info: quantity, imageFileUrl
      */
     addItem(item, use, tag=[]){
+        // console.log(item);
         // console.log(use);
         let record = {};
-        record["name"] = item.name;
+        Object.assign(record, item);
+        // record["name"] = item.name;
         if(tag.length > 0) record["tags"] = [tag];
         else record["tags"] = [];
         record["use"] = use;
@@ -58,11 +56,10 @@ class CookingBoard{
 
         const img = document.createElement("img");
         if(item.imageFileUrl != null){
-            img.setAttribute("src", item.imageFileUrl)
-            record["img"] = item.imageFileUrl;
+            img.setAttribute("src", item.imageFileUrl);
         } else {
-            img.setAttribute("src", "/images/placeholder.png");    //make a placeholder.png later
-            record["img"] = "/images/placeholder.png";
+            img.setAttribute("src", "/images/placeholder.png");
+            record["imageFileUrl"] = "/images/placeholder.png";
         }
 
         const card_content = document.createElement("div");
@@ -83,12 +80,8 @@ class CookingBoard{
 
         if(use === "ingredient"){
             card.classList.add("ingredient");
-            this.addIngredient(item);
-            record["unitOfMeasure"] = item.unitOfMeasure;
         }
-        else if(use === "tool"){
-            this.addTool(item);
-        }
+        else if(use === "tool"){}
         else if(use === "processedItem"){
             card.classList.add("processedItem");
             content.textContent += ": " + tag;
@@ -126,9 +119,7 @@ class CookingBoard{
         this.items[this.identifier] = record;
         this.identifier++;
 
-        // console.log(this.items);
-        console.log(this.tools);
-        // console.log(this.actions);
+        console.log(this.items);
     }
 
     addTag(itemKey, tag) {
@@ -139,43 +130,19 @@ class CookingBoard{
         this.items[itemKey].tags.push(tag);
     }
 
-    /**add to requested ingredient list*/
-    addIngredient(item){
-        // if(!this.ingredients.includes(item.name)) this.ingredients.push(item);
-        for(const ingredient of this.ingredients){
-            if(ingredient.name === item.name) return;
-        }
-        this.ingredients.push(item);
-    }
-
-    /**add to requested tools list as known by action menu */
-    addTool(item){
-        // if(!this.tools.includes(name)) this.tools.push(name);
-        let newTool = true;
-        for(const tool of this.tools){
-            if(tool.name === item.name) return;
-        }
-        this.tools.push(item);
-
-        for(let action of item.actions){
-            if(!this.actions.includes(action))
-                this.actions.push(action)
-        }
-    }
-
     async updateMenu(){
         let menu_ul;
         for(const id in this.items){
             if(this.items[id].use === "tool") continue;
             const card = document.getElementById(id);
-            // console.log(card);
             menu_ul = card.childNodes[2].firstChild;
             while(menu_ul.firstChild){
                 menu_ul.removeChild(menu_ul.firstChild);
             }
 
             let actionList = [];
-            for(const tool of this.tools){
+            let toolList = this.getTools();
+            for(const tool of toolList){
                 let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
                 const newActions = await fetch("/valid-actions", {
                     method: "POST",
@@ -188,7 +155,7 @@ class CookingBoard{
                     .then((response) => response.json())
                     .catch(e => {console.log("err ", e)});
 
-                console.log(newActions);
+                // console.log(newActions);
 
                 for(let action of newActions){
                     if(actionList.includes(action)) continue;
@@ -240,7 +207,7 @@ class CookingBoard{
         if (this.items[id].use === "processedItem") {
             this.addTag(id, action, []);
         } else {
-            let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].img};
+            let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].imageFileUrl};
             this.addItem(newItem, "processedItem", action);
             this.updateMenu();
         }
@@ -330,6 +297,17 @@ class CookingBoard{
                 }
                 this.descriptor.appendChild(span);
             }
+            let remove = document.createElement("span");
+            remove.textContent = "Remove this item?";
+            remove.setAttribute("style", "cursor: pointer; color: blue; float: right;");
+            remove.onclick = ()=>{
+                const selected = document.getElementsByClassName("selected");
+                this.removeItem(selected[0].id);
+                while(this.descriptor.firstChild){
+                    this.descriptor.removeChild(this.descriptor.firstChild);
+                }
+            };
+            this.descriptor.appendChild(remove);
         } else if(selectedItems.length === 0){
             //do nothing
         }
@@ -342,6 +320,13 @@ class CookingBoard{
         this.items[id].quantity = parseInt(quantity);
 
         card.children[1].textContent = quantity + " " + this.items[id].name;
+    }
+
+    removeItem(id){
+        let item = document.getElementById(id);
+        item.parentNode.parentNode.removeChild(item.parentNode);
+        delete this.items[id];
+        this.updateMenu();
     }
 
     groupItems(){
@@ -360,34 +345,38 @@ class CookingBoard{
             if(ids.length === 1) continue;
 
             let newQuant = 0;
-            let itemImg = this.items[ids[0]].img;
+            let newItem = {};
+            Object.assign(newItem, this.items[ids[0]]);
             for(const id of ids){
                 newQuant += this.items[id].quantity;
-                const card = document.getElementById(id);
-                card.parentNode.parentNode.removeChild(card.parentNode);
-                delete this.items[id];
+                this.removeItem(id);
             }
-            let newItem = {"name":name, "imageFileUrl":itemImg, "quantity":newQuant, "selected":true};
+            newItem["quantity"] = newQuant;
             this.addItem(newItem, "ingredient", []);
             this.updateMenu();
         }
     }
 
-    resetSelectedItems(){
-        for(const id in this.items) {
-            if(this.items[id].selected === true){
-                const card = document.getElementById(id);
-                id.classList.remove("selected");
+    getTools(){
+        // return this.tools;
+        let tools = [];
+        for(let id in this.items){
+            if(this.items[id].use === "tool"){
+                tools.push(this.items[id]);
             }
         }
-    }
-
-    getTools(){
-        return this.tools;
+        return tools;
     }
 
     getIngredients(){
-        return this.ingredients;
+        // return this.ingredients;
+        let ingredients = [];
+        for(let id in this.items){
+            if(this.items[id].use === "ingredient"){
+                ingredients.push(this.items[id]);
+            }
+        }
+        return ingredients;
     }
 
     getProcessedItems(){
@@ -411,5 +400,9 @@ class CookingBoard{
 
     getSavedStatus(){
         return this.saved;
+    }
+
+    getNameByID(id){
+        return this.items[id].name;
     }
 }

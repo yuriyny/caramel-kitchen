@@ -212,14 +212,17 @@ nav ul li a{
 .sample-img{
     height: 50px;
     width: 50px;
+    user-select: none;
 }
 
 .search-result-name{
     overflow-x: auto;
+    user-select: none;
 }
 
 .active-item > .card-image{
     height: 145px;
+    width: 145px;
 }
 
 .active-item > .card-image > img{
