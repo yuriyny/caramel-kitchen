@@ -1,6 +1,9 @@
 package cse308.caramel.caramelkitchen.util;
 
+import cse308.caramel.caramelkitchen.game.model.GameState;
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.*;
+import cse308.caramel.caramelkitchen.game.repository.GameRepository;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
@@ -15,7 +18,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 
@@ -31,6 +33,8 @@ public class DbSeeder implements CommandLineRunner {
     WhitelistRepository whitelistRepository;
     @Autowired
     UserDomainService userDomainService;
+    @Autowired
+    GameRepository gameRepository;
     //we can use mongotemplate class or repository interface for managing data in mongodb
     private MongoTemplate mongoTemplate;
     public DbSeeder(MongoTemplate mongoTemplate){
@@ -54,6 +58,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.dropCollection(KitchenTool.class);
         this.mongoTemplate.dropCollection(Recipe.class);
         this.mongoTemplate.dropCollection(Whitelist.class);
+        this.mongoTemplate.dropCollection(Game.class);
         /* ----------------- ADD USER ----------------------*/
         User user=new User();
         user.setUsername("user");
@@ -273,7 +278,6 @@ public class DbSeeder implements CommandLineRunner {
         Subprocedure chopCarrot=new Subprocedure();
         chopCarrot.setProcedureName("chop");
         chopCarrot.setInstructions("Chop 1 carrot");
-        chopCarrot.setTargetIngredients(Arrays.asList(carrot));
 //        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- SAMPLE RECIPE ----------------------*/
@@ -329,27 +333,21 @@ public class DbSeeder implements CommandLineRunner {
         Subprocedure cutSteak = new Subprocedure();
         cutSteak.setProcedureName("slice");
         cutSteak.setInstructions("Slice Steak");
-        cutSteak.setTargetIngredients(Arrays.asList(steak));
         Subprocedure applySalt = new Subprocedure();
         applySalt.setProcedureName("apply");
         applySalt.setInstructions("Apply Salt");
-        applySalt.setTargetIngredients(Arrays.asList(salt));
         Subprocedure applyPepper = new Subprocedure();
         applyPepper.setProcedureName("apply");
         applyPepper.setInstructions("Apply Pepper");
-        applyPepper.setTargetIngredients(Arrays.asList(pepper));
         Subprocedure applyDryMustard = new Subprocedure();
         applyDryMustard.setProcedureName("apply");
         applyDryMustard.setInstructions("Apply Dry Mustard");
-        applyDryMustard.setTargetIngredients(Arrays.asList(dryMustard));
         Subprocedure applyButter = new Subprocedure();
         applyButter.setProcedureName("spread");
         applyButter.setInstructions("Spread Butter");
-        applyButter.setTargetIngredients(Arrays.asList(butter));
         Subprocedure frySteak = new Subprocedure();
         frySteak.setProcedureName("fry");
         frySteak.setInstructions("Fry Steak");
-        frySteak.setTargetIngredients(Arrays.asList(steak));
 //        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- Fried Flank Steak RECIPE ----------------------*/
@@ -370,9 +368,83 @@ public class DbSeeder implements CommandLineRunner {
         steakrecipe.getIngredients().add(butter);
         steakrecipe.getKitchenTools().add(knife);
         steakrecipe.getKitchenTools().add(pan);
+
         recipeService.saveRecipe(steakrecipe,user.getUsername());
         user.getRecipesCreated().add(steakrecipe);
         userDomainService.saveUser(user);
+
+
+        //Adding Game
+        Game game1 = new Game();
+        game1.setRecipe(steakrecipe);
+        game1.setGameState(new GameState());
+        gameRepository.save(game1);
+        //System.out.println(game1.getId());
+        game1.getGameState().setRecipeId(steakrecipe.getId());
+        game1.getGameState().setGameId(game1.getId());
+        //After each subprocedure do we create a new intermediateIngredient?
+        IntermediateIngredient ii1 = new IntermediateIngredient();
+        //we cut steak, so we add steak to the list of ingredients?
+        ii1.getIngredients().add(steak);
+        IntermediateIngredient ii2 = new IntermediateIngredient();
+        ii2.getIngredients().add(salt);
+        //adding previous intermediateIngredient?
+        ii2.getIntermediateIngredients().add(ii1);
+
+        game1.getGameState().getIntermediateIngredients().add(ii1);
+        game1.getGameState().getIntermediateIngredients().add(ii2);
+        game1.setScore(250.0);
+        //saving uncomplited game with two finished steps
+        gameRepository.save(game1);
+
+        //Adding Game
+        Game game2 = new Game();
+        game2.setRecipe(steakrecipe);
+        game2.setGameState(new GameState());
+        gameRepository.save(game2);
+        System.out.println(game2.getId());
+        game2.getGameState().setRecipeId(steakrecipe.getId());
+        game2.getGameState().setGameId(game2.getId());
+        //After each subprocedure do we create a new intermediateIngredient?
+        //cut steak
+        IntermediateIngredient ii12 = new IntermediateIngredient();
+        //we cut steak, so we add steak to the list of ingredients?
+        ii12.getIngredients().add(steak);
+        //apply salt
+        IntermediateIngredient ii22 = new IntermediateIngredient();
+        ii22.getIngredients().add(salt);
+        //adding previous intermediateIngredient?
+        ii22.getIntermediateIngredients().add(ii12);
+        //apply pepper
+        //ii22 = salt + pepper
+        //ii32 = ii22 + pepper
+        IntermediateIngredient ii32 = new IntermediateIngredient();
+        ii32.getIntermediateIngredients().add(ii22);
+        ii32.getIngredients().add(pepper);
+        //apply dry mustard
+        IntermediateIngredient ii42 = new IntermediateIngredient();
+        ii42.getIntermediateIngredients().add(ii32);
+        ii42.getIngredients().add(dryMustard);
+        //spread butter
+        IntermediateIngredient ii52 = new IntermediateIngredient();
+        ii52.getIntermediateIngredients().add(ii42);
+        ii52.getIngredients().add(butter);
+        //fry steak
+        //seasoned steak = ii52
+        //no ingredients needed for this step
+        IntermediateIngredient ii62 = new IntermediateIngredient();
+        ii62.getIntermediateIngredients().add(ii52);
+
+        game2.getGameState().getIntermediateIngredients().add(ii12);
+        game2.getGameState().getIntermediateIngredients().add(ii22);
+        game2.getGameState().getIntermediateIngredients().add(ii32);
+        game2.getGameState().getIntermediateIngredients().add(ii42);
+        game2.getGameState().getIntermediateIngredients().add(ii52);
+        game2.getGameState().getIntermediateIngredients().add(ii62);
+        game2.setScore(1050.0);
+        //saving completed game with All finished steps
+        gameRepository.save(game2);
+
 
 
 
