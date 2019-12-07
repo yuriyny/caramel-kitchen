@@ -1,0 +1,9 @@
+#game{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 60%;
+    margin: 50px auto;
+}
+
+#ingredient-image{}

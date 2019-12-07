@@ -1,109 +1,164 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Caramel Kitchen Lab Creation</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
-    <link th:href="@{css/style.css}" rel="stylesheet"/>
+    <title>Caramel Kitchen Create</title>
+
+    <!--Let browser know website is optimized for mobile-->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!--Custom stylings-->
+    <link href="/css/style.css" rel="stylesheet"/>
 </head>
+
 <body th:with="reason=${session.pageType}">
-    <header>
-        <img th:src="@{images/logo4.png}" class="logo">
-        <nav>
-            <ul>
-                <li><a th:href="@{/home}">Home</a></li>
-            </ul>
-        </nav>
-    </header>
+<nav>
+    <div class="nav-wrapper amber lighten-4">
+        <a href="#" class="brand-logo" tabindex="-1"></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">search</i>Home</p></a></li>
+            <li><a th:href="@{/userprofile}"><p style="display: inline-flex"><i class="material-icons">face</i>Profile</p></a></li>
+            <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
+        </ul>
+    </div>
+</nav>
 
-    <div id="createlab_page">
-        <div id="item_search">
-            <h2>Ingredients and tools</h2>
-            <input id="item_search_input" type="text" placeholder="search for...">
-            <ul id = "item_search_ul">
-                <!-- <li>
-                    <div class="item_result" onclick="addItem(this)">
-                        Sample item 1
-                    </div>
-                </li>
-                <li>
-                    <div class="item_result" onclick="addItem(this)">
-                        Sample item 2
-                    </div>
-                </li> -->
+<div class="container custom-box createlab-container">
+    <div class="row">
+        <div id="item-search" class="col s2">
+            <h4>Item Search</h4>
+            <div class="col s12 input-field">
+                <input id="item-search-keyword" type="text">
+                <label for="item-search-keyword">search for...</label>
+            </div>
+            <ul id="item-search-results" class="col s12 collection">
+                <!--                <li class="collection-item">item</li>-->
             </ul>
         </div>
-        <div id="main_display">
-            <ul id="cooking_board">
-                <!-- <li>
-                    <div class="active_item">sample
-                        <div class="item_tag">&starf;
-                            <span class="item_tag_tooltip">boil</span>
-                        </div>
-                    </div>
-                </li> -->
-            </ul>
+
+        <div class="col s8">
+            <div class="row">
+                <div id="item-descriptor">
+<!--                    <input type="number" class="item-quantity-input browser-default"><span>placeholder lines</span>-->
+                </div>
+
+                <div id="cooking-board" class="row">
+    <!--                            <div class="col s4 m3 l2">-->
+    <!--                                <div class="ingredient card waves-effect waves-light active-item">-->
+    <!--                                    <div class="card-image"><img src="/images/placeholder.png"></div>-->
+    <!--                                    <div class="card-content center"><p>apple</p></div>-->
+    <!--                                    <div class="card-menu">-->
+    <!--                                        <ul class="card-menu-ul">-->
+    <!--                                            <li class="menu-option" oncontextmenu="return false">Chopping</li>-->
+    <!--                                            <li class="menu-option" oncontextmenu="return false">Menu-opt</li>-->
+    <!--                                        </ul>-->
+    <!--                                    </div>-->
+    <!--                                    <div class="card-select">Select</div>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+                </div>
+            </div>
         </div>
-        <div id="lab_instructions">
-            <ul id="lab_instructions_ul"></ul>
-            <input id="comment_input" type="text" placeholder="comment here">
-            <button id="comment_enter">Add</button>
+
+        <div class="col s2">
+            <div class="row">
+                <div class="col s12"><h4 class="right">Recipe</h4></div>
+                <div id="recipe_section" class="col s12">
+                    <ul id="recipe_ul">
+                        <!--                        <li class="recipe-step"><div>placeholder<i class="material-icons right clear-btn">clear</i></p></div></li>-->
+                        <!--                        <li class="recipe-step blue lighten-4"><div>placeholder<i class="material-icons right clear-btn">clear</i></div></li>-->
+                    </ul>
+                </div>
+                <div class="col s12 input-field">
+                    <input id="recipe_comment" type="text">
+                    <label for="recipe_comment">comment</label>
+                </div>
+                <div class="col m12 l6">
+                    <a th:href="@{/home}" class="waves-effect waves-orange btn-large orange lighten-2 square-btn"><i
+                            class="material-icons right">backspace</i>Discard</a>
+                </div>
+                <div class="col m12 l6">
+                    <a href="#publish" onclick="prompt.updateTargets()"
+                       class="waves-effect waves-orange btn-large orange lighten-2 square-btn modal-trigger"><i
+                            class="material-icons right">check</i>Save</a>
+                </div>
+            </div>
         </div>
-        <div id="make_request">
-            <p>Tool or ingredient not available? Make a request here.</p>
-            <input id="request_input" type="text" placeholder="Type here and then submit!"></textarea>
-            <button id="request_submit">Submit</button>
+    </div>
+</div>
+
+<div class="modal" id="publish">
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-orange btn-flat"><i
+                class="material-icons prefix">close</i></a>
+    </div>
+    <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <h2 class="col s12 center">Save Recipe</h2>
+                <div class="col s12 input-field">
+                    <input id="recipe-name" type="text">
+                    <label for="recipe-name">Recipe name</label>
+                </div>
+                <button onclick="prompt.saveRecipe()" class="col s8 offset-s2 btn-large waves-effect waves-orange amber lighten-1" style="margin-top: 20px">Save</button>
+                <button onclick="prompt.publishRecipe()" class="col s12 btn-large waves-effect waves-orange amber lighten-1" style="margin-top: 30px">Publish</button>
+            </div>
         </div>
-        <button id="lab_discard" onclick="location.href='userprofile.html';">Discard</button>
-        <button id="lab_publish" onclick="confirmAction()">Publish</button>
     </div>
+</div>
 
-    <div id="screenShade"></div>
-    <div id="confirmNotice">
-        <button id="confirmAccept">Publish</button>
-        <button id="confirmDecline" onclick="declineAction()">Go Back</button>
-    </div>
 
-    <div id="menu">
-        <ul id="menu_ul"></ul>
-    </div>
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-    <script th:src="@{js/ActionMenu.js}"></script>
-    <script th:src="@{js/CookingBoard.js}"></script>
-    <script th:src="@{js/ItemSelection.js}"></script>
-    <script th:src="@{js/Instructions.js}"></script>
-    <script type="text/javascript">
-        const instructions_list = document.getElementById("lab_instructions_ul");
-        let instructions = new Instructions(instructions_list, []);
+<script src="/js/Instructions.js"></script>
+<script src="/js/CookingBoard.js"></script>
+<script src="/js/ItemSelection.js"></script>
+<script src="/js/Prompt.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let materialize_select = document.querySelectorAll('select');
+        let select = M.FormSelect.init(materialize_select);
 
-        const menu_element = document.getElementById("menu");
-        const menu_ul = document.getElementById("menu_ul");
-        let customMenu = new ActionMenu(menu_element, menu_ul, instructions);
+        let materialize_modal = document.querySelectorAll('.modal');
+        let modal = M.Modal.init(materialize_modal, {dismissible: false});
+    });
 
-        const board_element = document.getElementById("cooking_board");
-        let cookingBoard = new CookingBoard(board_element, customMenu);
-        
-        const search_input = document.getElementById("item_search_input");
-        const search_ul = document.getElementById("item_search_ul");
-        let itemSelection = new ItemSelection(search_input, search_ul, cookingBoard);
-        
-        itemSelection.addSearchManual("blender");
-        itemSelection.addSearchManual("peeler");
-        itemSelection.addSearchManual("rolling pin");
-        itemSelection.addSearchManual("apple");
-        itemSelection.addSearchManual("knife");
+    const recipe_ul = document.querySelector("#recipe_ul");
+    const comment_input = document.querySelector("#recipe_comment");
+    const recipe = new Instructions(recipe_ul, []);
+    recipe.setCommentInput(comment_input);
 
-        function confirmAction(){
-            document.getElementById("screenShade").classList.add("fade-in");
-            document.getElementById("confirmNotice").classList.add("show");
-        }
+    // const context_menu = document.querySelector("#menu");
+    // const context_menu_ul = document.querySelector("#menu-ul");
+    // const customMenu = new ActionMenu(context_menu, context_menu_ul, recipe);
 
-        function declineAction(){
-            document.getElementById("screenShade").classList.remove("fade-in");
-            document.getElementById("confirmNotice").classList.remove("show");
-        }
-    </script>
+    const cooking_board = document.querySelector("#cooking-board");
+    const item_descriptor = document.querySelector("#item-descriptor");
+    const cookingBoard = new CookingBoard(cooking_board, recipe, null, item_descriptor);
+
+    const search_input = document.querySelector("#item-search-keyword");
+    const search_ul = document.querySelector("#item-search-results");
+    const itemSelection = new ItemSelection(search_input, search_ul, cookingBoard);
+    itemSelection.searchAllQuery();
+
+    const recipe_name = document.querySelector("#recipe-name");
+    const prompt = new Prompt(recipe_name, recipe, cookingBoard);
+
+    $('#nav-mobile a').map( function() {
+        $(this).click(function() {
+            if(cookingBoard.getSavedStatus() === false)
+                return window.confirm("You have unsaved work. Are you sure you want to leave?");
+        });
+    })
+</script>
+
 </body>
 </html>

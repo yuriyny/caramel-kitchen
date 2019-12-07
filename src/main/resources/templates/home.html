@@ -1,105 +1,135 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Caramel Kitchen Home</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
-    <link th:href="@{css/style.css}" rel="stylesheet"/>
-</head>
-<body th:with="reason=${session.pageType}">
-    <header>
-        <img th:src="@{images/logo4.png}" class="logo">
-        <nav>
-            <ul>
-                <li><a th:href="@{/userprofile}">My Labs</a></li>
-                <li><a th:href="@{/createlab}">Create Lab</a></li>
-                <li><a th:href="@{/aboutus}">About Us</a></li>
-                <li><a th:href="@{/logout}">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <div id="home_page">
-        <div id="recommendations">
-            <h2>Recommendations</h2><br>
-            <!-- USE THYMELEAF TO GET RECOMMENDATIONS -->
-            <ul>
-                <li>
-                    <button type="button" class="collapsible">Template output 1</button>
-                    <div class="collapsible_content">
+    <!--Let browser know website is optimized for mobile-->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!--Custom stylings-->
+    <link href="/css/style.css" rel="stylesheet"/>
+</head>
+
+<body th:with="reason=${session.pageType}">
+<nav>
+    <div class="nav-wrapper amber lighten-4">
+        <a href="#" class="brand-logo" tabindex="-1"></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a th:href="@{/createlab}"><p style="display: inline-flex"><i class="material-icons">content_copy</i>Create Lab</p></a></li>
+            <li><a th:href="@{/userprofile}"><p style="display: inline-flex"><i class="material-icons">face</i>Profile</p></a></li>
+            <li><a th:href="@{/aboutus}"><p style="display: inline-flex"><i class="material-icons">people</i>About Us</p></a></li>
+            <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container custom-box home-container">
+    <div class="row">
+        <div class="col s4">
+            <h4>Recommendations</h4>
+            <ul id="recommendations" class="collapsible col s12" data-collapsible="accordian">
+                <li class="active">
+                    <div class="collapsible-header">collapsible</div>
+                    <div class="collapsible-body">
                         <p>Content</p>
                         <a href="otheruserprofile.html">View Profile</a>
                     </div>
                 </li>
                 <li>
-                    <button class="collapsible">Template output 2</button>
-                    <div class="collapsible_content">
+                    <div class="collapsible-header">collapsible</div>
+                    <div class="collapsible-body">
                         <p>Content</p>
-                        <a href="#">Play Lab</a>
+                        <a href="otheruserprofile.html">View Profile</a>
                     </div>
                 </li>
                 <li>
-                    <button class="collapsible">Template output 2</button>
-                    <div class="collapsible_content">
+                    <div class="collapsible-header">collapsible</div>
+                    <div class="collapsible-body">
                         <p>Content</p>
-                        <a href="#">View Profile</a>
+                        <a href="otheruserprofile.html">View Profile</a>
                     </div>
                 </li>
             </ul>
         </div>
-        <input id="search_input" type="text" placeholder="search for...">
-        <button id="search_enter">Search</button>
-        <select id="search_category">
-            <option value="lab">search for labs</option>
-            <option value="creator">search for creators</option>
-        </select>
-        <div id="search_results">
-            <ul id="search_results_ul">
-                <!-- <li>
-                    <button class="collapsible">Template output 1<p>Creator</p></button>
-                    <div class="collapsible_content">
-                        <p>Content</p>
-                        <a href="#">Play Lab</a>
-                    </div>
-                </li>
-                <li>
-                    <button class="collapsible">Template output 2<p>Creator</p></button>
-                    <div class="collapsible_content">
-                        <p>Content</p>
-                        <a href="#">Play Lab</a>
-                    </div>
-                </li>
-                <li>
-                    <button class="collapsible">Template output 3<p>Creator</p></button>
-                    <div class="collapsible_content">
-                        <p>Content</p>
-                        <a href="#">Play Lab</a>
-                    </div>
-                </li> -->
-            </ul>
+
+        <div class="col s8">
+            <div class="row" style="margin-top: 20px">
+                <div class="input-field col s3">
+                    <select id="search-category">
+                        <option value="recipe">Recipe</option>
+                        <option value="creator">Creator</option>
+                    </select>
+                    <label>Category</label>
+                </div>
+                <div class="col s9 input-field">
+                    <input id="search-keyword" type="text">
+                    <label for="search-keyword">search for...</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button id="search-btn" class="btn-large waves-effect waves-orange orange lighten-2">
+                        Search
+                        <i class="material-icons right">search</i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <ul id="search-results" class="collection">
+<!--                    <li class="collection-item avatar">-->
+<!--                        <i class="material-icons circle orange lighten-3">format_list_bulleted</i>-->
+<!--                        <a class="title">Title</a>-->
+<!--                        <p>First Line <br>-->
+<!--                            Second Line-->
+<!--                        </p>-->
+<!--                        <p class="secondary-content">Rating:</p>-->
+<!--                    </li>-->
+<!--                    <li class="collection-item avatar">-->
+<!--                        <i class="material-icons circle orange lighten-3">person</i>-->
+<!--                        <a class="title">Title</a>-->
+<!--                        <p>First Line <br>-->
+<!--                            Second Line-->
+<!--                        </p>-->
+<!--                        <p class="secondary-content">Rating:</p>-->
+<!--                    </li>-->
+                </ul>
+            </div>
         </div>
     </div>
+</div>
 
-    <script th:src="@{js/HomeSearch.js}"></script>
-    <script>
-        /* make interactive collapsibles */
-        let collapsibles = document.getElementsByClassName("collapsible");
-        for(let i = 0; i < collapsibles.length; i++){
-            collapsibles[i].addEventListener("click", function(){
-                this.classList.toggle("active");
-                let content = this.nextElementSibling;
-                content.style.display = content.style.display === "block" ? "none" : "block";
-            });
-        }
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="/js/HomeSearch.js"></script>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        let materialize_collapsible = document.querySelectorAll(".collapsible");
+        let collapsible = M.Collapsible.init(materialize_collapsible);
 
-        const search_input = document.getElementById("search_input");
-        const search_category = document.getElementById("search_category");
-        const search_input_ul = document.getElementById("search_results_ul");
-        const search_btn = document.getElementById("search_enter");
-        let homeSearch = new HomeSearch(search_input, search_category, search_input_ul, search_btn);
+        let materialize_select = document.querySelectorAll("select");
+        let select = M.FormSelect.init(materialize_select);
+    });
 
-    </script>
+    const search_input = document.querySelector("#search-keyword");
+    const search_category = document.querySelector("#search-category");
+    const search_ul = document.querySelector("#search-results");
+    const search_btn = document.querySelector("#search-btn");
+    const generalSearch = new HomeSearch(search_input, search_category, search_ul, search_btn);
+    generalSearch.searchQuery();
+
+    const toast = [[${message}]];
+    if(toast) M.toast({html: toast, displayLength: 2500});
+
+</script>
 </body>
 </html>

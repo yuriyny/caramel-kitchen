@@ -1,6 +1,6 @@
 package cse308.caramel.caramelkitchen;
 
-import cse308.caramel.caramelkitchen.user.Role;
+import cse308.caramel.caramelkitchen.user.persistence.Role;
 import cse308.caramel.caramelkitchen.user.storage.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

@@ -1,0 +1,35 @@
+#game{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 340px;
+    height: 300px;
+    margin: 50px auto;
+}
+
+#ingredient-image{
+    position: absolute;
+    height: 300px;
+    width: 340px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#target-area{
+    position: absolute;
+    height: 40px;
+    width: 160px;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    background-color: rgba(0,225,0,0.4);
+}
+
+#player{
+    position: absolute;
+    height: 300px;
+    background-color: rgba(0,0,0,0.4);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+}

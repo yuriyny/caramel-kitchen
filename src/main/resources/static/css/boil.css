@@ -1,0 +1,33 @@
+#game{
+    height: 300px;
+    position: relative;
+    width: 350px;
+    margin: 30px auto;
+}
+
+#ingredient-image{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+}
+
+#fog{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 30px 30px #f10000;
+    background: #f10000;
+    top: 50%;
+    left: 50%;
+}
+
+.expand_animation{
+    animation: expand ease-in forwards;
+    /*animation-duration: 1s;*/
+}
+@keyframes expand{
+    0% {transform: translate(-50%, -50%) scale(0); opacity:0;}
+    100% {transform: translate(-50%, -50%) scale(0.9); opacity:0.4;}
+}

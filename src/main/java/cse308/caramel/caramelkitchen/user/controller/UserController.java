@@ -1,6 +1,7 @@
 package cse308.caramel.caramelkitchen.user.controller;
 
-import cse308.caramel.caramelkitchen.user.User;
+import cse308.caramel.caramelkitchen.search.service.SearchService;
+import cse308.caramel.caramelkitchen.user.persistence.User;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import cse308.caramel.caramelkitchen.user.storage.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Controller
@@ -21,6 +23,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    SearchService searchService;
 
     @Autowired
     public UserController(UserDomainService userDomainService) {
@@ -39,7 +44,7 @@ public class UserController {
         if(userDomainService.userExists(newUser)) {
             return "redirect:login?usernameError";
         } else {
-            userDomainService.saveUser(newUser);
+            userDomainService.saveNewUser(newUser);
             return "login";
         }
     }
@@ -61,4 +66,14 @@ public class UserController {
         return "redirect:home";
     }
 
+    @ResponseBody
+    @GetMapping(path={"/user-list"})
+    public List<User> userList() {
+        return userDomainService.getAllCreators();
+    }
+    @ResponseBody
+    @PostMapping(path={"/search-user"})
+    public List<User> searchUser(@RequestBody String search) {
+        return searchService.getCreators(search);
+    }
 }

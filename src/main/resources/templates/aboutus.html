@@ -1,38 +1,90 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Caramel Kitchen About Us</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
-    <link th:href="@{css/style.css}" rel="stylesheet"/>
-</head>
-<body th:with="reason=${session.pageType}">
-    <header>
-        <img th:src="@{images/logo4.png}" class="logo">
-        <nav>
-            <ul>
-                <li><a th:href="@{/home}">Home</a></li>
-                <li><a th:href="@{/logout}">Logout</a></li>
-                
-            </ul>
-        </nav>
-    </header>
 
-    <div id="aboutus_page">
-        <div id="aboutus">
-            <p>This is the CSE308 Section 2 
-                Web Application as designed by 
-                Team Caramel, consisting of:<br><br>
-                Lead Programmer - David Doo<br>
-                Project Manager - Teresa Wang<br>
-                Lead Designer - Allen Wang<br>
-                Data Designer - Yuri Burshtyko</p>
-        </div>
-        <h2>Have general feedback?<br>Let us know here.</h2>
-        <textarea id="feedback" type="text" placeholder="Type here and then send!"></textarea>
-        <button id="feedback_submit">Send</button>
+    <!--Let browser know website is optimized for mobile-->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!--Custom stylings-->
+    <link href="/css/style.css" rel="stylesheet"/>
+</head>
+
+<body th:with="reason=${session.pageType}">
+<nav>
+    <div class="nav-wrapper amber lighten-4">
+        <a href="#" class="brand-logo" tabindex="-1"></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a th:href="@{/createlab}"><p style="display: inline-flex"><i class="material-icons">content_copy</i>Create Lab</p></a></li>
+            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">search</i>Home</p></a></li>
+            <li><a th:href="@{/userprofile}"><p style="display: inline-flex"><i class="material-icons">face</i>Profile</p></a></li>
+            <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
+        </ul>
     </div>
+</nav>
+
+<div class="container custom-box aboutus-container">
+    <div class="row">
+        <div class="col s5">
+            <div class="card-panel teal" style="height: 67vh">
+                <h3 class="white-text">Hello! This is an application
+                    by the <b class="yellow-text">Caramel Group</b>, comprised of
+                    Lead Designer <b>David Doo</b>, Lead Manager
+                    <b>Teresa Wang</b>, Lead Designer <b>Allen Wang</b>,
+                    and Data Designer <b>Yuriy Burshtyko</b>!
+                    </h3>
+            </div>
+        </div>
+        <form class="col s7">
+            <h5 class="row center" style="line-height: 2.5em;">Want more ingredients? Want new equipment?<br>
+                Have general feedback? Or maybe you just want to chat?<br>
+                Let us know here! Do try to keep it short though!</h5>
+
+            <div class="row">
+                <div class="col s3 offset-s2 input-field">
+                    <select multiple>
+                        <option value="" disabled selected>...</option>
+                        <option value="ingredients">Ingredients</option>
+                        <option value="equipment">Equipment</option>
+                        <option value="feedback">Feedback</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <label>I want to talk about...</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s7 offset-s1 input-field">
+                    <i class="material-icons prefix">chat</i>
+                    <textarea id="feedback" class="materialize-textarea" data-length="520"></textarea>
+                    <label for="feedback">Talk to us!</label>
+                </div>
+                <button class="col s2 offset-s1 btn-large square-btn waves-effect waves-orange orange lighten-2"
+                        type="submit" name="action">Submit
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let materialize_select = document.querySelectorAll('select');
+        let select = M.FormSelect.init(materialize_select);
+    });
+
+</script>
 </body>
 </html>

@@ -1,0 +1,61 @@
+#game{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 800px;
+    height: 300px;
+    margin: 50px auto;
+}
+
+#ingredient-item{
+    position: absolute;
+    height: 300px;
+    width: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#ingredient-image{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    transform: translateX(-50%);
+}
+
+#glow{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    box-shadow: inset 0 0 140px 80px rgba(255,0,0,0.7), 0 0 8px 15px rgba(255,0,0,0.7);
+    opacity: 0;
+    border-radius: 40%;
+}
+
+#player{
+    position: absolute;
+    height: 10%;
+    width: 350px;
+    bottom: 0;
+    background-color: rgba(255,0,0,0.7);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#count-down-bar{
+    height: 50px;
+    background: transparent;
+    position: relative;
+}
+
+#progress{
+    position: absolute;
+    height: 100%;
+    background: black;
+    animation: progression 4s;
+    animation-timing-function: linear;
+}
+
+@keyframes progression {
+    from{width: 0;}
+    to{width: 100%;}
+}

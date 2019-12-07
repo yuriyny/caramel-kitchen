@@ -1,0 +1,32 @@
+#game{
+    height: 300px;
+    position: relative;
+    width: 350px;
+    margin: 30px auto;
+}
+
+#ingredient-image{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    border-left: 6px solid black;
+    border-right: 6px solid black;
+}
+
+#target{
+    position: absolute;
+    height: 100%;
+    background-color: rgb(0,0,0);
+    border-radius: 5px;
+    transform: translateX(-50%);
+    opacity: 0.4;
+    width: 10px;
+    animation: slide 2.5s ease-in-out infinite;
+}
+
+@keyframes slide{
+    0% {left: 0;}
+    50% {left: 100%;}
+    100% {left: 0;}
+}

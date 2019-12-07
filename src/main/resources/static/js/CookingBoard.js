@@ -1,58 +1,408 @@
 /**
- * The DOM element[s] pertaining to the cooking board with all present 
+ * The DOM element[s] pertaining to the cooking board with all present
  * utensils and ingredients.
  */
 class CookingBoard{
-    constructor(boardElement, menuElement){
-        this.listElement = boardElement;
-        this.contextMenu = menuElement;
-        /* items consist of utensils and ingredients */
-        this.items = [];
-        this.utensils  = [];
-        this.ingredients = [];
+    constructor(board_ul, recipe, game_area=null, descriptor=null){
+        /** the board element*/
+        this.board_ul = board_ul;
+
+        /** the recipe steps, if needed*/
+        this.recipe = recipe;
+
+        /** place for minigames*/
+        this.game_area = game_area;
+
+        /** shown text output*/
+        this.descriptor = descriptor;
+
+        /** additional info*/
+        this.identifier = 0;
+        this.items = {};    //let this be a list of hashes with {DOM id : {item name, imageFileUrl, use, tags, quantity, selected}}
+
+        this.saved = true;
+
+        this.relevent_id = null;
+        this.relevent_action = null;
     }
 
-    createItem(name, ingredient){   //maybe have some way to identify an active_item as either ingredient or utensil
-        const item = document.createElement("div");
-        if(ingredient === "ingredient"){
-            item.setAttribute("class", "active_item ingredient");
+    /** MENU ADD ITEM---------------------------------*/
+    /**
+     * item param should have name
+     *      additional optional info: quantity, imageFileUrl
+     */
+    addItem(item, use, tag=[]){
+        // console.log(item);
+        // console.log(use);
+        let record = {};
+        Object.assign(record, item);
+        // record["name"] = item.name;
+        if(tag.length > 0) record["tags"] = [tag];
+        else record["tags"] = [];
+        record["use"] = use;
+        record["quantity"] = item.quantity ? item.quantity : 1;
+        record["selected"] = item.selected ? true : false;
+
+        const wrapper = document.createElement("div");
+        if(Array.isArray(this.board_ul)){ wrapper.setAttribute("class", "col s4"); }
+        else { wrapper.setAttribute("class", "col s2"); }
+
+        const card = document.createElement("div");
+        card.setAttribute("class", "card waves-effect waves-teal active-item");
+        card.setAttribute("id", this.identifier);
+
+        const card_img = document.createElement("div");
+        card_img.setAttribute("class", "card-image");
+
+        const img = document.createElement("img");
+        if(item.imageFileUrl != null){
+            img.setAttribute("src", item.imageFileUrl);
         } else {
-            item.setAttribute("class", "active_item")
-        }
-        item.textContent = name;
-        return item;
-    }
-
-    clear(){
-        while(this.listElement.firstChild){
-            this.listElement.removeChild(this.listElement.firstChild)
-        }
-        this.items = [];
-        this.utensils = [];
-        this.ingredients = [];
-    }
-
-    addItem(name){
-        //code to be get item image and category (ingredient/utensil) should be here
-        const tempToolList = ["knife", "peeler", "rolling pin", "blender"];
-        let category = "ingredient";
-        if(tempToolList.includes(name)){
-            this.contextMenu.addUtensil(name);
-            category = "utensil";
+            img.setAttribute("src", "/images/placeholder.png");
+            record["imageFileUrl"] = "/images/placeholder.png";
         }
 
-        const li = document.createElement("li");
-        const item = this.createItem(name, category);
-        this.contextMenu.addMenuContext(item);
-        li.appendChild(item);
-        this.listElement.appendChild(li);
-        this.items.push(name);
-        if(category === "ingredient"){
-            this.ingredients.push(name);
+        const card_content = document.createElement("div");
+        card_content.setAttribute("class", "card-content center");
+
+        const content = document.createElement("p");
+        if(use === "ingredient"){
+            content.textContent = record.quantity + " " + item.name;
         } else {
-            this.utensils.push(name);
+            content.textContent = item.name;
         }
-        
-        this.contextMenu.updateMenu();
+
+        const card_menu = document.createElement("div");
+        card_menu.setAttribute("class", "card-menu");
+
+        const card_menu_ul = document.createElement("ul");
+        card_menu_ul.setAttribute("class", "card-menu-ul");
+
+        if(use === "ingredient"){
+            card.classList.add("ingredient");
+        }
+        else if(use === "tool"){}
+        else if(use === "processedItem"){
+            card.classList.add("processedItem");
+            content.textContent += ": " + tag;
+        } else { console.log("item use not defined"); }
+
+        const card_select = document.createElement("div");
+        card_select.setAttribute("class", "card-select");
+        if(item.selected) card.classList.add("selected");
+        card_select.textContent = "Select";
+        card_select.onclick = (e) => {
+            e.target.parentNode.classList.toggle("selected");
+            this.items[e.target.parentNode.id].selected = !this.items[e.target.parentNode.id].selected;
+            this.groupItems();
+            this.setDescriptor();
+        };
+
+        card_menu.appendChild(card_menu_ul);
+        card_content.appendChild(content);
+        card_img.appendChild(img);
+        card.appendChild(card_img);
+        card.appendChild(card_content);
+        card.appendChild(card_menu);
+        card.appendChild(card_select);
+        wrapper.appendChild(card);
+
+        if(Array.isArray(this.board_ul)){
+            if(use === "ingredient") this.board_ul[0].appendChild(wrapper);
+            else if(use === "tool") this.board_ul[1].appendChild(wrapper);
+            else if(use === "processedItem") this.board_ul[2].appendChild(wrapper);
+            else{ console.log("invalid case"); }
+        } else {
+            this.board_ul.appendChild(wrapper);
+        }
+
+        this.items[this.identifier] = record;
+        this.identifier++;
+
+        console.log(this.items);
+    }
+
+    addTag(itemKey, tag) {
+        if (this.items[itemKey].tags.includes(tag)) return;
+
+        document.getElementById(itemKey).childNodes[1].firstChild.textContent += ", " + tag;
+
+        this.items[itemKey].tags.push(tag);
+    }
+
+    async updateMenu(){
+        let menu_ul;
+        for(const id in this.items){
+            if(this.items[id].use === "tool") continue;
+            const card = document.getElementById(id);
+            menu_ul = card.childNodes[2].firstChild;
+            while(menu_ul.firstChild){
+                menu_ul.removeChild(menu_ul.firstChild);
+            }
+
+            let actionList = [];
+            let toolList = this.getTools();
+            for(const tool of toolList){
+                let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
+                const newActions = await fetch("/valid-actions", {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }
+                })
+                    .then((response) => response.json())
+                    .catch(e => {console.log("err ", e)});
+
+                // console.log(newActions);
+
+                for(let action of newActions){
+                    if(actionList.includes(action)) continue;
+
+                    const li = document.createElement("li");
+                    li.setAttribute("class", "menu-option");
+                    li.setAttribute("oncontextmenu", "return false");
+                    li.textContent = action;
+
+                    li.onclick = (e) => {
+                        if(!this.game_area) {
+                            let target = e.target.parentNode.parentNode.previousSibling.firstChild.textContent;
+
+                            if(this.recipe){ this.recipe.addToRecipe(action, target); }
+
+                            this.performAction(id, action);
+                            this.saved = false;
+                        } else {
+                            this.relevent_id = id;
+                            this.relevent_action = e.target.textContent;
+
+                            let item = e.target.parentNode.parentNode.parentNode;
+                            item.classList.add("game-in-progress");
+
+                            const action = e.target.textContent;
+                            // const action = "drizzle";
+                            const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
+                            tab_instance.select("gameView");
+                            this.playGame(action);
+                        }
+                    };
+
+                    actionList.push(action);
+                    menu_ul.appendChild(li);
+                }
+            }
+
+            if(!menu_ul.firstChild){
+                const li = document.createElement("li");
+                li.setAttribute("class", "menu-option noSelect");
+                li.setAttribute("oncontextmenu", "return false");
+                li.textContent = "No actions available";
+                menu_ul.appendChild(li);
+            }
+        }
+    }
+
+    performAction(id=this.relevent_id, action=this.relevent_action){
+        if (this.items[id].use === "processedItem") {
+            this.addTag(id, action, []);
+        } else {
+            let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].imageFileUrl};
+            this.addItem(newItem, "processedItem", action);
+            this.updateMenu();
+        }
+
+        if(this.game_area){
+            this.recipe.confirmStep(action, this.items[id].name, this.items[id].quantity);
+        }
+
+        this.relevent_id = null;
+        this.relevent_action = null;
+    }
+
+    clearAction(){
+        this.relevent_id = null;
+        this.relevent_action = null;
+    }
+
+    async playGame(action){
+        const path = "/game-app/" + action;
+        const game = await fetch(path, {
+            method: "GET",
+            contentType: "text/plain"
+        })
+            .then(response => response.json())
+            .catch((e)=>{console.log("err " + e)});
+
+        console.log(game);
+        let head = document.getElementsByTagName("head")[0];
+        let gameScript = document.createElement("script");
+        gameScript.type = "text/javascript";
+        gameScript.src = "/" + game.jsFilePath;
+        let gameLink = document.createElement("link");
+        gameLink.rel = "stylesheet";
+        gameLink.type = "text/css";
+        gameLink.href = "/" + game.presentationFilePath;
+        head.appendChild(gameLink);
+        head.appendChild(gameScript);
+
+        current_game_script = gameScript;
+        current_game_css = gameLink;
+    }
+
+    setDescriptor(){
+        if(!this.descriptor) return;
+
+        let selectedItems = [];
+        let selectedIDs = [];
+        for(const id in this.items) {
+            if(this.items[id].selected === true){
+                selectedItems.push(this.items[id]);
+                selectedIDs.push(id);
+            }
+        }
+
+        while(this.descriptor.firstChild){
+            this.descriptor.removeChild(this.descriptor.firstChild);
+        }
+        if(selectedItems.length === 1){
+            if(selectedItems[0].use === "tool"){
+                let span = document.createElement("span");
+                span.textContent = "A " + selectedItems[0].name;
+                this.descriptor.appendChild(span);
+            }
+            else if(selectedItems[0].use === "ingredient"){
+                let input = document.createElement("input");
+                input.setAttribute("type", "number");
+                input.setAttribute("class", "item-quantity-input browser-default");
+                input.setAttribute("value", selectedItems[0].quantity);
+                input.setAttribute("min", "1");
+                input.addEventListener("mouseup", (e)=>{this.updateQuantity(selectedIDs[0], e.target.value)});
+                input.addEventListener("keyup", (e)=>{this.updateQuantity(selectedIDs[0], e.target.value)});
+
+                let span = document.createElement("span");
+                span.textContent = "";
+                if(selectedItems[0].unitOfMeasure && selectedItems[0].unitOfMeasure[0])
+                    span.textContent += selectedItems[0].unitOfMeasure[0];
+                span.textContent += " units of " + selectedItems[0].name + "[s]";
+
+                this.descriptor.appendChild(input);
+                this.descriptor.appendChild(span);
+            }
+            else if(selectedItems[0].use === "processedItem"){
+                let span = document.createElement("span");
+                span.textContent = "A " + selectedItems[0].name + " that has tags:";
+                for(let tag of selectedItems[0].tags){
+                    span.textContent += " " + tag;
+                }
+                this.descriptor.appendChild(span);
+            }
+            let remove = document.createElement("span");
+            remove.textContent = "Remove this item?";
+            remove.setAttribute("style", "cursor: pointer; color: blue; float: right;");
+            remove.onclick = ()=>{
+                const selected = document.getElementsByClassName("selected");
+                this.removeItem(selected[0].id);
+                while(this.descriptor.firstChild){
+                    this.descriptor.removeChild(this.descriptor.firstChild);
+                }
+            };
+            this.descriptor.appendChild(remove);
+        } else if(selectedItems.length === 0){
+            //do nothing
+        }
+    }
+
+    updateQuantity(id, quantity){
+        if(!quantity) return;
+
+        let card = document.getElementById(id);
+        this.items[id].quantity = parseInt(quantity);
+
+        card.children[1].textContent = quantity + " " + this.items[id].name;
+    }
+
+    removeItem(id){
+        let item = document.getElementById(id);
+        item.parentNode.parentNode.removeChild(item.parentNode);
+        delete this.items[id];
+        this.updateMenu();
+    }
+
+    groupItems(){
+        let groups = {};
+        for(const id in this.items) {
+            if(this.items[id].selected === true && this.items[id].use === "ingredient"){
+                if(groups[this.items[id].name]){
+                    groups[this.items[id].name].push(id);
+                } else {
+                    groups[this.items[id].name] = [id];
+                }
+            }
+        }
+
+        for(const [name, ids] of Object.entries(groups)){
+            if(ids.length === 1) continue;
+
+            let newQuant = 0;
+            let newItem = {};
+            Object.assign(newItem, this.items[ids[0]]);
+            for(const id of ids){
+                newQuant += this.items[id].quantity;
+                this.removeItem(id);
+            }
+            newItem["quantity"] = newQuant;
+            this.addItem(newItem, "ingredient", []);
+            this.updateMenu();
+        }
+    }
+
+    getTools(){
+        // return this.tools;
+        let tools = [];
+        for(let id in this.items){
+            if(this.items[id].use === "tool"){
+                tools.push(this.items[id]);
+            }
+        }
+        return tools;
+    }
+
+    getIngredients(){
+        // return this.ingredients;
+        let ingredients = [];
+        for(let id in this.items){
+            if(this.items[id].use === "ingredient"){
+                ingredients.push(this.items[id]);
+            }
+        }
+        return ingredients;
+    }
+
+    getProcessedItems(){
+        const keys = Object.keys(this.items);
+        let processedItems = [];
+        for(const id of keys){
+            if(this.items[id].use === "processedItem"){
+                let nameAndTag = "";
+                for(const tag of this.items[id].tags)
+                    nameAndTag += tag + " ";
+                nameAndTag += this.items[id].name;
+                processedItems.push(nameAndTag);
+            }
+        }
+        return processedItems;
+    }
+
+    setSavedStatus(state){
+        this.saved = state;
+    }
+
+    getSavedStatus(){
+        return this.saved;
+    }
+
+    getNameByID(id){
+        return this.items[id].name;
     }
 }

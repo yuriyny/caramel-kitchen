@@ -5,85 +5,133 @@ class HomeSearch{
     constructor(search_input, search_category, search_results_ul, search_btn){
         this.search_input = search_input;
         this.search_category = search_category;
-        this.search_output = search_results_ul;
+        this.search_ul = search_results_ul;
         this.search_btn = search_btn;
+        
         this.search_btn.onclick = () => this.searchQuery();
+        // this.search_input.addEventListener("keyup", (e)=>{
+        //     if(e.keyCode === 13){ this.search_btn.click(); }
+        // })
+        this.search_input.addEventListener("input", ()=>{ this.searchQuery(); });
     }
 
-    createLabResultLi(result, category){
-        const li = document.createElement("li");
-        const collapsible = document.createElement("button");
-        const author = document.createElement("p");
-        const collapsible_content = document.createElement("div");
-        const content = document.createElement("p");
-        const btn = document.createElement("a");
-        btn.textContent = "Play Lab";
-        btn.setAttribute("href", "#");
-        content.textContent = result["content"];
-        collapsible_content.setAttribute("class", "collapsible_content");
-        collapsible_content.appendChild(content);
-        collapsible_content.appendChild(btn);
-
-        author.textContent = result["creator"];
-        collapsible.textContent = result["name"];
-        collapsible.setAttribute("class", "collapsible");
-        collapsible.appendChild(author);
-        collapsible.addEventListener("click", function(){
-            this.classList.toggle("active");
-            let content = this.nextElementSibling;
-            content.style.display = content.style.display === "block" ? "none" : "block";
-        });
-        li.appendChild(collapsible);
-        li.appendChild(collapsible_content);
-        return li;
-    }
-
-    createCreatorResultLi(result, category){
-        const li = document.createElement("li");
-        const collapsible = document.createElement("button");
-        const collapsible_content = document.createElement("div");
-        const btn = document.createElement("a");
-        btn.textContent = "View Profile";
-        btn.setAttribute("href", "#");
-        collapsible_content.setAttribute("class", "collapsible_content");
-        collapsible_content.appendChild(btn);
-
-        collapsible.textContent = result["creator"];
-        collapsible.setAttribute("class", "collapsible");
-        collapsible.addEventListener("click", function(){
-            this.classList.toggle("active");
-            let content = this.nextElementSibling;
-            content.style.display = content.style.display === "block" ? "none" : "block";
-        });
-        li.appendChild(collapsible);
-        li.appendChild(collapsible_content);
-        return li;
-    }
-
-    //CHANGE THIS FUNCTION FOR AJAX REQUESTS LATER
-    searchQuery(){
-        while(this.search_output.firstChild){
-            this.search_output.removeChild(this.search_output.firstChild)
+    async searchQuery(){
+        const keyword = this.search_input.value;
+        const category = this.search_category.options[this.search_category.selectedIndex].value;
+        // if(category === "creator") return;
+        if(keyword === ""){
+            this.searchAllQuery(category);
+            return;
         }
 
-        const sampleOutput = [{"name":"Apple Pie", "content":"Grandma's apple pie.", "creator":"bob"},
-                                {"name":"Pizza", "content":"New York style Pizza with pineapples", "creator":"joseph"},
-                                {"name":"Flaming Greek Cheese", "content":"Greek cheese thats been set on fire by chef john", "creator":"john"},
-                                {"name":"Slicing an apple", "content":"Tutorial to slice an apple", "creator":"admin"},
-                                {"name":"Lemon Poppy Seed Scones with Strawberry Glaze", "content":"refer to title", "creator":"john"},
-                                {"name":"Water", "content":"a glass of water", "creator":"admin"}]
+        this.clearSearchUl();
 
-        if(this.search_category.value === "lab"){
-            for(let result of sampleOutput){
-                const resultLi = this.createLabResultLi(result, "lab");
-                this.search_output.appendChild(resultLi);
+        if (category ==="recipe"){
+            const recipeResults = await fetch("/search-recipe-list", {
+                method: "POST",
+                body: keyword,
+                contentType: "text/plain"
+            })
+                .then(response => response.json())
+                .catch((e)=>{console.log("err " + e)});
+            for(let result of recipeResults){
+                this.createRecipeResultLi(result);
             }
-        }
-        else if(this.search_category.value === "creator"){
-            for(let result of sampleOutput){
-                const resultLi = this.createCreatorResultLi(result, "creator");
-                this.search_output.appendChild(resultLi);
+        }else{
+            const userResults = await fetch("/search-user", {
+                method: "POST",
+                body: keyword,
+                contentType: "text/plain"
+            })
+                .then(response => response.json())
+                .catch((e)=>{console.log("err " + e)});
+            for(let result of userResults){
+                this.createCreatorResultLi(result)
             }
         }
     }
+
+    async searchAllQuery(category){
+        this.clearSearchUl();
+        if (category==="recipe") {
+            const recipeResults=await fetch("/recipe-list", {
+                method: "GET",
+                contentType: "text/plain"
+            })
+                .then(response => response.json())
+                .catch((e) => {
+                    console.log("err " + e)
+                });
+            console.log(recipeResults);
+            for (let result of recipeResults) {
+                this.createRecipeResultLi(result);
+            }
+        }else{
+            const userResults= await fetch("/user-list", {
+                method: "GET",
+                contentType: "text/plain"
+            })
+                .then(response => response.json())
+                .catch((e) => {
+                    console.log("err " + e)
+                });
+            for (let result of userResults) {
+                this.createCreatorResultLi(result);
+            }
+        }
+    }
+
+    clearSearchUl(){
+        while(this.search_ul.firstChild){
+            this.search_ul.removeChild(this.search_ul.firstChild)
+        }
+    }
+
+    createRecipeResultLi(result){
+        const li = document.createElement("li");
+        li.setAttribute("class", "collection-item avatar");
+
+        const icon = document.createElement("i");
+        icon.setAttribute("class", "material-icons circle orange light-3");
+        icon.textContent = "format_list_bulleted";
+
+        const title = document.createElement("a");
+        title.setAttribute("class", "title");
+        title.setAttribute("href", "/play/"+result.id);
+        title.textContent = result.recipeName;
+
+        const info = document.createElement("p");
+        info.textContent = result.creator;
+
+        const rating = document.createElement("p");
+        rating.setAttribute("class", "secondary-content");
+        rating.textContent = "Rating: " + result.rating;
+
+        li.appendChild(icon);
+        li.appendChild(title);
+        li.appendChild(info);
+        li.appendChild(rating);
+
+        this.search_ul.appendChild(li);
+    }
+
+    createCreatorResultLi(result){
+        const li = document.createElement("li");
+        li.setAttribute("class", "collection-item avatar");
+
+        const icon = document.createElement("i");
+        icon.setAttribute("class", "material-icons circle orange light-3");
+        icon.textContent = "format_list_bulleted";
+
+        const title = document.createElement("a");
+        title.setAttribute("class", "title");
+        title.setAttribute("href", "#");
+        title.textContent = result.username;
+
+        li.appendChild(icon);
+        li.appendChild(title);
+
+        this.search_ul.appendChild(li);
+    }
+
 }
