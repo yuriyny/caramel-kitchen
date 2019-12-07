@@ -82,7 +82,7 @@
 
         move_controller();
 
-        timer = window.setInterval(shrinkArea, 25);
+        move_timer = window.setInterval(shrinkArea, 25);
     }
 
     function move_controller() {
@@ -94,7 +94,7 @@
             if((parseInt($("#player").css("left")) + ($("#player").width() / 2)) <= 339)
                 $("#player").css("left", "+=4")
         }
-        move_timer = setTimeout(move_controller, 10);
+        timer = setTimeout(move_controller, 10);
     }
 
     function shrinkArea(){
@@ -124,6 +124,7 @@
         if(score > max_score * 0.6){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
+            itemBoard.updateMenu();
             exitGame();
         } else {
             const elem = document.getElementById("mistakes");
@@ -140,14 +141,14 @@
 
     function resetGame(){
         while(game_elements.firstChild){ game_elements.removeChild(game_elements.firstChild); }
-        clearTimeout(move_timer);
-        clearInterval(timer);
+        clearTimeout(timer);
+        clearInterval(move_timer);
         loadGame();
     }
 
     function customClean(){
-        clearTimeout(move_timer);
-        clearInterval(timer);
+        clearTimeout(timer);
+        clearInterval(move_timer);
         keyState = {};
         $(document).unbind();
     }

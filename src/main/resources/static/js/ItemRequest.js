@@ -37,7 +37,7 @@ class ItemRequest{
         for(let action of uniqueActions){
             const opt = document.createElement("option");
             opt.value = action;
-            opt.textContent = action;
+            opt.textContent = action.charAt(0).toUpperCase() + action.substring(1);;
             select.appendChild(opt);
         }
         return actions;
@@ -72,39 +72,5 @@ class ItemRequest{
         li.appendChild(select);
         this.actions.appendChild(li);
     }
-
-    // getSelectedActions(){
-    //     let selectedActions = [];
-    //     for(let li of this.actions.children){
-    //         let select = li.childNodes[1];
-    //         selectedActions.push(select.options[select.selectedIndex].value);
-    //     }
-    //     return selectedActions;
-    // }
-    //
-    // async makeRequest(){
-    //     let data = {};
-    //     data["name"] = this.name.value;
-    //     data["file"] = this.img_input.files[0];
-    //     // data["blacklist"]?
-    //     // data["whitelist"] = this.getSelectedActions();
-    //
-    //     console.log(data);
-    //     const send = await fetch("/request", {
-    //         method: "POST",
-    //         body: JSON.stringify(data),
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Accept": "application/json"
-    //         }
-    //     })
-    //         .then((response) => {
-    //             if(response.status !== 200) return response.json();
-    //             else return "success";
-    //         })
-    //         .catch(e => {console.log("err ", e)});
-    //
-    //     console.log(send);
-    // }
 
 }

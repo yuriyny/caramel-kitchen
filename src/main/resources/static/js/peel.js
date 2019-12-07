@@ -92,7 +92,7 @@
                 } else {
                     check = parseFloat(window.getComputedStyle($("#edge" + edge_cnt)[0]).getPropertyValue("height"));
                 }
-                if (check > max_length * 0.9) {
+                if (check > max_length * 0.8) {
                     score++;
                 }
                 $("#edge" + edge_cnt).css("-webkit-animation-play-state", "paused");
@@ -133,9 +133,10 @@
     }
 
     function endGame(){
-        if(score > 2){
+        if(score > 3){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
+            itemBoard.updateMenu();
             exitGame();
         } else {
             const elem = document.getElementById("mistakes");
@@ -155,7 +156,9 @@
         loadGame();
     }
 
-    function customClean(){}
+    function customClean(){
+        clearTimeout(timer);
+    }
 
     function exitGame(){
         customClean();

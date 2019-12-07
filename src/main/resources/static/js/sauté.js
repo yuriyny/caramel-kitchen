@@ -96,8 +96,8 @@
 
         move_controller();
 
-        timer = window.setInterval(moveIngredient, 25);
-        game_timer = setTimeout(endGame, 4000);
+        game_timer = window.setInterval(moveIngredient, 25);
+        timer = setTimeout(endGame, 4000);
     }
 
     function move_controller() {
@@ -148,6 +148,7 @@
         if(parseFloat($("#glow").css("opacity")) > 0.7 && parseFloat($("#glow").css("opacity")) < 0.99){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
+            itemBoard.updateMenu();
             exitGame();
         } else {
             const elem = document.getElementById("mistakes");
@@ -165,15 +166,15 @@
     function resetGame(){
         while(game_elements.firstChild){ game_elements.removeChild(game_elements.firstChild); }
         clearTimeout(move_timer);
-        clearInterval(timer);
-        clearTimeout(game_timer);
+        clearInterval(game_timer);
+        clearTimeout(timer);
         loadGame();
     }
 
     function customClean(){
         clearTimeout(move_timer);
-        clearInterval(timer);
-        clearTimeout(game_timer);
+        clearInterval(game_timer);
+        clearTimeout(timer);
         keyState = {};
         $(document).unbind();
     }

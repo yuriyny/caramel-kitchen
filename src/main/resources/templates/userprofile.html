@@ -1,4 +1,4 @@
-u<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 
 <head>
@@ -42,19 +42,7 @@ u<!DOCTYPE html>
         </div>
 
         <div class="col s12" id="profile">
-            <div class="col s4">
-                <div class="card">
-                    <div class="card-image">
-                        <img src="/images/placeholder.png">
-<!--                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i-->
-<!--                                class="material-icons">add</i></a>-->
-                    </div>
-                    <div class="card-content">
-                        <p>user description</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col s4">
+            <div class="col s6">
                 <h5 class="row center">Created Recipes</h5>
                 <ul id="user-recipes" class="collapsible col s12" data-collapsible="accordian">
 <!--                    <li>-->
@@ -80,7 +68,7 @@ u<!DOCTYPE html>
 <!--                    </li>-->
                 </ul>
             </div>
-            <div class="col s4">
+            <div class="col s6">
                 <h5 class="row center">In progress</h5>
                 <div id="inprogress-recipes" class="collapsible col s12" data-collapsible="accordian">
 
@@ -119,6 +107,17 @@ u<!DOCTYPE html>
                         <i class="material-icons prefix">restaurant_menu</i>
                         <input name="name" id="ingredient-name" type="text" class="validate">
                         <label for="ingredient-name">Ingredient name</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix">subdirectory_arrow_right</i>
+                        <select class="browser-default offset-s1 col s11" name="type">
+                            <option value="">Specify Ingredient Type</option>
+                            <option value="fruit">Fruit</option>
+                            <option value="vegetable">Vegetable</option>
+                            <option value="spice">Spice</option>
+                            <option value="meat">Meat</option>
+                            <option value="dairy">Dairy</option>
+                        </select>
                     </div>
                     <div class="action-list">
                         <ul id="ingredient-actable-actions">

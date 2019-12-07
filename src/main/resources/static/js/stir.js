@@ -106,13 +106,14 @@
             right.classList.remove("glow");
             left.classList.add("glow");
         }
-        console.log("score: " + score);
+        // console.log("score: " + score);
     }
 
     function endGame(){
         if(score > 25){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
+            itemBoard.updateMenu();
             exitGame();
         } else {
             const elem = document.getElementById("mistakes");
@@ -134,6 +135,7 @@
 
     function customClean(){
         document.removeEventListener("keydown", shake);
+        clearTimeout(timer);
     }
 
     function exitGame(){

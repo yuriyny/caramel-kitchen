@@ -17,7 +17,7 @@ class CookingBoard{
         this.descriptor = descriptor;
 
         /** additional info*/
-        this.identifier = 0;
+        this.new_identifier = 1;
         this.items = {};    //let this be a list of hashes with {DOM id : {item name, imageFileUrl, use, tags, quantity, selected}}
 
         this.saved = true;
@@ -32,11 +32,13 @@ class CookingBoard{
      *      additional optional info: quantity, imageFileUrl
      */
     addItem(item, use, tag=[]){
-        // console.log(item);
-        // console.log(use);
+        if(this.items.hasOwnProperty(item.id)){
+            M.toast({html:"You already have that item!", displayLength:1000});
+            return;
+        }
+
         let record = {};
         Object.assign(record, item);
-        // record["name"] = item.name;
         if(tag.length > 0) record["tags"] = [tag];
         else record["tags"] = [];
         record["use"] = use;
@@ -66,11 +68,12 @@ class CookingBoard{
         card_content.setAttribute("class", "card-content center");
 
         const content = document.createElement("p");
-        if(use === "ingredient"){
-            content.textContent = record.quantity + " " + item.name;
-        } else {
-            content.textContent = item.name;
-        }
+        // if(use === "ingredient"){
+        //     content.textContent = record.quantity + " " + item.name;
+        // } else {
+        //     content.textContent = item.name;
+        // }
+        content.textContent = item.name;
 
         const card_menu = document.createElement("div");
         card_menu.setAttribute("class", "card-menu");
@@ -85,6 +88,8 @@ class CookingBoard{
         else if(use === "processedItem"){
             card.classList.add("processedItem");
             content.textContent += ": " + tag;
+            record.id = this.new_identifier;
+            this.new_identifier++;
         } else { console.log("item use not defined"); }
 
         const card_select = document.createElement("div");
@@ -116,8 +121,7 @@ class CookingBoard{
             this.board_ul.appendChild(wrapper);
         }
 
-        this.items[item.id] = record;
-        this.identifier++;
+        this.items[record.id] = record;
 
         console.log(this.items);
     }
@@ -155,8 +159,6 @@ class CookingBoard{
                     .then((response) => response.json())
                     .catch(e => {console.log("err ", e)});
 
-                // console.log(newActions);
-
                 for(let action of newActions){
                     if(actionList.includes(action)) continue;
 
@@ -167,11 +169,13 @@ class CookingBoard{
 
                     li.onclick = (e) => {
                         if(!this.game_area) {
-                            let target = e.target.parentNode.parentNode.previousSibling.firstChild.textContent;
+                            let targetId = e.target.parentNode.parentNode.parentNode.id;
+                            let item = this.items[targetId];
 
-                            if(this.recipe){ this.recipe.addToRecipe(action, target); }
+                            if(this.recipe){ this.recipe.addToRecipe(action, [item], item.quantity); }
 
-                            this.performAction(id, action);
+                            this.performAction(targetId, e.target.textContent);
+                            this.updateMenu();
                             this.saved = false;
                         } else {
                             this.relevent_id = id;
@@ -207,13 +211,15 @@ class CookingBoard{
         if (this.items[id].use === "processedItem") {
             this.addTag(id, action, []);
         } else {
-            let newItem = {"name": this.items[id].name, "imageFileUrl": this.items[id].imageFileUrl};
+            let newItem = {};
+            Object.assign(newItem, this.items[id]);
+            newItem.id = this.new_identifier;
             this.addItem(newItem, "processedItem", action);
-            this.updateMenu();
+            // this.updateMenu();
         }
 
         if(this.game_area){
-            this.recipe.confirmStep(action, this.items[id].name, this.items[id].quantity);
+            this.recipe.confirmStep(action, [this.items[id]], this.items[id].quantity);
         }
 
         this.relevent_id = null;
@@ -277,6 +283,7 @@ class CookingBoard{
                 input.setAttribute("class", "item-quantity-input browser-default");
                 input.setAttribute("value", selectedItems[0].quantity);
                 input.setAttribute("min", "1");
+                input.setAttribute("max", "999")
                 input.addEventListener("mouseup", (e)=>{this.updateQuantity(selectedIDs[0], e.target.value)});
                 input.addEventListener("keyup", (e)=>{this.updateQuantity(selectedIDs[0], e.target.value)});
 
@@ -358,7 +365,6 @@ class CookingBoard{
     }
 
     getTools(){
-        // return this.tools;
         let tools = [];
         for(let id in this.items){
             if(this.items[id].use === "tool"){
@@ -369,7 +375,6 @@ class CookingBoard{
     }
 
     getIngredients(){
-        // return this.ingredients;
         let ingredients = [];
         for(let id in this.items){
             if(this.items[id].use === "ingredient"){

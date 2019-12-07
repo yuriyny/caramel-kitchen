@@ -85,7 +85,7 @@
                             class="material-icons right">backspace</i>Discard</a>
                 </div>
                 <div class="col m12 l6">
-                    <a href="#publish" onclick="prompt.updateTargets()"
+                    <a href="#publish"
                        class="waves-effect waves-orange btn-large orange lighten-2 square-btn modal-trigger"><i
                             class="material-icons right">check</i>Save</a>
                 </div>
@@ -173,18 +173,19 @@
             cookingBoard.addItem(tools[i], "tool");
         }
 
+        console.log(oldRecipe);
+
         const subprocedures = oldRecipe.subprocedureList;
         for (let i = 0; i < subprocedures.length; i++) {
             let action = subprocedures[i].procedureName;
             let instructions = subprocedures[i].instructions;
-            let target = instructions.substr(instructions.indexOf(' ')+1);
+            let target = subprocedures[i].targetIngredients;
             let ingredient = subprocedures[i].targetIngredients[0];
             /* TODO: Fix ingredient quantities in instructions*/
             recipe.addToRecipe(action, target);
             cookingBoard.performAction(ingredient.id, action);
         }
-
-
+        cookingBoard.updateMenu();
 
     }
 

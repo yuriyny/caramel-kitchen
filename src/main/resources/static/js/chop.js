@@ -80,6 +80,7 @@
         if(score > 0){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
+            itemBoard.updateMenu();
             exitGame();
         } else {
             const elem = document.getElementById("mistakes");
@@ -101,6 +102,7 @@
 
     function customClean(){
         document.removeEventListener("keydown", chopDown);
+        clearTimeout(timer);
     }
 
     function exitGame(){

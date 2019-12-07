@@ -85,6 +85,7 @@
         if(score > 0){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
+            itemBoard.updateMenu();
             exitGame();
         } else {
             const elem = document.getElementById("mistakes");
@@ -104,7 +105,9 @@
         loadGame();
     }
 
-    function customClean(){}
+    function customClean(){
+        clearTimeout(timer);
+    }
 
     function exitGame(){
         customClean();

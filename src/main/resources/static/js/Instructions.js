@@ -7,94 +7,177 @@ class Instructions{
         this.recipe = recipe;
 
         this.instructions = [];
+        this.index = null;
     }
 
     setCommentInput(comment_input){
         comment_input.onkeypress = (e) => {
             if(e.keyCode === 13){
-                this.addToRecipe(comment_input.value, null,"comment")
+                if(this.index = null){ return; }
+                const selected_step = document.getElementsByClassName("selected-step")[0];
+
+                const input = document.createElement("span");
+                input.textContent = " " + comment_input.value;
+
+                selected_step.children[0].appendChild(input);
                 comment_input.value = "";
             }
         }
     }
 
-
     deleteStep(li){
+        for(let i = 0; i < this.recipe_ul.children.length; i++){
+            if(this.recipe_ul.children[i] === li){
+                this.instructions.splice(i, 1);
+                break;
+            }
+        }
         li.parentNode.removeChild(li);
+        this.setSelectedIndex();
+
+        console.log(this.instructions);
     }
 
-    addToRecipe(action, target, type="instruction"){
+    addToRecipe(action, targets, initial_quantity=1){
         if(!action) return;
+        this.clearSelected();
 
         const li = document.createElement("li");
-        if(type === "comment"){li.setAttribute("class", "recipe-step blue lighten-4");}
-        else{li.setAttribute("class", "recipe-step");}
+        li.setAttribute("class", "recipe-step selected-step");
+        li.onclick = (e) => {
+            let elem = e.target;
+            while(!elem.classList.contains("recipe-step")) elem = elem.parentElement;
+            if(!elem.classList.contains("selected-step")){
+                this.clearSelected();
+                elem.classList.add("selected-step");
+                this.setSelectedIndex();
+            }
+        };
 
-        const p = document.createElement("p");
+        const txt = document.createElement("div");
+        txt.setAttribute("style", "max-width: 180px; overflow-wrap: break-word;")
+
+        const p1 = document.createElement("span");
         action = action.charAt(0).toUpperCase() + action.substring(1);
-        if(target.split(" ")[0] === "1") target = target.substr(2);
+        p1.textContent = action + " ";
 
-        if(type === "instruction") {
-            p.textContent = action + " " + target;
+        const quant = document.createElement("input");
+        quant.setAttribute("type", "number");
+        quant.setAttribute("class", "item-quantity-recipe-input browser-default");
+        quant.setAttribute("value", initial_quantity.toString(10));
+        quant.setAttribute("min", "1");
+        quant.setAttribute("max", "999");
+
+        const p2 = document.createElement("span");
+        if(targets.length === 1) {
+            p2.textContent = " " + targets[0].name + "[s];";
         } else {
-            p.textContent = action;
+            //somethign else for multiple target ingredients
         }
-        // p.textContent = p.textContent.split(" ").map(e => e[0].toUpperCase() + e.slice(1)).join(" ")
 
-        const icon = document.createElement("i");
-        icon.setAttribute("class", "material-icons right clear-btn");
-        icon.textContent = "clear";
-        icon.onclick = () => this.deleteStep(li);
+        const remove = document.createElement("i");
+        remove.setAttribute("class", "material-icons right hidden-btn");
+        remove.textContent = "clear";
+        remove.onclick = () => this.deleteStep(li);
 
-        li.appendChild(p);
-        li.appendChild(icon);
-        this.recipe_ul.appendChild(li);
+        txt.appendChild(p1);
+        txt.appendChild(quant);
+        txt.appendChild(p2);
+        li.appendChild(txt);
+        li.appendChild(remove);
 
-        this.instructions.push({"action":action, "target":target, "type":type});
+        if(this.index === null){
+            this.recipe_ul.appendChild(li);
+        } else {
+            let current_selection = this.recipe_ul.children[this.index];
+            current_selection.parentNode.insertBefore(li, current_selection.nextSibling);
+        }
+
+        if(this.index !== null)
+            this.instructions.splice((this.index + 1), 0, {"action":action, "targets":targets});
+        else
+            this.instructions.splice(this.index, 0, {"action":action, "targets":targets});
+        this.setSelectedIndex();
+
+        console.log(this.instructions);
+    }
+
+    clearSelected(){
+        const selected = document.getElementsByClassName("selected-step");
+        for(const item of selected){
+            item.classList.remove("selected-step");
+        }
+    }
+
+    setSelectedIndex(){
+        for(let i = 0; i< this.recipe_ul.children.length; i++){
+            if(this.recipe_ul.children[i].classList.contains("selected-step")){
+                this.index = i;
+                return;
+            }
+        }
+        this.index = null;
     }
 
     getRecipe(){
         let recipe = [];
-        // for(let li of this.recipe_ul.getElementsByTagName("li")){
-        //     let sub = {};
-        //     sub["game"] = null;
-        //     sub["instructions"] = "placeholder text";
-        //     sub["procedureName"] = li.childNodes[0].textContent;
-        //     // recipe.push(li.childNodes[0].textContent)
-        //     recipe.push(sub);
-        // }
-        for(const instruction of this.instructions){
+
+        for(let i = 0; i < this.recipe_ul.children.length; i++){
             let sub = {};
-            sub["game"] = null;
-            sub["instructions"] = instruction.action + " " + instruction.target;
-            sub["procedureName"] = instruction.action;
+            let text = "";
+            for(let j = 0; j < this.recipe_ul.children[i].firstChild.children.length; j++){
+                if(this.recipe_ul.children[i].firstChild.children[j].tagName === "INPUT"){
+                    text += this.recipe_ul.children[i].firstChild.children[j].value;
+                } else {
+                    text += this.recipe_ul.children[i].firstChild.children[j].textContent;
+                }
+            }
+            // sub["game"] = null;
+            sub["instructions"] = text;
+            sub["procedureName"] = this.instructions[i].action;
+            sub["targetIngredients"] = this.instructions[i].targets;
             recipe.push(sub);
         }
 
+        // console.log(recipe);
         return recipe;
     }
 
-    confirmStep(action, target, quantity=1){
-        let instruction = "";
-        // action = action.charAt(0).toUpperCase() + action.substring(1);
-        if(quantity === 1){
-            instruction = action + " " + target;
-        } else {
-            instruction = action + " " + quantity + " " + target;
-        }
-        // console.log("target instruction is: " + instruction);
-        for(let i = 0; i< this.recipe_ul.children.length; i++){
-            // console.log("comparing with : " + this.recipe_ul.children[i].textContent);
-            if(this.recipe_ul.children[i].textContent.toUpperCase() === instruction.toUpperCase()){
-                this.recipe_ul.children[i].classList.add("completed");
-                return;
+    confirmStep(action, targets, quantity=1){
+        for(let i = 0; i < this.recipe_ul.children.length; i++){
+            if(this.recipe_ul.children[i].classList.contains("completed")){
+                continue;
+            } else {
+                // console.log(this.recipe[i].procedureName.toUpperCase());
+                // console.log(action.toUpperCase());
+                // console.log(this.recipe[i].targetIngredients);
+                // console.log(targets);
+                if(this.recipe[i].procedureName.toUpperCase() === action.toUpperCase() && this.compareTargetIngredients(this.recipe[i].targetIngredients, targets)){
+                    this.recipe_ul.children[i].classList.add("completed");
+                    return;
+                }
+                else{
+                    break;
+                }
             }
-            if(!this.recipe_ul.children[i].classList.contains("completed")){
-                break;
-            }
         }
-        // console.log(this.recipe_ul.children);
 
         M.toast({html: "That wasn't the correct action though!", displayLength: 1500});
+    }
+
+    compareTargetIngredients(targets1, targets2){
+        let found = null;
+        for(const item1 of targets1){
+            found = false;
+            for(const item2 of targets2){
+                if(item1.name === item2.name){
+                    found = true;
+                    break;
+                }
+            }
+            if(found === false) return false;
+        }
+
+        return true;
     }
 }
