@@ -103,7 +103,9 @@ public class DbSeeder implements CommandLineRunner {
         KitchenTool mixingBowl = new KitchenTool();
         mixingBowl.setName("bowl");
         mixingBowl.getActions().add("mix");
+        mixingBowl.getActions().add("pour");
         mixingBowl.getActions().add("marinate");
+        mixingBowl.setImageName("bowl.png");
 
         KitchenTool mixingSpoon = new KitchenTool();
         mixingSpoon.setName("mixing spoon");
@@ -125,6 +127,11 @@ public class DbSeeder implements CommandLineRunner {
         spatula.getActions().add("flip");
         spatula.getActions().add("stir");
 
+        KitchenTool whisk = new KitchenTool();
+        whisk.setName("whisk");
+        whisk.getActions().add("whisk");
+        whisk.setImageName("whisk.png");
+
         this.mongoTemplate.insert(knife);
         this.mongoTemplate.insert(kettle);
         this.mongoTemplate.insert(rollingPin);
@@ -136,6 +143,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(pan);
         this.mongoTemplate.insert(pot);
         this.mongoTemplate.insert(spatula);
+        this.mongoTemplate.insert(whisk);
 
         /* ----------------- ADD INGREDIENTS ----------------------*/
         Ingredient apple = new Ingredient();
@@ -197,6 +205,31 @@ public class DbSeeder implements CommandLineRunner {
         butter.setImageName("butter.png");
         butter.setType("dairy");
 
+        Ingredient milk = new Ingredient();
+        milk.setName("milk");
+        milk.setImageName("milk.png");
+        milk.setType("liquid");
+
+        Ingredient cinnamon = new Ingredient();
+        cinnamon.setName("cinnamon");
+        cinnamon.setImageName("cinnamon.png");
+        cinnamon.setType("spice");
+
+        Ingredient breadSlice = new Ingredient();
+        breadSlice.setName("bread slice");
+        breadSlice.setImageName("breadslice.png");
+        breadSlice.setType("grain");
+
+        Ingredient mapleSyrup = new Ingredient();
+        mapleSyrup.setName("maple syrup");
+        mapleSyrup.setImageName("maplesyrup.png");
+        mapleSyrup.setType("syrup");
+
+        Ingredient egg = new Ingredient();
+        egg.setName("egg");
+        egg.setImageName("egg.png");
+        egg.setType("egg");
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -208,6 +241,11 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(chicken);
         this.mongoTemplate.insert(butter);
         this.mongoTemplate.insert(dryMustard);
+        this.mongoTemplate.insert(milk);
+        this.mongoTemplate.insert(cinnamon);
+        this.mongoTemplate.insert(breadSlice);
+        this.mongoTemplate.insert(mapleSyrup);
+        this.mongoTemplate.insert(egg);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -262,6 +300,21 @@ public class DbSeeder implements CommandLineRunner {
         w11.setName(dryMustard.getName());
         w11.getActions().add("spice");
 
+        Whitelist w12 = new Whitelist();
+        w12.setName(milk.getName());
+        w12.getActions().add("pour");
+        w12.getActions().add("whisk");
+
+        Whitelist w13 = new Whitelist();
+        w13.setName(cinnamon.getName());
+        w13.getActions().add("season");
+
+        Whitelist w14 = new Whitelist();
+        w14.setName(egg.getName());
+        w14.getActions().add("whisk");
+
+
+
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
         this.mongoTemplate.insert(w3);
@@ -272,6 +325,11 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w8);
         this.mongoTemplate.insert(w9);
         this.mongoTemplate.insert(w10);
+        this.mongoTemplate.insert(w11);
+        this.mongoTemplate.insert(w12);
+        this.mongoTemplate.insert(w13);
+        this.mongoTemplate.insert(w14);
+
 
         /* ----------------- SUBPROCEDURE ----------------------*/
 
@@ -371,9 +429,77 @@ public class DbSeeder implements CommandLineRunner {
 
         recipeService.saveRecipe(steakrecipe,user.getUsername());
         user.getRecipesCreated().add(steakrecipe);
+        //userDomainService.saveUser(user);
+
+        //French Toast Recipe
+        //INGREDIENTS:
+        //1.4 EGGS
+        //2.2/3 CUP MILK
+        //3.2 TEASPOONS CINNAMON
+        //4.8 BREAD SLICES
+        //5.BUTTER
+        //6. MAPLE SYRUP
+        //TOOLS:
+        //1.BOWL
+        //2.WHISK
+        //3.PAN
+        //INSTRUCTIONS:
+        //1.POUR MILK INTO A BOWL
+        //2.ADD 4 EGGS TO THE BOWL
+        //3.ADD 2 TEASPOONS OF CINNAMON
+        //4.WHISK TOGETHER THE EGGS, MILK, AND CINNAMON
+        //5.SOAK EACH BREAD SLICE INTO THE MIXTURE
+        //6.ADD BUTTER TO A PAN
+        //7.FRY THE SOAKED SLICES On THE PAN
+        Subprocedure pourMilk = new Subprocedure();
+        pourMilk.setProcedureName("pour");
+        pourMilk.setInstructions("Pour 2/3 cup of milk into a bowl");
+        Subprocedure addEggs = new Subprocedure();
+        addEggs.setProcedureName("add");
+        addEggs.setInstructions("Add 4 eggs");
+        Subprocedure addCinnamon = new Subprocedure();
+        addCinnamon.setProcedureName("add");
+        addCinnamon.setInstructions("Add 2 teaspoons of cinnamon");
+        Subprocedure whiskMilk = new Subprocedure();
+        whiskMilk.setProcedureName("whisk");
+        whiskMilk.setInstructions("Whisk together the eggs, milk, and cinnamon");
+        Subprocedure addButter = new Subprocedure();
+        addButter.setProcedureName("add");
+        addButter.setInstructions("Add butter to a pan");
+        Subprocedure frySlices = new Subprocedure();
+        frySlices.setProcedureName("fry");
+        frySlices.setInstructions("Fry the slices");
+//        chopCarrot.setGame(new GameApplication());
+
+        /* ----------------- Fried Flank Steak RECIPE ----------------------*/
+        Recipe frenchToastrecipe = new Recipe();
+        frenchToastrecipe.setCreator(user.getUsername());
+        frenchToastrecipe.setRecipeName("French Toast Recipe");
+        frenchToastrecipe.getSubprocedureList().add(pourMilk);
+        frenchToastrecipe.getSubprocedureList().add(addEggs);
+        frenchToastrecipe.getSubprocedureList().add(addCinnamon);
+        frenchToastrecipe.getSubprocedureList().add(whiskMilk);
+        frenchToastrecipe.getSubprocedureList().add(addButter);
+        frenchToastrecipe.getSubprocedureList().add(frySlices);
+
+        frenchToastrecipe.setIsPublished(true);
+        frenchToastrecipe.getIngredients().add(egg);
+        frenchToastrecipe.getIngredients().add(milk);
+        frenchToastrecipe.getIngredients().add(cinnamon);
+        frenchToastrecipe.getIngredients().add(breadSlice);
+        frenchToastrecipe.getIngredients().add(butter);
+        frenchToastrecipe.getIngredients().add(mapleSyrup);
+
+        frenchToastrecipe.getKitchenTools().add(mixingBowl);
+        frenchToastrecipe.getKitchenTools().add(pan);
+        System.out.println(user.getUsername());
+        recipeService.saveRecipe(frenchToastrecipe,user.getUsername());
+        user.getRecipesCreated().add(frenchToastrecipe);
         userDomainService.saveUser(user);
 
 
+
+        /////////////////////////////////////////////////////////////////////////////
         //Adding Game
         Game game1 = new Game();
         game1.setRecipe(steakrecipe);
@@ -444,6 +570,10 @@ public class DbSeeder implements CommandLineRunner {
         game2.setScore(1050.0);
         //saving completed game with All finished steps
         gameRepository.save(game2);
+
+
+
+
 
 
 
