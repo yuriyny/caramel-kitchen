@@ -11,7 +11,6 @@ import java.util.Collection;
 public class Subprocedure {
     private String procedureName;//This is the action name. This is also the game to call for
     private String instructions;
-    // TECHNICALLY, just a collection of any ingredient
     private Collection<Ingredient> targetIngredients;
 //    private String miniGame;
     //private int instructionNumber;//step number

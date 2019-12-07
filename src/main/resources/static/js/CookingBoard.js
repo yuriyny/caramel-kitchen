@@ -49,7 +49,7 @@ class CookingBoard{
 
         const card = document.createElement("div");
         card.setAttribute("class", "card waves-effect waves-teal active-item");
-        card.setAttribute("id", this.identifier);
+        card.setAttribute("id", item.id);
 
         const card_img = document.createElement("div");
         card_img.setAttribute("class", "card-image");
@@ -116,7 +116,7 @@ class CookingBoard{
             this.board_ul.appendChild(wrapper);
         }
 
-        this.items[this.identifier] = record;
+        this.items[item.id] = record;
         this.identifier++;
 
         console.log(this.items);
