@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.util;
 
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
@@ -267,6 +268,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w8);
         this.mongoTemplate.insert(w9);
         this.mongoTemplate.insert(w10);
+        this.mongoTemplate.insert(w11);
 
         /* ----------------- SUBPROCEDURE ----------------------*/
 

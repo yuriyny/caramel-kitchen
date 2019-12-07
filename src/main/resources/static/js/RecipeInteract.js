@@ -85,6 +85,7 @@ class RecipeInteract{
 
        col_body.appendChild(rating);
        col_body.appendChild(edit);
+       col_body.appendChild(document.createElement("div"));
        col_body.appendChild(remove);
        li.appendChild(col_header);
        li.appendChild(col_body);
