@@ -1,7 +1,9 @@
 package cse308.caramel.caramelkitchen.util;
 
+import cse308.caramel.caramelkitchen.game.model.GameState;
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.*;
+import cse308.caramel.caramelkitchen.game.repository.GameRepository;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
@@ -16,7 +18,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 
@@ -32,6 +33,8 @@ public class DbSeeder implements CommandLineRunner {
     WhitelistRepository whitelistRepository;
     @Autowired
     UserDomainService userDomainService;
+    @Autowired
+    GameRepository gameRepository;
     //we can use mongotemplate class or repository interface for managing data in mongodb
     private MongoTemplate mongoTemplate;
     public DbSeeder(MongoTemplate mongoTemplate){
@@ -55,6 +58,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.dropCollection(KitchenTool.class);
         this.mongoTemplate.dropCollection(Recipe.class);
         this.mongoTemplate.dropCollection(Whitelist.class);
+        this.mongoTemplate.dropCollection(Game.class);
         /* ----------------- ADD USER ----------------------*/
         User user=new User();
         user.setUsername("user");
@@ -99,7 +103,9 @@ public class DbSeeder implements CommandLineRunner {
         KitchenTool mixingBowl = new KitchenTool();
         mixingBowl.setName("bowl");
         mixingBowl.getActions().add("mix");
+        mixingBowl.getActions().add("pour");
         mixingBowl.getActions().add("marinate");
+        mixingBowl.setImageName("bowl.png");
 
         KitchenTool mixingSpoon = new KitchenTool();
         mixingSpoon.setName("mixing spoon");
@@ -121,6 +127,11 @@ public class DbSeeder implements CommandLineRunner {
         spatula.getActions().add("flip");
         spatula.getActions().add("stir");
 
+        KitchenTool whisk = new KitchenTool();
+        whisk.setName("whisk");
+        whisk.getActions().add("whisk");
+        whisk.setImageName("whisk.png");
+
         this.mongoTemplate.insert(knife);
         this.mongoTemplate.insert(kettle);
         this.mongoTemplate.insert(rollingPin);
@@ -132,6 +143,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(pan);
         this.mongoTemplate.insert(pot);
         this.mongoTemplate.insert(spatula);
+        this.mongoTemplate.insert(whisk);
 
         /* ----------------- ADD INGREDIENTS ----------------------*/
         Ingredient apple = new Ingredient();
@@ -193,6 +205,31 @@ public class DbSeeder implements CommandLineRunner {
         butter.setImageName("butter.png");
         butter.setType("dairy");
 
+        Ingredient milk = new Ingredient();
+        milk.setName("milk");
+        milk.setImageName("milk.png");
+        milk.setType("liquid");
+
+        Ingredient cinnamon = new Ingredient();
+        cinnamon.setName("cinnamon");
+        cinnamon.setImageName("cinnamon.png");
+        cinnamon.setType("spice");
+
+        Ingredient breadSlice = new Ingredient();
+        breadSlice.setName("bread slice");
+        breadSlice.setImageName("breadslice.png");
+        breadSlice.setType("grain");
+
+        Ingredient mapleSyrup = new Ingredient();
+        mapleSyrup.setName("maple syrup");
+        mapleSyrup.setImageName("maplesyrup.png");
+        mapleSyrup.setType("syrup");
+
+        Ingredient egg = new Ingredient();
+        egg.setName("egg");
+        egg.setImageName("egg.png");
+        egg.setType("egg");
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -204,6 +241,11 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(chicken);
         this.mongoTemplate.insert(butter);
         this.mongoTemplate.insert(dryMustard);
+        this.mongoTemplate.insert(milk);
+        this.mongoTemplate.insert(cinnamon);
+        this.mongoTemplate.insert(breadSlice);
+        this.mongoTemplate.insert(mapleSyrup);
+        this.mongoTemplate.insert(egg);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -258,6 +300,21 @@ public class DbSeeder implements CommandLineRunner {
         w11.setName(dryMustard.getName());
         w11.getActions().add("spice");
 
+        Whitelist w12 = new Whitelist();
+        w12.setName(milk.getName());
+        w12.getActions().add("pour");
+        w12.getActions().add("whisk");
+
+        Whitelist w13 = new Whitelist();
+        w13.setName(cinnamon.getName());
+        w13.getActions().add("season");
+
+        Whitelist w14 = new Whitelist();
+        w14.setName(egg.getName());
+        w14.getActions().add("whisk");
+
+
+
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
         this.mongoTemplate.insert(w3);
@@ -269,13 +326,16 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w9);
         this.mongoTemplate.insert(w10);
         this.mongoTemplate.insert(w11);
+        this.mongoTemplate.insert(w12);
+        this.mongoTemplate.insert(w13);
+        this.mongoTemplate.insert(w14);
+
 
         /* ----------------- SUBPROCEDURE ----------------------*/
 
         Subprocedure chopCarrot=new Subprocedure();
         chopCarrot.setProcedureName("chop");
         chopCarrot.setInstructions("Chop 1 carrot");
-        chopCarrot.setTargetIngredients(Arrays.asList(carrot));
 //        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- SAMPLE RECIPE ----------------------*/
@@ -331,27 +391,21 @@ public class DbSeeder implements CommandLineRunner {
         Subprocedure cutSteak = new Subprocedure();
         cutSteak.setProcedureName("slice");
         cutSteak.setInstructions("Slice Steak");
-        cutSteak.setTargetIngredients(Arrays.asList(steak));
         Subprocedure applySalt = new Subprocedure();
         applySalt.setProcedureName("apply");
         applySalt.setInstructions("Apply Salt");
-        applySalt.setTargetIngredients(Arrays.asList(salt));
         Subprocedure applyPepper = new Subprocedure();
         applyPepper.setProcedureName("apply");
         applyPepper.setInstructions("Apply Pepper");
-        applyPepper.setTargetIngredients(Arrays.asList(pepper));
         Subprocedure applyDryMustard = new Subprocedure();
         applyDryMustard.setProcedureName("apply");
         applyDryMustard.setInstructions("Apply Dry Mustard");
-        applyDryMustard.setTargetIngredients(Arrays.asList(dryMustard));
         Subprocedure applyButter = new Subprocedure();
         applyButter.setProcedureName("spread");
         applyButter.setInstructions("Spread Butter");
-        applyButter.setTargetIngredients(Arrays.asList(butter));
         Subprocedure frySteak = new Subprocedure();
         frySteak.setProcedureName("fry");
         frySteak.setInstructions("Fry Steak");
-        frySteak.setTargetIngredients(Arrays.asList(steak));
 //        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- Fried Flank Steak RECIPE ----------------------*/
@@ -372,9 +426,155 @@ public class DbSeeder implements CommandLineRunner {
         steakrecipe.getIngredients().add(butter);
         steakrecipe.getKitchenTools().add(knife);
         steakrecipe.getKitchenTools().add(pan);
+
         recipeService.saveRecipe(steakrecipe,user.getUsername());
         user.getRecipesCreated().add(steakrecipe);
+        //userDomainService.saveUser(user);
+
+        //French Toast Recipe
+        //INGREDIENTS:
+        //1.4 EGGS
+        //2.2/3 CUP MILK
+        //3.2 TEASPOONS CINNAMON
+        //4.8 BREAD SLICES
+        //5.BUTTER
+        //6. MAPLE SYRUP
+        //TOOLS:
+        //1.BOWL
+        //2.WHISK
+        //3.PAN
+        //INSTRUCTIONS:
+        //1.POUR MILK INTO A BOWL
+        //2.ADD 4 EGGS TO THE BOWL
+        //3.ADD 2 TEASPOONS OF CINNAMON
+        //4.WHISK TOGETHER THE EGGS, MILK, AND CINNAMON
+        //5.SOAK EACH BREAD SLICE INTO THE MIXTURE
+        //6.ADD BUTTER TO A PAN
+        //7.FRY THE SOAKED SLICES On THE PAN
+        Subprocedure pourMilk = new Subprocedure();
+        pourMilk.setProcedureName("pour");
+        pourMilk.setInstructions("Pour 2/3 cup of milk into a bowl");
+        Subprocedure addEggs = new Subprocedure();
+        addEggs.setProcedureName("add");
+        addEggs.setInstructions("Add 4 eggs");
+        Subprocedure addCinnamon = new Subprocedure();
+        addCinnamon.setProcedureName("add");
+        addCinnamon.setInstructions("Add 2 teaspoons of cinnamon");
+        Subprocedure whiskMilk = new Subprocedure();
+        whiskMilk.setProcedureName("whisk");
+        whiskMilk.setInstructions("Whisk together the eggs, milk, and cinnamon");
+        Subprocedure addButter = new Subprocedure();
+        addButter.setProcedureName("add");
+        addButter.setInstructions("Add butter to a pan");
+        Subprocedure frySlices = new Subprocedure();
+        frySlices.setProcedureName("fry");
+        frySlices.setInstructions("Fry the slices");
+//        chopCarrot.setGame(new GameApplication());
+
+        /* ----------------- Fried Flank Steak RECIPE ----------------------*/
+        Recipe frenchToastrecipe = new Recipe();
+        frenchToastrecipe.setCreator(user.getUsername());
+        frenchToastrecipe.setRecipeName("French Toast Recipe");
+        frenchToastrecipe.getSubprocedureList().add(pourMilk);
+        frenchToastrecipe.getSubprocedureList().add(addEggs);
+        frenchToastrecipe.getSubprocedureList().add(addCinnamon);
+        frenchToastrecipe.getSubprocedureList().add(whiskMilk);
+        frenchToastrecipe.getSubprocedureList().add(addButter);
+        frenchToastrecipe.getSubprocedureList().add(frySlices);
+
+        frenchToastrecipe.setIsPublished(true);
+        frenchToastrecipe.getIngredients().add(egg);
+        frenchToastrecipe.getIngredients().add(milk);
+        frenchToastrecipe.getIngredients().add(cinnamon);
+        frenchToastrecipe.getIngredients().add(breadSlice);
+        frenchToastrecipe.getIngredients().add(butter);
+        frenchToastrecipe.getIngredients().add(mapleSyrup);
+
+        frenchToastrecipe.getKitchenTools().add(mixingBowl);
+        frenchToastrecipe.getKitchenTools().add(pan);
+        System.out.println(user.getUsername());
+        recipeService.saveRecipe(frenchToastrecipe,user.getUsername());
+        user.getRecipesCreated().add(frenchToastrecipe);
         userDomainService.saveUser(user);
+
+
+
+        /////////////////////////////////////////////////////////////////////////////
+        //Adding Game
+        Game game1 = new Game();
+        game1.setRecipe(steakrecipe);
+        game1.setGameState(new GameState());
+        gameRepository.save(game1);
+        //System.out.println(game1.getId());
+        game1.getGameState().setRecipeId(steakrecipe.getId());
+        game1.getGameState().setGameId(game1.getId());
+        //After each subprocedure do we create a new intermediateIngredient?
+        IntermediateIngredient ii1 = new IntermediateIngredient();
+        //we cut steak, so we add steak to the list of ingredients?
+        ii1.getIngredients().add(steak);
+        IntermediateIngredient ii2 = new IntermediateIngredient();
+        ii2.getIngredients().add(salt);
+        //adding previous intermediateIngredient?
+        ii2.getIntermediateIngredients().add(ii1);
+
+        game1.getGameState().getIntermediateIngredients().add(ii1);
+        game1.getGameState().getIntermediateIngredients().add(ii2);
+        game1.setScore(250.0);
+        //saving uncomplited game with two finished steps
+        gameRepository.save(game1);
+
+        //Adding Game
+        Game game2 = new Game();
+        game2.setRecipe(steakrecipe);
+        game2.setGameState(new GameState());
+        gameRepository.save(game2);
+        System.out.println(game2.getId());
+        game2.getGameState().setRecipeId(steakrecipe.getId());
+        game2.getGameState().setGameId(game2.getId());
+        //After each subprocedure do we create a new intermediateIngredient?
+        //cut steak
+        IntermediateIngredient ii12 = new IntermediateIngredient();
+        //we cut steak, so we add steak to the list of ingredients?
+        ii12.getIngredients().add(steak);
+        //apply salt
+        IntermediateIngredient ii22 = new IntermediateIngredient();
+        ii22.getIngredients().add(salt);
+        //adding previous intermediateIngredient?
+        ii22.getIntermediateIngredients().add(ii12);
+        //apply pepper
+        //ii22 = salt + pepper
+        //ii32 = ii22 + pepper
+        IntermediateIngredient ii32 = new IntermediateIngredient();
+        ii32.getIntermediateIngredients().add(ii22);
+        ii32.getIngredients().add(pepper);
+        //apply dry mustard
+        IntermediateIngredient ii42 = new IntermediateIngredient();
+        ii42.getIntermediateIngredients().add(ii32);
+        ii42.getIngredients().add(dryMustard);
+        //spread butter
+        IntermediateIngredient ii52 = new IntermediateIngredient();
+        ii52.getIntermediateIngredients().add(ii42);
+        ii52.getIngredients().add(butter);
+        //fry steak
+        //seasoned steak = ii52
+        //no ingredients needed for this step
+        IntermediateIngredient ii62 = new IntermediateIngredient();
+        ii62.getIntermediateIngredients().add(ii52);
+
+        game2.getGameState().getIntermediateIngredients().add(ii12);
+        game2.getGameState().getIntermediateIngredients().add(ii22);
+        game2.getGameState().getIntermediateIngredients().add(ii32);
+        game2.getGameState().getIntermediateIngredients().add(ii42);
+        game2.getGameState().getIntermediateIngredients().add(ii52);
+        game2.getGameState().getIntermediateIngredients().add(ii62);
+        game2.setScore(1050.0);
+        //saving completed game with All finished steps
+        gameRepository.save(game2);
+
+
+
+
+
 
 
 
