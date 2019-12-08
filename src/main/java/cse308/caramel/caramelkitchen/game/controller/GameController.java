@@ -43,13 +43,12 @@ public class GameController {
         Game game;
         User currentUser = userDomainService.getUserByUsername(principal.getName());
         if(gameService.isGameInProgress(recipe, currentUser)) {
-            game = gameService.getGame(id);
+            game = gameService.fetchGameInprogress(recipe, currentUser);
         }
         else {
-            game=gameService.createGame(recipe);
+            game = gameService.createGame(recipe);
             userDomainService.saveInProgressGameToUser(principal.getName(),game);
         }
-
         //return view of recipe
         ModelAndView modelAndView = new ModelAndView("/playlab");
         modelAndView.addObject("game",game);
@@ -59,6 +58,7 @@ public class GameController {
     /*
     Method to read GameState associated with the current recipe and user, redirect to get GameApplication
      */
+
 
     @ResponseBody
     @GetMapping(path={"/game-app/{id}"})

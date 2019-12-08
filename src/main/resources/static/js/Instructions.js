@@ -87,6 +87,8 @@ class Instructions{
             // console.log("comparing with : " + this.recipe_ul.children[i].textContent);
             if(this.recipe_ul.children[i].textContent.toUpperCase() === instruction.toUpperCase()){
                 this.recipe_ul.children[i].classList.add("completed");
+                this.scores[i] = true;
+                if (isRecipeCompleted()) $("#finish").removeClass("disabled");
                 return;
             }
             if(!this.recipe_ul.children[i].classList.contains("completed")){
