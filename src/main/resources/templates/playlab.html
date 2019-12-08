@@ -183,7 +183,7 @@
     }
 
     function isRecipeCompleted(){
-        scores.every(function(e){ return e === true;});
+        return scores.every(function(e){ return e === true;});
     }
 
     $('#save').click(async function(){
