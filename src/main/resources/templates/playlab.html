@@ -126,6 +126,7 @@
                     Mistakes: <span id="mistakes">0</span>
                 </div>
                 <a class="waves-effect waves-light btn-large col s12" style="width: 95%">Finish</a>
+                <button id="save" style="width: 95%" class="waves-effect yellow black-text lighten-3 btn col s12">Save</button>
             </div>
         </div>
     </div>
@@ -175,6 +176,66 @@
     const search_ul = document.querySelector("#item-search-results");
     const itemSelection = new ItemSelection(search_input, search_ul, itemBoard);
     itemSelection.searchAllQuery();
+
+    $('#save').click(async function(){
+        let l_scores = [];
+        for (let i = 0; i < recipe_ul.children.length; i++) {
+            if(recipe_ul.children[i].classList.contains("completed")) {
+                l_scores.push(true);
+            } else {
+                l_scores.push(false);
+            }
+        }
+
+        let data = {
+            "gameId": game.id,
+            "recipeId": game.recipe.id,
+            "ingredients": itemBoard.getIngredients(),
+            "kitchenTools": itemBoard.getTools(),
+            "intermediateIngredients": itemBoard.getProcessedItems(),
+            "scores": l_scores
+        };
+        const savedGameResults = await fetch("/save-game", {
+               method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }})
+                .then(response => response.json())
+                .catch((e)=>{console.log("err " + e)});
+    });
+
+    if(game.gameState){
+        let doesProgressExist = game.gameState.ingredients.length != 0 || game.gameState.kitchenTools.length != 0 || game.gameState.intermediateIngredients.length != 0;
+        if(doesProgressExist) {
+            const recipe = game.recipe;
+            const ingredients = recipe.ingredients;
+            for (let i = 0; i < ingredients.length; i++) {
+                cookingBoard.addItem(ingredients[i], "ingredient");
+            }
+
+            const tools = recipe.kitchenTools;
+            for (let i = 0; i < tools.length; i++) {
+                cookingBoard.addItem(tools[i], "tool");
+            }
+
+            const subprocedures = recipe.subprocedureList;
+            for (let i = 0; i < subprocedures.length; i++) {
+                let action = subprocedures[i].procedureName;
+                let instructions = subprocedures[i].instructions;
+                let target = instructions.substr(instructions.indexOf(' ')+1);
+                let ingredient = subprocedures[i].targetIngredients[0];
+                /* TODO: Fix ingredient quantities in instructions*/
+                recipe.addToRecipe(action, target);
+                cookingBoard.performAction(ingredient.id, action);
+            }
+        }
+    }
+
+    window.onbeforeunload = function() {
+    return "Do you really want to leave? Any unsaved changes will be lost!";
+   };
 </script>
 
 </body>

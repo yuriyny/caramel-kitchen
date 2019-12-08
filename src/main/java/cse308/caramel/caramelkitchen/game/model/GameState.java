@@ -1,5 +1,7 @@
 package cse308.caramel.caramelkitchen.game.model;
 
+import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
+import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +12,8 @@ import java.util.Collection;
 public class GameState {
     String gameId;
     String recipeId;
+    Collection<Ingredient> ingredients;
+    Collection<KitchenTool> kitchenTools;
     Collection<IntermediateIngredient> intermediateIngredients; //This is to make it easier to retrieve if comments are used
-    Collection<Double> scores;
+    Collection<Boolean> scores;
 }

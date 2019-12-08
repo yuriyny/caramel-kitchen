@@ -486,6 +486,10 @@ nav ul li a{
     animation: red-alert 1.3s ease-out forwards;
 }
 
+#mistakes{
+    color:red;
+}
+
 @keyframes red-alert{
     0%{box-shadow: none}
     50%{box-shadow: inset -20px 0 14px 34px red}

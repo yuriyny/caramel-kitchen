@@ -16,7 +16,8 @@ public class GameService {
     @Autowired
     GameRepository gameRepository;
     public Game getGame(String gameId){
-        return gameRepository.findById(gameId).get();
+        System.out.println(gameId);
+        return gameRepository.findById(gameId).orElse(null);
     }
     public Game createGame(Recipe recipe){
         Game game=new Game();
@@ -24,19 +25,15 @@ public class GameService {
         gameRepository.save(game);
         return game;
     }
-    public void saveGameProgress(String gameId, String recipeId, List<IntermediateIngredient> intermediateIngredients,List<Double> scores){
-        GameState gameState=new GameState();
-        gameState.setGameId(gameId);
-        gameState.setRecipeId(recipeId);
-        gameState.setIntermediateIngredients(intermediateIngredients);
-        gameState.setScores(scores);
-        Game game=getGame(gameId);
+    public void saveGameProgress(GameState gamestate){
+        GameState gameState = gamestate;
+        Game game=getGame(gameState.getGameId());
         game.setGameState(gameState);
         gameRepository.save(game);
     }
 
     public boolean isGameInProgress(Recipe recipe, User user) {
-        return user.getGamesInProgress().stream().anyMatch(game -> game.getRecipe().getId() == recipe.getId());
+        return user.getGamesInProgress().stream().anyMatch(game -> game.getRecipe().getId().equals(recipe.getId()));
     }
 
     public void saveGame(Game game) {

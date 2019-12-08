@@ -63,6 +63,13 @@ public class UserDomainService implements UserDetailsService { //removed id beca
         user.getRecipesCreated().remove(recipe);
         saveUser(user);
     }
+
+    public void deleteGameFromInProgress(String username, Game game) {
+        User user=getUserByUsername(username);
+        user.getGamesInProgress().remove(game);
+        userRepository.save(user);
+    }
+
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findById(username).get();
