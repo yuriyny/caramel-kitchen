@@ -154,6 +154,8 @@ class Instructions{
                 // console.log(targets);
                 if(this.recipe[i].procedureName.toUpperCase() === action.toUpperCase() && this.compareTargetIngredients(this.recipe[i].targetIngredients, targets)){
                     this.recipe_ul.children[i].classList.add("completed");
+                    this.scores[i] = true;
+                    if (isRecipeCompleted()) $("#finish").removeClass("disabled");
                     return;
                 }
                 else{

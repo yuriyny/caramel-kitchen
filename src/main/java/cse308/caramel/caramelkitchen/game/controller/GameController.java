@@ -1,6 +1,7 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
 import cse308.caramel.caramelkitchen.game.model.GameApplication;
+import cse308.caramel.caramelkitchen.game.model.GameState;
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.Game;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
@@ -42,13 +43,12 @@ public class GameController {
         Game game;
         User currentUser = userDomainService.getUserByUsername(principal.getName());
         if(gameService.isGameInProgress(recipe, currentUser)) {
-            game = gameService.getGame(id);
+            game = gameService.fetchGameInprogress(recipe, currentUser);
         }
         else {
-            game=gameService.createGame(recipe);
+            game = gameService.createGame(recipe);
             userDomainService.saveInProgressGameToUser(principal.getName(),game);
         }
-
         //return view of recipe
         ModelAndView modelAndView = new ModelAndView("/playlab");
         modelAndView.addObject("game",game);
@@ -59,6 +59,7 @@ public class GameController {
     Method to read GameState associated with the current recipe and user, redirect to get GameApplication
      */
 
+
     @ResponseBody
     @GetMapping(path={"/game-app/{id}"})
     public GameApplication getMinigame(@PathVariable(value = "id") String id) {
@@ -67,14 +68,15 @@ public class GameController {
 
     @ResponseBody
     @PostMapping(path={"/save-game"})
-    public void saveGameState (@RequestBody String gameId, @RequestBody String recipeId, @RequestBody List<IntermediateIngredient>intermediateIngredients,@RequestBody List<Double> scores){
-        gameService.saveGameProgress(gameId, recipeId,intermediateIngredients,scores);
+    public void saveGameState (@RequestBody GameState gamestate){
+        gameService.saveGameProgress(gamestate);
     }
 
     @ResponseBody
     @PostMapping(path={"/finish-game"})
     public void finishedGame (@RequestBody Game game,Principal principal){
         gameService.saveGame(game);
-        userDomainService.saveFinishedGameToUser(principal.getName(),game);
+        userDomainService.deleteGameFromInProgress(principal.getName(), game);
+        userDomainService.saveFinishedGameToUser(principal.getName(), game);
     }
 }

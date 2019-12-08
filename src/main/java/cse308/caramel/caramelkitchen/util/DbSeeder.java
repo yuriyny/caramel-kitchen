@@ -37,7 +37,8 @@ public class DbSeeder implements CommandLineRunner {
     GameRepository gameRepository;
     //we can use mongotemplate class or repository interface for managing data in mongodb
     private MongoTemplate mongoTemplate;
-    public DbSeeder(MongoTemplate mongoTemplate){
+
+    public DbSeeder(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -60,7 +61,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.dropCollection(Whitelist.class);
         this.mongoTemplate.dropCollection(Game.class);
         /* ----------------- ADD USER ----------------------*/
-        User user=new User();
+        User user = new User();
         user.setUsername("user");
         user.setEnabled(true);
         user.setPassword("password");
@@ -250,43 +251,43 @@ public class DbSeeder implements CommandLineRunner {
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
 
-        Whitelist w1=new Whitelist();
+        Whitelist w1 = new Whitelist();
         w1.setName(apple.getName());
         w1.getActions().add("slice");
         w1.getActions().add("peel");
 
-        Whitelist w2=new Whitelist();
+        Whitelist w2 = new Whitelist();
         w2.setName(carrot.getName());
         w2.getActions().add("chop");
         w2.getActions().add("peel");
 
-        Whitelist w3=new Whitelist();
+        Whitelist w3 = new Whitelist();
         w3.setName(garlic.getName());
 //        w3.getActions().add("flatten");
 
-        Whitelist w4=new Whitelist();
+        Whitelist w4 = new Whitelist();
         w4.setName(salt.getName());
         w4.getActions().add("season");
 
-        Whitelist w5=new Whitelist();
+        Whitelist w5 = new Whitelist();
         w5.setName(pepper.getName());
         w5.getActions().add("season");
 
-        Whitelist w6=new Whitelist();
+        Whitelist w6 = new Whitelist();
         w6.setName(steak.getName());
         w6.getActions().add("season");
         w6.getActions().add("slice");
         w6.getActions().add("fry");
 
-        Whitelist w7=new Whitelist();
+        Whitelist w7 = new Whitelist();
         w7.setName(orange.getName());
         w7.getActions().add("slice");
 
-        Whitelist w8=new Whitelist();
+        Whitelist w8 = new Whitelist();
         w8.setName(broccoli.getName());
         w8.getActions().add("chop");
 
-        Whitelist w9=new Whitelist();
+        Whitelist w9 = new Whitelist();
         w9.setName(chicken.getName());
         w9.getActions().add("season");
         w9.getActions().add("boil");
@@ -333,20 +334,20 @@ public class DbSeeder implements CommandLineRunner {
 
         /* ----------------- SUBPROCEDURE ----------------------*/
 
-        Subprocedure chopCarrot=new Subprocedure();
+        Subprocedure chopCarrot = new Subprocedure();
         chopCarrot.setProcedureName("chop");
         chopCarrot.setInstructions("Chop 1 carrot");
 //        chopCarrot.setGame(new GameApplication());
 
         /* ----------------- SAMPLE RECIPE ----------------------*/
-        Recipe recipe=new Recipe();
+        Recipe recipe = new Recipe();
         recipe.setCreator(user.getUsername());
         recipe.setRecipeName("Chopping Carrot Recipe");
         recipe.getSubprocedureList().add(chopCarrot);
         recipe.setIsPublished(true);
         recipe.getIngredients().add(carrot);
         recipe.getKitchenTools().add(knife);
-        recipeService.saveRecipe(recipe,user.getUsername());
+        recipeService.saveRecipe(recipe, user.getUsername());
         user.getRecipesCreated().add(recipe);
         //userDomainService.saveUser(user);
 
@@ -427,7 +428,7 @@ public class DbSeeder implements CommandLineRunner {
         steakrecipe.getKitchenTools().add(knife);
         steakrecipe.getKitchenTools().add(pan);
 
-        recipeService.saveRecipe(steakrecipe,user.getUsername());
+        recipeService.saveRecipe(steakrecipe, user.getUsername());
         user.getRecipesCreated().add(steakrecipe);
         //userDomainService.saveUser(user);
 
@@ -493,7 +494,7 @@ public class DbSeeder implements CommandLineRunner {
         frenchToastrecipe.getKitchenTools().add(mixingBowl);
         frenchToastrecipe.getKitchenTools().add(pan);
         System.out.println(user.getUsername());
-        recipeService.saveRecipe(frenchToastrecipe,user.getUsername());
+        recipeService.saveRecipe(frenchToastrecipe, user.getUsername());
         user.getRecipesCreated().add(frenchToastrecipe);
         userDomainService.saveUser(user);
 
@@ -570,16 +571,5 @@ public class DbSeeder implements CommandLineRunner {
         game2.setScore(1050.0);
         //saving completed game with All finished steps
         gameRepository.save(game2);
-
-
-
-
-
-
-
-
-
-
-
     }
 }

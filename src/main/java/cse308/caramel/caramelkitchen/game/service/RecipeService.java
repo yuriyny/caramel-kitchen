@@ -27,7 +27,7 @@ public class RecipeService {
         return (List<Recipe>)recipeRepository.findAllPublishedRecipes();
     }
     public Recipe findRecipe(String id){//add images along with retrieving recipe
-        Recipe recipe=recipeRepository.findById(id).orElse(null);
+        Recipe recipe = recipeRepository.findById(id).orElse(null);
         recipe.setIngredients(recipeEditorService.findImageIngredient((List<Ingredient>)recipe.getIngredients()));
         recipe.setKitchenTools(recipeEditorService.findImageTool((List<KitchenTool>)recipe.getKitchenTools()));
         return recipe;
