@@ -10,11 +10,13 @@
     title.textContent = itemBoard.relevent_action + " " + itemBoard.getNameByID(itemBoard.relevent_id);
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Press space when the bar is closest to the center!";
+    instructions.textContent = "Hover and make the board sufficiently covered!";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
     let timer = null;
+    let game_interval = null;
+    let activeArea = null;
 
     const game_elements = document.createElement("div");
     game_elements.setAttribute("id", "game_elements");
@@ -41,6 +43,12 @@
     }
 
     function loadGame(){
+        const countdownBar = document.createElement("div");
+        countdownBar.setAttribute("id", "count-down-bar");
+
+        const progress = document.createElement("div");
+        progress.setAttribute("id", "progress");
+
         const game = document.createElement("div");
         game.setAttribute("id", "game");
 
@@ -50,12 +58,31 @@
         ingredient_img.setAttribute("src", img);
         ingredient_img.setAttribute("draggable", false);
 
-        const target = document.createElement("div");
-        target.setAttribute("id", "target");
+        const region1 = document.createElement("div");
+        region1.setAttribute("id", "region1");
+        region1.setAttribute("class", "area");
+
+        const region2 = document.createElement("div");
+        region2.setAttribute("id", "region2");
+        region2.setAttribute("class", "area");
+
+        const region3 = document.createElement("div");
+        region3.setAttribute("id", "region3");
+        region3.setAttribute("class", "area");
+
+        const region4 = document.createElement("div");
+        region4.setAttribute("id", "region4");
+        region4.setAttribute("class", "area");
+
+        countdownBar.appendChild(progress);
 
         game.appendChild(ingredient_img);
-        game.appendChild(target);
+        game.appendChild(region1);
+        game.appendChild(region2);
+        game.appendChild(region3);
+        game.appendChild(region4);
 
+        game_elements.appendChild(countdownBar);
         game_elements.appendChild(game);
 
         score = 0;
@@ -63,23 +90,38 @@
     }
 
     function playGame(){
-        document.addEventListener("keydown", chopDown);
+        const regions = [$("#region1"), $("#region2"), $("#region3"), $("#region4")];
+        for(const region of regions){
+            region.on("mouseenter", function(){
+                activeArea = region[0].id;
+            });
+            region.on("mouseleave", function(){
+                activeArea = null;
+            });
+        }
+
+        game_interval = setInterval(spread, 25);
+        timer = setTimeout(endGame, 4000);
     }
 
-    function chopDown(e){
-        if(e.keyCode === 32) {
-            const width = 350;
-            const targetPos = parseFloat(window.getComputedStyle($("#target")[0]).getPropertyValue("left"));
-            // console.log(targetPos);
-            if (targetPos > width * 0.35 && targetPos < width * 0.65) {
-                score++;
+    function spread(){
+        const regions = [$("#region1"), $("#region2"), $("#region3"), $("#region4")];
+        for(const region of regions){
+            if(activeArea && region[0].id === activeArea){
+                region.css("opacity", "+=0.04");
+            } else {
+                region.css("opacity", "-=0.01");
             }
-            endGame();
         }
     }
 
     function endGame(){
-        if(score > 0){
+        const regions = [$("#region1"), $("#region2"), $("#region3"), $("#region4")];
+        for(const region of regions){
+            if(region.css("opacity") > 0.5) score++;
+            console.log(region.css("opacity"));
+        }
+        if(score > 2){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
             itemBoard.updateMenu();
@@ -99,12 +141,14 @@
 
     function resetGame(){
         while(game_elements.firstChild){ game_elements.removeChild(game_elements.firstChild); }
+        clearTimeout(timer);
+        clearInterval(game_interval);
         loadGame();
     }
 
     function customClean(){
-        document.removeEventListener("keydown", chopDown);
         clearTimeout(timer);
+        clearInterval(game_interval);
     }
 
     function exitGame(){

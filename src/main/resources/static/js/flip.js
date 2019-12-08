@@ -10,7 +10,7 @@
     title.textContent = itemBoard.relevent_action + " " + itemBoard.getNameByID(itemBoard.relevent_id);
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Press space when the bar is closest to the center!";
+    instructions.textContent = "Press space when the ingredient is low enough to flip.";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
@@ -50,11 +50,11 @@
         ingredient_img.setAttribute("src", img);
         ingredient_img.setAttribute("draggable", false);
 
-        const target = document.createElement("div");
-        target.setAttribute("id", "target");
+        const trigger_area = document.createElement("img");
+        trigger_area.setAttribute("id", "trigger-area");
 
         game.appendChild(ingredient_img);
-        game.appendChild(target);
+        game.appendChild(trigger_area);
 
         game_elements.appendChild(game);
 
@@ -63,23 +63,30 @@
     }
 
     function playGame(){
-        document.addEventListener("keydown", chopDown);
+        document.addEventListener("keydown", flipAgain);
+
+        $("#ingredient-image")[0].addEventListener("animationend", function () {
+            endGame();
+        });
     }
 
-    function chopDown(e){
-        if(e.keyCode === 32) {
-            const width = 350;
-            const targetPos = parseFloat(window.getComputedStyle($("#target")[0]).getPropertyValue("left"));
-            // console.log(targetPos);
-            if (targetPos > width * 0.35 && targetPos < width * 0.65) {
+    function flipAgain(e){
+        if(e.keyCode === 32){
+            const item = $("#ingredient-image");
+            console.log(parseFloat(item.css("bottom")) + " " + score);
+            if(parseFloat(item.css("bottom")) < 0){
                 score++;
-            }
-            endGame();
+                console.log(score);
+                if(score > 4) endGame();
+            };
+            item[0].style.animation = "none";
+            item[0].offsetHeight;
+            item[0].style.animation = null;
         }
     }
 
     function endGame(){
-        if(score > 0){
+        if(score > 4){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
             itemBoard.updateMenu();
@@ -99,11 +106,12 @@
 
     function resetGame(){
         while(game_elements.firstChild){ game_elements.removeChild(game_elements.firstChild); }
+        document.removeEventListener("keydown", flipAgain);
         loadGame();
     }
 
     function customClean(){
-        document.removeEventListener("keydown", chopDown);
+        document.removeEventListener("keydown", flipAgain);
         clearTimeout(timer);
     }
 

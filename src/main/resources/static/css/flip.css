@@ -1,0 +1,29 @@
+#game{
+    height: 300px;
+    position: relative;
+    width: 350px;
+    margin: 30px auto;
+}
+
+#trigger-area{
+    position: absolute;
+    height: 95px;
+    width: 100%;
+    bottom: -75px;
+    background-color: rgba(0,0,0,0.4);
+    transform: translateX(-50%);
+}
+
+#ingredient-image{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    animation: flip 2s ease-in forwards;
+}
+
+@keyframes flip{
+    0% {bottom: 0; transform: rotate(0deg); animation-timing-function: cubic-bezier(0.33333, 0.66667, 0.66667, 1)}
+    69.0983% {bottom: 180px; animation-timing-function: cubic-bezier(0.33333, 0, 0.66667, 0.33333)}
+    100% {bottom: -80px; transform: rotate(360deg);}
+}

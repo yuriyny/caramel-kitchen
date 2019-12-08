@@ -1,0 +1,60 @@
+#game{
+    height: 300px;
+    position: relative;
+    width: 350px;
+    margin: 30px auto;
+}
+
+#ingredient-image{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+}
+
+.area{
+    position: absolute;
+    height: 50%;
+    width: 50%;
+    background: lightgreen;
+    opacity: 0.2;
+}
+
+#region1{
+    top: 0;
+    left: 0;
+}
+
+#region2{
+    top: 0;
+    right: 0;
+}
+
+#region3{
+    bottom: 0;
+    right: 0;
+}
+
+#region4{
+    bottom: 0;
+    left: 0;
+}
+
+#count-down-bar{
+    height: 50px;
+    background: transparent;
+    position: relative;
+}
+
+#progress{
+    position: absolute;
+    height: 100%;
+    background: black;
+    animation: progression 4s;
+    animation-timing-function: linear;
+}
+
+@keyframes progression {
+    from{width: 0;}
+    to{width: 100%;}
+}
