@@ -40,10 +40,12 @@ public class GameService {
     public Game fetchGameInprogress(Recipe recipe, User user) {
         Game fetchedGame = user.getGamesInProgress().stream().filter(game-> game.getRecipe().getId().equals(recipe.getId())).findAny().orElse(null);
         GameState currentGamestate = fetchedGame.getGameState();
-        currentGamestate.setIngredients(recipeEditorService.findImageIngredient((List) currentGamestate.getIngredients()));
-        currentGamestate.setKitchenTools(recipeEditorService.findImageTool((List) currentGamestate.getKitchenTools()));
-        currentGamestate.setIntermediateIngredients(recipeEditorService.findImage((List) currentGamestate.getIntermediateIngredients()));
-        fetchedGame.setGameState(currentGamestate);
+        if(currentGamestate != null) {
+            currentGamestate.setIngredients(recipeEditorService.findImageIngredient((List) currentGamestate.getIngredients()));
+            currentGamestate.setKitchenTools(recipeEditorService.findImageTool((List) currentGamestate.getKitchenTools()));
+            currentGamestate.setIntermediateIngredients(recipeEditorService.findImage((List) currentGamestate.getIntermediateIngredients()));
+            fetchedGame.setGameState(currentGamestate);
+        }
         return fetchedGame;
     }
 

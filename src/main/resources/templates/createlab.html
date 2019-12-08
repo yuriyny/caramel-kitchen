@@ -180,10 +180,11 @@
             let action = subprocedures[i].procedureName;
             let instructions = subprocedures[i].instructions;
             let target = subprocedures[i].targetIngredients;
-            let ingredient = subprocedures[i].targetIngredients[0];
             /* TODO: Fix ingredient quantities in instructions*/
-            recipe.addToRecipe(action, target);
-            cookingBoard.performAction(ingredient.id, action);
+            if (target){
+                recipe.addToRecipe(action, target);
+                cookingBoard.performAction(ingredient.id, action);
+            }
         }
         cookingBoard.updateMenu();
 
