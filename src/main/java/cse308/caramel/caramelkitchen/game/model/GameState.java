@@ -15,7 +15,7 @@ public class GameState {
     String recipeId;
     Collection<Ingredient> ingredients;
     Collection<KitchenTool> kitchenTools;
-    Collection<IntermediateIngredient> intermediateIngredients; //This is to make it easier to retrieve if comments are used
+    Collection<ProcessedIngredient> intermediateIngredients; //This is to make it easier to retrieve if comments are used
     Collection<Boolean> scores;
 
     public GameState() {

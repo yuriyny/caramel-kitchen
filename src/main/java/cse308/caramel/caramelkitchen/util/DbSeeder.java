@@ -1,7 +1,7 @@
 package cse308.caramel.caramelkitchen.util;
 
 import cse308.caramel.caramelkitchen.game.model.GameState;
-import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
+import cse308.caramel.caramelkitchen.game.model.ProcessedIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.GameRepository;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
@@ -510,10 +510,10 @@ public class DbSeeder implements CommandLineRunner {
         game1.getGameState().setRecipeId(steakrecipe.getId());
         game1.getGameState().setGameId(game1.getId());
         //After each subprocedure do we create a new intermediateIngredient?
-        IntermediateIngredient ii1 = new IntermediateIngredient();
+        ProcessedIngredient ii1 = new ProcessedIngredient();
         //we cut steak, so we add steak to the list of ingredients?
         ii1.getIngredients().add(steak);
-        IntermediateIngredient ii2 = new IntermediateIngredient();
+        ProcessedIngredient ii2 = new ProcessedIngredient();
         ii2.getIngredients().add(salt);
         //adding previous intermediateIngredient?
         ii2.getIntermediateIngredients().add(ii1);
@@ -534,32 +534,32 @@ public class DbSeeder implements CommandLineRunner {
         game2.getGameState().setGameId(game2.getId());
         //After each subprocedure do we create a new intermediateIngredient?
         //cut steak
-        IntermediateIngredient ii12 = new IntermediateIngredient();
+        ProcessedIngredient ii12 = new ProcessedIngredient();
         //we cut steak, so we add steak to the list of ingredients?
         ii12.getIngredients().add(steak);
         //apply salt
-        IntermediateIngredient ii22 = new IntermediateIngredient();
+        ProcessedIngredient ii22 = new ProcessedIngredient();
         ii22.getIngredients().add(salt);
         //adding previous intermediateIngredient?
         ii22.getIntermediateIngredients().add(ii12);
         //apply pepper
         //ii22 = salt + pepper
         //ii32 = ii22 + pepper
-        IntermediateIngredient ii32 = new IntermediateIngredient();
+        ProcessedIngredient ii32 = new ProcessedIngredient();
         ii32.getIntermediateIngredients().add(ii22);
         ii32.getIngredients().add(pepper);
         //apply dry mustard
-        IntermediateIngredient ii42 = new IntermediateIngredient();
+        ProcessedIngredient ii42 = new ProcessedIngredient();
         ii42.getIntermediateIngredients().add(ii32);
         ii42.getIngredients().add(dryMustard);
         //spread butter
-        IntermediateIngredient ii52 = new IntermediateIngredient();
+        ProcessedIngredient ii52 = new ProcessedIngredient();
         ii52.getIntermediateIngredients().add(ii42);
         ii52.getIngredients().add(butter);
         //fry steak
         //seasoned steak = ii52
         //no ingredients needed for this step
-        IntermediateIngredient ii62 = new IntermediateIngredient();
+        ProcessedIngredient ii62 = new ProcessedIngredient();
         ii62.getIntermediateIngredients().add(ii52);
 
         game2.getGameState().getIntermediateIngredients().add(ii12);

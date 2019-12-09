@@ -1,7 +1,7 @@
 package cse308.caramel.caramelkitchen.game.service;
 
 import cse308.caramel.caramelkitchen.game.model.GameState;
-import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
+import cse308.caramel.caramelkitchen.game.model.ProcessedIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.GameRepository;
 import cse308.caramel.caramelkitchen.user.persistence.User;
