@@ -238,7 +238,7 @@ public class DbSeeder implements CommandLineRunner {
         egg.setType("other");
 
         Ingredient veggieOil=new Ingredient();
-        veggieOil.setType("vegetable oil");
+        veggieOil.setName("vegetable oil");
         veggieOil.setType("oil");
 
         this.mongoTemplate.insert(apple);
@@ -326,6 +326,18 @@ public class DbSeeder implements CommandLineRunner {
         w14.setName(egg.getName());
         w14.getActions().add("whisk");
 
+        Whitelist w15=new Whitelist();
+        w14.setName(veggieOil.getName());
+        w14.getActions().add("add");
+
+        Whitelist w16=new Whitelist();
+        w14.setName(breadSlice.getName());
+        w14.getActions().add("slice");
+        w14.getActions().add("apply");
+
+        Whitelist w17=new Whitelist();
+        w14.setName(mapleSyrup.getName());
+        w14.getActions().add("add");
 
 
         this.mongoTemplate.insert(w1);
@@ -342,6 +354,9 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w12);
         this.mongoTemplate.insert(w13);
         this.mongoTemplate.insert(w14);
+        this.mongoTemplate.insert(w15);
+        this.mongoTemplate.insert(w16);
+        this.mongoTemplate.insert(w17);
 
         /* ----------------- TEST ACTIONS ----------------------*/
         List<String> i=new ArrayList<>();//mix
