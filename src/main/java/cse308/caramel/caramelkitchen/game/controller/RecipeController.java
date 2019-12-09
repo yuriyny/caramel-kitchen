@@ -236,7 +236,7 @@ public class RecipeController {
     @GetMapping(path= "/get-all-types")
     public List<String> getTypes() {
         return recipeEditorService.findAllTypes();
-    }g
+    }
 }
 
 
