@@ -5,6 +5,7 @@ import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.GameRepository;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
+import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 @Service
@@ -35,6 +38,9 @@ public class DbSeeder implements CommandLineRunner {
     UserDomainService userDomainService;
     @Autowired
     GameRepository gameRepository;
+    @Autowired
+    RecipeEditorService recipeEditorService;
+
     //we can use mongotemplate class or repository interface for managing data in mongodb
     private MongoTemplate mongoTemplate;
 
@@ -204,7 +210,7 @@ public class DbSeeder implements CommandLineRunner {
         Ingredient butter = new Ingredient();
         butter.setName("butter");
         butter.setImageName("butter.png");
-        butter.setType("dairy");
+        butter.setType("oil");
 
         Ingredient milk = new Ingredient();
         milk.setName("milk");
@@ -219,17 +225,21 @@ public class DbSeeder implements CommandLineRunner {
         Ingredient breadSlice = new Ingredient();
         breadSlice.setName("bread slice");
         breadSlice.setImageName("breadslice.png");
-        breadSlice.setType("grain");
+        breadSlice.setType("other");
 
         Ingredient mapleSyrup = new Ingredient();
         mapleSyrup.setName("maple syrup");
         mapleSyrup.setImageName("maplesyrup.png");
-        mapleSyrup.setType("syrup");
+        mapleSyrup.setType("other");
 
         Ingredient egg = new Ingredient();
         egg.setName("egg");
         egg.setImageName("egg.png");
-        egg.setType("egg");
+        egg.setType("other");
+
+        Ingredient veggieOil=new Ingredient();
+        veggieOil.setType("vegetable oil");
+        veggieOil.setType("oil");
 
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
@@ -247,6 +257,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(breadSlice);
         this.mongoTemplate.insert(mapleSyrup);
         this.mongoTemplate.insert(egg);
+        this.mongoTemplate.insert(veggieOil);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -305,6 +316,7 @@ public class DbSeeder implements CommandLineRunner {
         w12.setName(milk.getName());
         w12.getActions().add("pour");
         w12.getActions().add("whisk");
+        w12.getActions().add("boil");
 
         Whitelist w13 = new Whitelist();
         w13.setName(cinnamon.getName());
@@ -331,7 +343,70 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w13);
         this.mongoTemplate.insert(w14);
 
+        /* ----------------- TEST ACTIONS ----------------------*/
+        List<String> i=new ArrayList<>();//mix
+        i.add(apple.getName());
+        i.add(steak.getName());
+        List<String>t=new ArrayList<>();
+        t.add(mixingBowl.getName());
+        t.add(mixingSpoon.getName());
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
 
+        i=new ArrayList<>();//marinate
+        i.add(salt.getName());
+        i.add(steak.getName());
+        t=new ArrayList<>();
+        t.add(mixingBowl.getName());
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
+
+        i=new ArrayList<>();//none
+        i.add(salt.getName());
+        i.add(milk.getName());
+        t=new ArrayList<>();
+        t.add(mixingBowl.getName());
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
+
+        IntermediateIngredient mixedAppleAndMilk=new IntermediateIngredient();
+        mixedAppleAndMilk.setName("mixed apple and milk");
+        mixedAppleAndMilk.getIngredients().add(apple);
+        mixedAppleAndMilk.getIngredients().add(milk);
+        mixedAppleAndMilk.setTag("mix");
+        i=new ArrayList<>();//marinate
+        t=new ArrayList<>();
+        t.add(mixingBowl.getName());
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>(Collections.singleton(mixedAppleAndMilk))));
+
+        i=new ArrayList<>();//add salt
+        i.add(salt.getName());
+        i.add(chicken.getName());
+        t=new ArrayList<>();
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
+
+        i=new ArrayList<>();//[]
+        i.add(salt.getName());
+        i.add(pepper.getName());
+        t=new ArrayList<>();
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
+
+        i=new ArrayList<>();//boil
+        i.add(milk.getName());
+        i.add(chicken.getName());
+        t=new ArrayList<>();
+        t.add(pot.getName());
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
+
+        i=new ArrayList<>();//boil
+        i.add(milk.getName());
+        t=new ArrayList<>();
+        t.add(kettle.getName());
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
+
+        i=new ArrayList<>();//sauté
+        i.add(veggieOil.getName());
+        t=new ArrayList<>();
+        t.add(pan.getName());
+        t.add(spatula.getName());
+        System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
         /* ----------------- SUBPROCEDURE ----------------------*/
 
         Subprocedure chopCarrot = new Subprocedure();

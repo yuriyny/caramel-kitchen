@@ -47,6 +47,9 @@ public class RecipeEditorService {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
+    public List<String>findAllTypes(){
+        return findAllIngredients().stream().map(obj->obj.getType()).distinct().collect(Collectors.toList());
+    }
     public List<SubprocedureComponent> findImage(List<SubprocedureComponent> list){
         for (SubprocedureComponent subprocedureComponent : list){
             if(subprocedureComponent.getImageName()!=null){
@@ -80,50 +83,57 @@ public class RecipeEditorService {
         ingredientRepository.save(ingredient);
     }
 
-    public List<String> retrieveValidToolActions(List<String> ingredientIds,List<String> toolIds,  List<IntermediateIngredient> intermediates) {
+    public List<String> retrieveValidToolActions(List<String> ingredients,List<String> tools,  List<IntermediateIngredient> intermediates) {
 
-        List<Ingredient>ingredients=new ArrayList<>();
-        ingredientIds.stream().forEach(obj->{
-            ingredients.add(ingredientRepository.findByName(obj).get());
-        });
-
-        List<KitchenTool>tools=new ArrayList<>();
-        toolIds.stream().forEach(obj->tools.add(kitchenToolRepository.findByName(obj).get()));
+        List<Ingredient>ingredientObj=new ArrayList<>();
+        ingredients.stream().forEach(obj->ingredientObj.add(ingredientRepository.findByName(obj).get()));
+        List<KitchenTool>toolObj=new ArrayList<>();
+        tools.stream().forEach(obj->toolObj.add(kitchenToolRepository.findByName(obj).get()));
+        List<String>base=new ArrayList<>();
+        base.add("spice");
+        base.add("liquid");
+//        System.out.println("tool size"+toolObj.size());
+//        System.out.println("bowl?"+toolObj.stream().anyMatch(obj->obj.getName().equals("bowl")));
+//        System.out.println("spoon"+tools.stream().anyMatch("mixing spoon"::contains));
 
         //if size of ingredients ==1 and size of intermediates==0 and size of tools==1 check whitelist
         if(ingredients.size()==1 && intermediates.size()==0 && tools.size()==1){
-                Whitelist ingredientWL=whitelistRepository.findById(ingredients.get(0).getName()).get();                                          // ID is the name, might need to change
-                KitchenTool tool = kitchenToolRepository.findByName(tools.get(0).getName()).get();
+                Whitelist ingredientWL=whitelistRepository.findById(ingredients.get(0)).get();                                          // ID is the name, might need to change
+                KitchenTool tool=toolObj.get(0);
                 List<String> allActions= (List) tool.getActions();
                 return allActions.stream().filter(action->ingredientWL.getActions().contains(action)).collect(Collectors.toList());
         }
-        //if has liquid or spice ingredient somewhere and bowl is available, then marinate
-        else if(ingredients.size()+intermediates.size()>1 && tools.size()==1 && tools.stream().allMatch(obj->obj.getName().equals("bowl"))){
+        //if has liquid or spice ingredient and other ingredient and bowl is available, then marinate
+        else if(ingredientObj.size()+intermediates.size()>=1 && toolObj.size()==1 && toolObj.stream().anyMatch(obj->obj.getName().equals("bowl"))){
+            //if only liquid/spice, no actions
+            if(ingredientObj.size()>=1 && intermediates.size()==0 && ingredientObj.stream().allMatch(obj->base.contains(obj.getType()))){
+                return new ArrayList<>();
+            }
             //if previous action was mix and liquid/spice was present in that mix, then allow marinate
             if(intermediates.size()>0 && intermediates.stream().anyMatch(obj-> obj.getTag().equals("mix") && (obj.getIngredients().stream().anyMatch(ingredient -> ingredient.getType().equals("liquid"))||obj.getIngredients().stream().anyMatch(ingredient -> ingredient.getType().equals("spice"))))){
-                return new ArrayList<>(Collections.singleton("mix"));
+                return new ArrayList<>(Collections.singleton("marinate"));
             }
-            //if current list has a liquid or spice
-            if(ingredients.stream().anyMatch(obj->obj.getType().equals("liquid"))|| ingredients.stream().anyMatch(obj->obj.getType().equals("spice"))){
-                return new ArrayList<>(Collections.singleton("mix"));
+            //if current list has a liquid or spice(has a non liquid/spice item)
+            if(ingredientObj.size()+intermediates.size()>1 &&(ingredientObj.stream().anyMatch(obj->obj.getType().equals("liquid"))|| ingredientObj.stream().anyMatch(obj->obj.getType().equals("spice")))){
+                return new ArrayList<>(Collections.singleton("marinate"));
             }
         }
         //if list of ingredients+intermediate size >1, and bowl and spoon is there, then  add mix
-        else if(ingredients.size()+intermediates.size()>1 && tools.size()==2 && tools.stream().anyMatch(obj->obj.getName().equals("bowl")) && tools.stream().anyMatch(obj->obj.getName().equals("spoon"))){
+        else if(ingredients.size()+intermediates.size()>1 && tools.size()==2 && toolObj.stream().anyMatch(obj->obj.getName().equals("bowl"))&& toolObj.stream().anyMatch(obj->obj.getName().equals("mixing spoon"))){
             return new ArrayList<>(Collections.singleton("mix"));
         }
         //if spice is in the ingredient and the other ingredient isn't spice, have option to add spice
-        else if(ingredients.size()+intermediates.size()==2 && ingredients.stream().anyMatch(obj->obj.getType().equals("spice"))&&!ingredients.stream().allMatch(obj->obj.getType().equals("spice"))){
-            List<Ingredient> i=ingredients.stream().filter(obj->obj.getType().equals("spice")).collect(Collectors.toList());
-            return new ArrayList<>(Collections.singleton("add"+i.get(0)));
+        else if(ingredientObj.size()+intermediates.size()==2 && ingredientObj.stream().anyMatch(obj->obj.getType().equals("spice"))&&!ingredientObj.stream().allMatch(obj->obj.getType().equals("spice"))){
+            List<Ingredient> i=ingredientObj.stream().filter(obj->obj.getType().equals("spice")).collect(Collectors.toList());
+            return new ArrayList<>(Collections.singleton("add"+i.get(0).getName()));
         }
-        //if pan or pot and exists liquid, then boil is an option
-        else if((tools.stream().anyMatch(tool->tool.getName().equals("pan")) || tools.stream().anyMatch(tool->tool.getName().equals("pot"))) && ingredients.stream().anyMatch(obj->obj.getType().equals("liquid"))){
+        //if pot and liquid, then boil is an option
+        else if(tools.size()==1&& toolObj.stream().anyMatch(tool->tool.getName().equals("pot")) && ingredientObj.stream().anyMatch(obj->obj.getType().equals("liquid"))){
             return new ArrayList<>(Collections.singleton("boil"));
         }
-        //if pan and spatula and exists non liquid and non spice ingredient and oil exists, then saute is an option (NOT FINISHED)
-        else if(tools.stream().anyMatch(tool->tool.getName().equals("pan")) && tools.stream().anyMatch(tool->tool.getName().equals("spatula")) && ingredients.stream().anyMatch(ingredient -> ingredient.getType().equals("oil")) ){
-            return new ArrayList<>(Collections.singleton("boil"));
+        //if pan and spatula and exists non liquid and non spice ingredient and oil exists, then saute is an option
+        else if(toolObj.stream().anyMatch(tool->tool.getName().equals("pan")) && toolObj.stream().anyMatch(tool->tool.getName().equals("spatula")) && ingredientObj.stream().anyMatch(ingredient -> ingredient.getType().equals("oil")) && !ingredientObj.stream().allMatch(obj->base.contains(obj.getType()))){
+            return new ArrayList<>(Collections.singleton("sauté"));
         }
         return new ArrayList<>();
 
