@@ -38,7 +38,7 @@ class Instructions{
         console.log(this.instructions);
     }
 
-    addToRecipe(action, targets, initial_quantity=1){
+    addToRecipe(action, targets){
         if(!action) return;
         this.clearSelected();
 
@@ -60,19 +60,53 @@ class Instructions{
         const p1 = document.createElement("span");
         action = action.charAt(0).toUpperCase() + action.substring(1);
         p1.textContent = action + " ";
+        txt.appendChild(p1);
 
-        const quant = document.createElement("input");
-        quant.setAttribute("type", "number");
-        quant.setAttribute("class", "item-quantity-recipe-input browser-default");
-        quant.setAttribute("value", initial_quantity.toString(10));
-        quant.setAttribute("min", "1");
-        quant.setAttribute("max", "999");
-
-        const p2 = document.createElement("span");
         if(targets.length === 1) {
-            p2.textContent = " " + targets[0].name + "[s];";
+            let quant = document.createElement("input");
+            quant.setAttribute("type", "number");
+            quant.setAttribute("class", "item-quantity-recipe-input browser-default");
+            quant.setAttribute("value", targets[0].quantity);
+            quant.setAttribute("min", "1");
+            quant.setAttribute("max", "999");
+
+            let p2 = document.createElement("span");
+            p2.textContent = " " + targets[0].name + "[s]";
+            if(targets[0].tags.length > 0){
+                p2.textContent += " with tags, ";
+                for(let i = 0; i < targets[0].tags.length ; i++){
+                    p2.textContent += targets[0].tags[i];
+                    if(i !== targets[0].tags.length - 1) p2.textContent += ", "
+                }
+                p2.textContent += ";";
+            }
+            txt.appendChild(quant);
+            txt.appendChild(p2);
         } else {
-            //somethign else for multiple target ingredients
+            for(let j = 0; j < targets.length; j++){
+                console.log("CP!");
+                console.log(targets[j]);
+
+                let quant = document.createElement("input");
+                quant.setAttribute("type", "number");
+                quant.setAttribute("class", "item-quantity-recipe-input browser-default");
+                quant.setAttribute("value", targets[j].quantity);
+                quant.setAttribute("min", "1");
+                quant.setAttribute("max", "999");
+
+                let p2 = document.createElement("span");
+                p2.textContent = " " + targets[j].name + "[s]";
+                if(targets[j].tags.length > 0){
+                    p2.textContent += " with tags, ";
+                    for(let i = 0; i < targets[j].tags.length ; i++){
+                        p2.textContent += targets[j].tags[i];
+                        if(i !== targets[j].tags.length - 1) p2.textContent += ", "
+                    }
+                }
+                if(j !== targets.length - 1) p2.textContent += " and ";
+                txt.appendChild(quant);
+                txt.appendChild(p2);
+            }
         }
 
         const remove = document.createElement("i");
@@ -80,9 +114,6 @@ class Instructions{
         remove.textContent = "clear";
         remove.onclick = () => this.deleteStep(li);
 
-        txt.appendChild(p1);
-        txt.appendChild(quant);
-        txt.appendChild(p2);
         li.appendChild(txt);
         li.appendChild(remove);
 
@@ -148,13 +179,9 @@ class Instructions{
             if(this.recipe_ul.children[i].classList.contains("completed")){
                 continue;
             } else {
-                // console.log(this.recipe[i].procedureName.toUpperCase());
-                // console.log(action.toUpperCase());
-                // console.log(this.recipe[i].targetIngredients);
-                // console.log(targets);
                 if(this.recipe[i].procedureName.toUpperCase() === action.toUpperCase() && this.compareTargetIngredients(this.recipe[i].targetIngredients, targets)){
                     this.recipe_ul.children[i].classList.add("completed");
-                    this.scores[i] = true;
+                    scores[i] = true;
                     if (isRecipeCompleted()) $("#finish").removeClass("disabled");
                     return;
                 }
@@ -168,6 +195,8 @@ class Instructions{
     }
 
     compareTargetIngredients(targets1, targets2){
+        if(!targets1 || !targets2) return false;
+
         let found = null;
         for(const item1 of targets1){
             found = false;

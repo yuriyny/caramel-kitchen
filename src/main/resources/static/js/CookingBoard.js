@@ -102,7 +102,6 @@ class CookingBoard{
         card_select.onclick = (e) => {
             e.target.parentNode.classList.toggle("selected");
             this.items[e.target.parentNode.id].selected = !this.items[e.target.parentNode.id].selected;
-            this.groupItems();
             this.setDescriptor();
             this.setSelected();
             this.updateMenu();
@@ -214,19 +213,35 @@ class CookingBoard{
         li.setAttribute("oncontextmenu", "return false");
         li.textContent = action;
 
-                    li.onclick = (e) => {
-                        if(!this.game_area) {
-                            let targetId = e.target.parentNode.parentNode.parentNode.id;
-                            let item = this.items[targetId];
+        li.onclick = (e) => {
+            if(!this.game_area) {
+                let targets = [];
+                if(this.selectedIds.length > 0){
+                    for(const id of this.selectedIds){
+                        if(this.items[id].use !== "tool") targets.push(this.items[id]);
+                    }
+                    if(this.recipe){ this.recipe.addToRecipe(action, targets); }
+                    this.performAction(this.selectedIngredients, e.target.textContent);
+                } else {
+                    let targetId = e.target.parentNode.parentNode.parentNode.id;
+                    let ingredient = this.items[targetId];
+                    if(this.recipe){ this.recipe.addToRecipe(action, [ingredient]); }
+                    this.performAction(targetId, e.target.textContent);
+                }
 
-                            if(this.recipe){ this.recipe.addToRecipe(action, [item], item.quantity); }
-
-                            this.performAction(targetId, e.target.textContent);
-                            this.updateMenu();
-                            this.saved = false;
-                        } else {
-                            this.relevent_id = id;
-                            this.relevent_action = e.target.textContent;
+                this.updateMenu();
+                this.saved = false;
+            } else {
+                if(this.selectedIds.length > 0){
+                    this.relevent_id = [];
+                    for(let id of this.selectedIds){
+                        if(this.items[id].use !== "tool") {
+                            this.relevent_id.push(id);
+                        }
+                    }
+                }
+                else{ this.relevent_id = id; }
+                this.relevent_action = e.target.textContent;
 
                 if(this.selectedIds.length > 0) {
                     for (const id of this.selectedIds) {
@@ -248,31 +263,35 @@ class CookingBoard{
             }
         };
 
-                    actionList.push(action);
-                    menu_ul.appendChild(li);
-                }
-            }
-
-            if(!menu_ul.firstChild){
-                const li = document.createElement("li");
-                li.setAttribute("class", "menu-option noSelect");
-                li.setAttribute("oncontextmenu", "return false");
-                li.textContent = "No actions available";
-                menu_ul.appendChild(li);
-            }
-        }
+        menu_ul.appendChild(li);
     }
 
     performAction(id=this.relevent_id, action=this.relevent_action){
-        if (this.items[id].use === "processedItem") {
-            this.addTag(id, action, []);
-        } else {
+        if(Array.isArray(id)){
             let newItem = {};
-            Object.assign(newItem, this.items[id]);
+            newItem.name = "mixed item placeholder";
             newItem.id = this.new_identifier;
-            this.addItem(newItem, "processedItem", action);
-            // this.updateMenu();
+            this.addItem(newItem, "processedItem", "mix");
+
+            if (this.game_area) {
+                let targets = [];
+                for(let identifier of id){
+                    targets.push(this.items[identifier]);
+                }
+                this.recipe.confirmStep(action, targets);
+            }
         }
+
+        else {
+            if (this.items[id].use === "processedItem") {
+                this.addTag(id, action, []);
+            } else {
+                let newItem = {};
+                Object.assign(newItem, this.items[id]);
+                newItem.id = this.new_identifier;
+                newItem.selected = false;
+                this.addItem(newItem, "processedItem", action);
+            }
 
             if (this.game_area) {
                 this.recipe.confirmStep(action, [this.items[id]], this.items[id].quantity);
@@ -391,34 +410,6 @@ class CookingBoard{
         item.parentNode.parentNode.removeChild(item.parentNode);
         delete this.items[id];
         this.updateMenu();
-    }
-
-    groupItems(){
-        let groups = {};
-        for(const id in this.items) {
-            if(this.items[id].selected === true && this.items[id].use === "ingredient"){
-                if(groups[this.items[id].name]){
-                    groups[this.items[id].name].push(id);
-                } else {
-                    groups[this.items[id].name] = [id];
-                }
-            }
-        }
-
-        for(const [name, ids] of Object.entries(groups)){
-            if(ids.length === 1) continue;
-
-            let newQuant = 0;
-            let newItem = {};
-            Object.assign(newItem, this.items[ids[0]]);
-            for(const id of ids){
-                newQuant += this.items[id].quantity;
-                this.removeItem(id);
-            }
-            newItem["quantity"] = newQuant;
-            this.addItem(newItem, "ingredient", []);
-            this.updateMenu();
-        }
     }
 
     getTools(){

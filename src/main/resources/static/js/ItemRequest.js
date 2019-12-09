@@ -2,9 +2,10 @@
  * create selection for "blacklist"?
  */
 class ItemRequest{
-    constructor(use, item_card, item_name, item_img_input, item_actions){
+    constructor(use, item_card, item_name, item_img_input, item_actions, item_type_ul=null){
         this.use = use;
         this.actions = item_actions;
+        this.type_ul = item_type_ul;
 
         item_img_input.onchange = () =>{
             let preview = item_card.children[0].firstChild;
@@ -71,6 +72,22 @@ class ItemRequest{
         li.appendChild(icon);
         li.appendChild(select);
         this.actions.appendChild(li);
+    }
+
+    async addTypes(){
+        const types = await fetch("/get-all-types", {
+            method: "GET",
+            contentType: "text/plain"
+        })
+            .then(response => response.json())
+            .catch((e)=>{console.log("err " + e)});
+
+        for(const type of types) {
+            const opt = document.createElement("option");
+            opt.value = type;
+            opt.textContent = type;
+            this.type_ul.appendChild(opt);
+        }
     }
 
 }

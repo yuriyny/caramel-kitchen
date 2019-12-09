@@ -1,0 +1,84 @@
+#game{
+    /*display: flex;*/
+    justify-content: space-between;
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+        ". up ."
+        "left center right"
+        ". down .";
+}
+
+#items, #right-indicator, #left-indicator, #up-indicator, #down-indicator{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#items{
+    grid-area: center;
+}
+
+#right-indicator{
+    grid-area: right;
+}
+
+#left-indicator{
+    grid-area: left;
+}
+
+#up-indicator{
+    grid-area: up;
+}
+
+#down-indicator{
+    grid-area: down;
+}
+
+.glow{
+    border-radius: 50%;
+    box-shadow: 0 0 30px 10px rgba(0,255,0,0.6);
+    background-color: rgba(0,255,0,0.6);
+}
+
+.ingredient-image{
+    position: absolute;
+    height: 190px;
+    width: 190px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.game-comp{
+    width: 100%;
+    height: 100%;
+}
+
+#game i{
+    user-select: none;
+    font-size: 145px !important;
+}
+
+#count-down-bar{
+    height: 50px;
+    background: transparent;
+    position: relative;
+}
+
+#progress{
+    position: absolute;
+    height: 100%;
+    background: black;
+    animation: progression 3s;
+    animation-timing-function: linear;
+}
+
+@keyframes progression {
+    from{width: 0;}
+    to{width: 100%;}
+}

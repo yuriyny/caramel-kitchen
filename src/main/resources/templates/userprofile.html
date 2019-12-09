@@ -110,13 +110,8 @@
                     </div>
                     <div class="col s12 input-field">
                         <i class="material-icons prefix">subdirectory_arrow_right</i>
-                        <select class="browser-default offset-s1 col s11" name="type">
+                        <select class="browser-default offset-s1 col s11" name="type" id="ingredient-type">
                             <option value="">Specify Ingredient Type</option>
-                            <option value="fruit">Fruit</option>
-                            <option value="vegetable">Vegetable</option>
-                            <option value="spice">Spice</option>
-                            <option value="meat">Meat</option>
-                            <option value="dairy">Dairy</option>
                         </select>
                     </div>
                     <div class="action-list">
@@ -221,18 +216,20 @@
     const ingredient_card = document.querySelector("#ingredient-card");
     const ingredient_img = document.querySelector("#ingredient-img-input");
     const ingredient_actions = document.querySelector("#ingredient-actable-actions");
-    let ingredientRequest = new ItemRequest("ingredient", ingredient_card, ingredient_name, ingredient_img, ingredient_actions);
+    const ingredient_types = document.querySelector("#ingredient-type");
+    let ingredientRequest = new ItemRequest("ingredient", ingredient_card, ingredient_name, ingredient_img, ingredient_actions, ingredient_types);
     ingredientRequest.addAction();
+    ingredientRequest.addTypes();
 
     const created_recipe_ul = document.querySelector("#user-recipes");
     let createdRecipeInteract = new RecipeInteract(created_recipe_ul);
     createdRecipeInteract.loadCreatedRecipes();
 
-    const inprogress_recipe_ul = document.querySelector("inprogress-recipes");
+    const inprogress_recipe_ul = document.querySelector("#inprogress-recipes");
     let inProgressRecipeInteract = new RecipeInteract(inprogress_recipe_ul);
     inProgressRecipeInteract.loadInprogressRecipes();
 
-    const completed_recipe_ul = document.querySelector("completed-recipes");
+    const completed_recipe_ul = document.querySelector("#completed-recipes");
     let completedRecipeInteract = new RecipeInteract(completed_recipe_ul);
     completedRecipeInteract.loadCompletedRecipes();
 
