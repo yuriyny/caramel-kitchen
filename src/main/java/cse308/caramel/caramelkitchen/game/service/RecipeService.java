@@ -36,17 +36,6 @@ public class RecipeService {
         if(recipe.getCreator()==null){//for testing with dbseeder
             recipe.setCreator(username);
         }
-//        for(Subprocedure s : recipe.getSubprocedureList()) {      //NO NEED TO SAVE MINIGAME INTO SUBPROCEDURE IF IT IS ALREADY THE VALUE PROCEDURENAME
-//            s.setMiniGame(s.getProcedureName());                  //STRING IS USED TO GET THE PATH SO
-//        }
-//        for(Subprocedure s : recipe.getSubprocedureList()) {
-//            MiniGame miniGame = new MiniGame();
-//            miniGame.setId(s.getProcedureName().hashCode());
-//            miniGame.setRecipe(recipe);
-//            miniGame.setUsername(username);
-//
-//            s.setMiniGame(miniGame);
-//        }
         recipeRepository.save(recipe);
         return recipe;
     }

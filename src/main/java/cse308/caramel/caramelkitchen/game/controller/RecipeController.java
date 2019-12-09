@@ -232,6 +232,11 @@ public class RecipeController {
         return recipeEditorService.retrieveValidToolActions((List<String>) pair.get("ingredient"), (List<String>) pair.get("tool"), (List<ProcessedIngredient>) pair.get("intermediateIngredient"));
     }
 
+    @ResponseBody
+    @GetMapping(path= "/get-all-types")
+    public List<String> getTypes() {
+        return recipeEditorService.findAllTypes();
+    }
 }
 
 
