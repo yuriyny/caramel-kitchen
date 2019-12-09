@@ -18,7 +18,10 @@ class CookingBoard{
 
         /** additional info*/
         this.new_identifier = 1;
-        this.items = {};    //let this be a list of hashes with {DOM id : {item name, imageFileUrl, use, tags, quantity, selected}}
+        this.items = {};
+        this.selectedIds = [];
+        this.selectedIngredients = [];
+        this.selectedTools = [];
 
         this.saved = true;
 
@@ -51,7 +54,7 @@ class CookingBoard{
 
         const card = document.createElement("div");
         card.setAttribute("class", "card waves-effect waves-teal active-item");
-        card.setAttribute("id", item.id);
+        card.setAttribute("id", record.id);
 
         const card_img = document.createElement("div");
         card_img.setAttribute("class", "card-image");
@@ -101,6 +104,8 @@ class CookingBoard{
             this.items[e.target.parentNode.id].selected = !this.items[e.target.parentNode.id].selected;
             this.groupItems();
             this.setDescriptor();
+            this.setSelected();
+            this.updateMenu();
         };
 
         card_menu.appendChild(card_menu_ul);
@@ -144,10 +149,10 @@ class CookingBoard{
                 menu_ul.removeChild(menu_ul.firstChild);
             }
 
-            let actionList = [];
-            let toolList = this.getTools();
-            for(const tool of toolList){
-                let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
+            if(this.selectedIds.length > 0){
+                if(!this.selectedIds.includes(id) || this.selectedIngredients.length === 0 || this.selectedTools.length === 0) continue;
+
+                let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": []};
                 const newActions = await fetch("/valid-actions", {
                     method: "POST",
                     body: JSON.stringify(data),
@@ -159,13 +164,55 @@ class CookingBoard{
                     .then((response) => response.json())
                     .catch(e => {console.log("err ", e)});
 
-                for(let action of newActions){
-                    if(actionList.includes(action)) continue;
+                for(const action of newActions){
+                    this.addAction(id, action);
+                }
+            }
+            else {
+                let actionList = [];
+                let toolList = this.getTools();
+                for (const tool of toolList) {
+                    let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
+                    const newActions = await fetch("/valid-actions", {
+                        method: "POST",
+                        body: JSON.stringify(data),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        }
+                    })
+                        .then((response) => response.json())
+                        .catch(e => {
+                            console.log("err ", e)
+                        });
 
-                    const li = document.createElement("li");
-                    li.setAttribute("class", "menu-option");
-                    li.setAttribute("oncontextmenu", "return false");
-                    li.textContent = action;
+                    for (let action of newActions) {
+                        if (actionList.includes(action)) continue;
+
+                        this.addAction(id, action);
+                        actionList.push(action);
+                    }
+                }
+            }
+
+            if(!menu_ul.firstChild){
+                const li = document.createElement("li");
+                li.setAttribute("class", "menu-option noSelect");
+                li.setAttribute("oncontextmenu", "return false");
+                li.textContent = "No actions available";
+                menu_ul.appendChild(li);
+            }
+        }
+    }
+
+    addAction(id, action){
+        const card = document.getElementById(id);
+        let menu_ul = card.childNodes[2].firstChild;
+
+        const li = document.createElement("li");
+        li.setAttribute("class", "menu-option");
+        li.setAttribute("oncontextmenu", "return false");
+        li.textContent = action;
 
                     li.onclick = (e) => {
                         if(!this.game_area) {
@@ -181,16 +228,25 @@ class CookingBoard{
                             this.relevent_id = id;
                             this.relevent_action = e.target.textContent;
 
-                            let item = e.target.parentNode.parentNode.parentNode;
-                            item.classList.add("game-in-progress");
-
-                            const action = e.target.textContent;
-                            // const action = "drizzle";
-                            const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
-                            tab_instance.select("gameView");
-                            this.playGame(action);
+                if(this.selectedIds.length > 0) {
+                    for (const id of this.selectedIds) {
+                        if (this.items[id].use !== "tool"){
+                            let card = document.getElementById(id);
+                            card.classList.add("game-in-progress");
                         }
-                    };
+                    }
+                } else {
+                    let item = e.target.parentNode.parentNode.parentNode;
+                    item.classList.add("game-in-progress");
+                }
+
+                const action = e.target.textContent;
+                // const action = "drizzle";
+                const tab_instance = M.Tabs.getInstance(document.querySelectorAll(".tabs")[0]);
+                tab_instance.select("gameView");
+                this.playGame(action);
+            }
+        };
 
                     actionList.push(action);
                     menu_ul.appendChild(li);
@@ -218,8 +274,9 @@ class CookingBoard{
             // this.updateMenu();
         }
 
-        if(this.game_area){
-            this.recipe.confirmStep(action, [this.items[id]], this.items[id].quantity);
+            if (this.game_area) {
+                this.recipe.confirmStep(action, [this.items[id]], this.items[id].quantity);
+            }
         }
 
         this.relevent_id = null;
@@ -283,7 +340,7 @@ class CookingBoard{
                 input.setAttribute("class", "item-quantity-input browser-default");
                 input.setAttribute("value", selectedItems[0].quantity);
                 input.setAttribute("min", "1");
-                input.setAttribute("max", "999")
+                input.setAttribute("max", "999");
                 input.addEventListener("mouseup", (e)=>{this.updateQuantity(selectedIDs[0], e.target.value)});
                 input.addEventListener("keyup", (e)=>{this.updateQuantity(selectedIDs[0], e.target.value)});
 
@@ -389,11 +446,7 @@ class CookingBoard{
         let processedItems = [];
         for(const id of keys){
             if(this.items[id].use === "processedItem"){
-                let nameAndTag = "";
-                for(const tag of this.items[id].tags)
-                    nameAndTag += tag + " ";
-                nameAndTag += this.items[id].name;
-                processedItems.push(nameAndTag);
+                processedItems.push(this.items[id]);
             }
         }
         return processedItems;
@@ -409,5 +462,20 @@ class CookingBoard{
 
     getNameByID(id){
         return this.items[id].name;
+    }
+
+    setSelected(){
+        this.selectedIds = [];
+        this.selectedIngredients = [];
+        this.selectedTools = [];
+        for(let id in this.items){
+            if(this.items[id].selected === true){
+                this.selectedIds.push(id);
+                if(this.items[id].use === "ingredient")
+                    this.selectedIngredients.push(this.items[id].name);
+                if(this.items[id].use === "tool")
+                    this.selectedTools.push(this.items[id].name);
+            }
+        }
     }
 }
