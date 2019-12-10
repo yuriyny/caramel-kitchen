@@ -7,6 +7,7 @@ import cse308.caramel.caramelkitchen.game.repository.GameRepository;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
 import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
+import cse308.caramel.caramelkitchen.request.service.RequestService;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 import cse308.caramel.caramelkitchen.game.repository.KitchenToolRepository;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
@@ -40,6 +41,8 @@ public class DbSeeder implements CommandLineRunner {
     GameRepository gameRepository;
     @Autowired
     RecipeEditorService recipeEditorService;
+    @Autowired
+    RequestService requestService;
 
     //we can use mongotemplate class or repository interface for managing data in mongodb
     private MongoTemplate mongoTemplate;
@@ -661,5 +664,15 @@ public class DbSeeder implements CommandLineRunner {
         game2.setScore(1050.0);
         //saving completed game with All finished steps
         gameRepository.save(game2);
+
+        /* ----------------- TEST REQUEST ----------------------*/
+        requestService.storeRequest(user.getUsername(),"feedback",null,"add more actions");
+        requestService.storeRequest(user.getUsername(),"feedback",null,"better games");
+        requestService.storeRequest(user.getUsername(),"action","mince","use a knife to mince a garlic");
+        requestService.storeRequest(user.getUsername(),"action","blend","use blender to blend");
+        requestService.storeRequest(user.getUsername(),"ingredient","sugar",null);
+        requestService.storeRequest(user.getUsername(),"ingredient","thyme",null);
+        requestService.storeRequest(user.getUsername(),"tool","blender","to blend food");
+        requestService.storeRequest(user.getUsername(),"tool","oven","to bake");
     }
 }
