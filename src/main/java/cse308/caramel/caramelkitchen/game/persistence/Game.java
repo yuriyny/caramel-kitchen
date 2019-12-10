@@ -22,5 +22,6 @@ public class Game {// created game repository just in case we want to do a leade
     @DBRef
     private Recipe recipe;
     private Double score;
+    private Double userRating;
 
 }

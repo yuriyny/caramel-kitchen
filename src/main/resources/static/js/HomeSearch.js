@@ -64,6 +64,12 @@ class HomeSearch{
                 });
             console.log(recipeResults);
             for (let result of recipeResults) {
+                let recipe_rating_data = await fetch("/rating/" + result.id, {
+                                                                           method: "GET"
+                                                                       })
+                                                                       .then(response => response.json())
+                                                                       .catch((e)=>{console.log("err " + e)});
+                result['rating'] = recipe_rating_data['score'];
                 this.createRecipeResultLi(result);
             }
         }else{
@@ -105,6 +111,9 @@ class HomeSearch{
 
         const rating = document.createElement("p");
         rating.setAttribute("class", "secondary-content");
+        if (!result.rating) {
+                   result.rating = "-";
+        }
         rating.textContent = "Rating: " + result.rating;
 
         li.appendChild(icon);

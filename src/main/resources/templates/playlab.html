@@ -234,9 +234,26 @@
         let endPromptHtml = `<div class="row">
         <div class="col s12">Submission received!</div>
         <div class="col s12">Would you like to leave a rating?
-            <input id="recipe-rating" name="recipe-rating" type="number" min="1" max="5">
+            <input style="color:white" id="recipe-rating" name="recipe-rating" type="number" min="1" max="5">
         </div></div>`;
-        M.toast({html: endPromptHtml, displayLength: 10000});
+
+        M.toast({html: endPromptHtml, displayLength: 10000, completeCallback:  function(){
+            $.ajax({
+                url: "/update-recipe-rating",
+                type: "POST",
+                data: JSON.stringify({"score":$('#recipe-rating').val(), "gameId":game.id}),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data){console.log(data);},
+                failure: function(errMsg) {
+                    console.log(errMsg);
+                }
+            });
+
+
+            window.location.href = "/home";
+            }
+        });
     });
 
     if(game.gameState){
@@ -253,10 +270,10 @@
                 itemBoard.addItem(tools[i], "tool");
             }
 
-            const intermediateIngredients = prevGame.intermediateIngredients;
+            /*const intermediateIngredients = prevGame.intermediateIngredients;
             for (let i = 0; i < intermediateIngredients.length; i++) {
                 itemBoard.addItem(intermediateIngredients[i], "processedItem", intermediateIngredients[i].tag);
-            }
+            }*/
 
             const receivedScores = prevGame.scores;
             for (let i = 0; i < receivedScores.length; i++) {

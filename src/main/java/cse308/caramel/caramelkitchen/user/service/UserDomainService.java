@@ -67,7 +67,7 @@ public class UserDomainService implements UserDetailsService { //removed id beca
     public void deleteGameFromInProgress(String username, Game game) {
         User user=getUserByUsername(username);
         user.getGamesInProgress().remove(game);
-        userRepository.save(user);
+        saveUser(user);
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -88,9 +88,10 @@ public class UserDomainService implements UserDetailsService { //removed id beca
     public void saveFinishedGameToUser(String username, Game game){
         //remove from in progress if exist
         User user=getUserByUsername(username);
-        for(Game g:user.getGamesInProgress()){
-            if (g.getId()==game.getId()){
-                user.getGamesInProgress().remove(g);
+        for(Iterator<Game> it = user.getGamesInProgress().iterator(); it.hasNext(); ){
+            Game g = it.next();
+            if (g.getId().equals(game.getId())){
+                it.remove();
             }
         }
         //add game to finished

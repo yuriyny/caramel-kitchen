@@ -1,14 +1,17 @@
 package cse308.caramel.caramelkitchen.game.service;
 
 import cse308.caramel.caramelkitchen.game.model.GameState;
-import cse308.caramel.caramelkitchen.game.model.ProcessedIngredient;
+import cse308.caramel.caramelkitchen.game.model.Rating;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.GameRepository;
 import cse308.caramel.caramelkitchen.user.persistence.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class GameService {
@@ -53,4 +56,22 @@ public class GameService {
         gameRepository.save(game);
     }
 
+    public void updateUserRecipeRating(Rating rating) {
+        Game game = getGame(rating.getGameId());
+        game.setUserRating(rating.getScore());
+        gameRepository.save(game);
+    }
+
+    public Double fetchRecipeRating(String recipeId) {
+        Collection<Game> g = gameRepository.findAllGamesPlayedByRecipeId(recipeId).orElse(null);
+        if (g != null){
+            return g.stream().map(game -> game.getUserRating()).filter(Objects::nonNull).mapToDouble(rating->rating).average().orElse(0.0);
+        }
+        return 0.0;
+    }
+
+    public Double fetchSingleUserGameRating(String gameId) {
+        Game g = getGame(gameId);
+        return g.getUserRating();
+    }
 }

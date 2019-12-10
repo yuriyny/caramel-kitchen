@@ -2,7 +2,7 @@ package cse308.caramel.caramelkitchen.game.controller;
 
 import cse308.caramel.caramelkitchen.game.model.GameApplication;
 import cse308.caramel.caramelkitchen.game.model.GameState;
-import cse308.caramel.caramelkitchen.game.model.ProcessedIngredient;
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.Game;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.service.GameService;
@@ -76,7 +76,6 @@ public class GameController {
     @PostMapping(path={"/finish-game"})
     public void finishedGame (@RequestBody Game game,Principal principal){
         gameService.saveGame(game);
-        userDomainService.deleteGameFromInProgress(principal.getName(), game);
         userDomainService.saveFinishedGameToUser(principal.getName(), game);
     }
 }

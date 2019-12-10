@@ -1,10 +1,13 @@
 package cse308.caramel.caramelkitchen.game.service;
 
+import cse308.caramel.caramelkitchen.game.model.Rating;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 

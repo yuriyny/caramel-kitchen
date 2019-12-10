@@ -176,9 +176,10 @@ nav ul li a{
 .user-desc{
 }
 #completed-recipes, #inprogress-recipes{
-
     overflow-y: auto;
     height: 20vh;
+    box-shadow: none;
+    border: none;
 }
 #user-recipes{
     overflow-y: auto;

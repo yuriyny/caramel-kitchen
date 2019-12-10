@@ -1,6 +1,6 @@
 package cse308.caramel.caramelkitchen.game.service;
 
-import cse308.caramel.caramelkitchen.game.model.ProcessedIngredient;
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
@@ -83,7 +83,7 @@ public class RecipeEditorService {
         ingredientRepository.save(ingredient);
     }
 
-    public List<String> retrieveValidToolActions(List<String> ingredients,List<String> tools,  List<ProcessedIngredient> intermediates) {
+    public List<String> retrieveValidToolActions(List<String> ingredients,List<String> tools,  List<IntermediateIngredient> intermediates) {
 
         List<Ingredient>ingredientObj=new ArrayList<>();
         ingredients.stream().forEach(obj->ingredientObj.add(ingredientRepository.findByName(obj).get()));

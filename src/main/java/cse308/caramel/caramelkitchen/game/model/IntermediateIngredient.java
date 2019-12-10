@@ -12,10 +12,14 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProcessedIngredient extends SubprocedureComponent {
+public class IntermediateIngredient extends SubprocedureComponent {
     private Collection<HashMap<String, List<String>>> ingredientComponents;
+    private Collection<Ingredient> ingredients;
+    private Collection<IntermediateIngredient> intermediateIngredients;
+    private String tag; // actions completed on this current
 
-    public ProcessedIngredient(){
-        ingredientComponents = new ArrayList<>();
+    public IntermediateIngredient(){
+        ingredients=new ArrayList<>();
+        intermediateIngredients=new ArrayList<>();
     }
 }
