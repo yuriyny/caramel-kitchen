@@ -142,6 +142,12 @@ public class DbSeeder implements CommandLineRunner {
         whisk.getActions().add("whisk");
         whisk.setImageName("whisk.png");
 
+        KitchenTool plate = new KitchenTool();
+        plate.setName("plate");
+        plate.getActions().add("put");
+        plate.getActions().add("dredge");
+        plate.setImageName("plate.png");
+
         this.mongoTemplate.insert(knife);
         this.mongoTemplate.insert(kettle);
         this.mongoTemplate.insert(rollingPin);
@@ -154,6 +160,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(pot);
         this.mongoTemplate.insert(spatula);
         this.mongoTemplate.insert(whisk);
+        this.mongoTemplate.insert(plate);
 
         /* ----------------- ADD INGREDIENTS ----------------------*/
         Ingredient apple = new Ingredient();
@@ -244,6 +251,72 @@ public class DbSeeder implements CommandLineRunner {
         veggieOil.setName("vegetable oil");
         veggieOil.setType("oil");
 
+
+        Ingredient whitewine = new Ingredient();
+        whitewine.setName("white wine");
+        whitewine.setImageName("whitewine.png");
+        whitewine.setType("liquid");
+
+        Ingredient lemonjuice = new Ingredient();
+        lemonjuice.setName("lemon juice");
+        lemonjuice.setImageName("lemonjuice.png");
+        lemonjuice.setType("liquid");
+
+        Ingredient choppedparsley = new Ingredient();
+        choppedparsley.setName("chopped parsley");
+        choppedparsley.setImageName("choppedparsley.png");
+        choppedparsley.setType("spice");
+
+        Ingredient extravirginoil = new Ingredient();
+        extravirginoil.setName("extra virgin oil");
+        extravirginoil.setImageName("extravirginoil.png");
+        extravirginoil.setType("liquid");
+
+        Ingredient parmesancheese = new Ingredient();
+        parmesancheese.setName("parmesan cheese");
+        parmesancheese.setImageName("parmesancheese.png");
+        parmesancheese.setType("dairy");
+
+        Ingredient flour = new Ingredient();
+        flour.setName("flour");
+        flour.setImageName("flour.png");
+        flour.setType("grain");
+
+        Ingredient chickenbreast = new Ingredient();
+        chickenbreast.setName("chicken breast");
+        chickenbreast.setImageName("chickenbreast.png");
+        chickenbreast.setType("meat");
+
+        Ingredient basil = new Ingredient();
+        basil.setName("basil");
+        basil.setImageName("basil.png");
+        basil.setType("spice");
+
+        Ingredient water = new Ingredient();
+        water.setName("water");
+        water.setImageName("water.png");
+        water.setType("liquid");
+
+        Ingredient garlicclove = new Ingredient();
+        garlicclove.setName("garlic clove");
+        garlicclove.setImageName("garlicclove.png");
+        garlicclove.setType("spice");
+
+        Ingredient smallpasta = new Ingredient();
+        smallpasta.setName("small pasta");
+        smallpasta.setImageName("smallpasta.png");
+        smallpasta.setType("grain");
+
+        Ingredient mozzarella = new Ingredient();
+        mozzarella.setName("mozzarella");
+        mozzarella.setImageName("mozzarella.png");
+        mozzarella.setType("dairy");
+
+        Ingredient cherrytomato = new Ingredient();
+        cherrytomato.setName("cherry tomato");
+        cherrytomato.setImageName("cherrytomato.png");
+        cherrytomato.setType("vegetable");
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -261,6 +334,19 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(mapleSyrup);
         this.mongoTemplate.insert(egg);
         this.mongoTemplate.insert(veggieOil);
+        this.mongoTemplate.insert(whitewine);
+        this.mongoTemplate.insert(choppedparsley);
+        this.mongoTemplate.insert(lemonjuice);
+        this.mongoTemplate.insert(chickenbreast);
+        this.mongoTemplate.insert(parmesancheese);
+        this.mongoTemplate.insert(extravirginoil);
+        this.mongoTemplate.insert(flour);
+        this.mongoTemplate.insert(basil);
+        this.mongoTemplate.insert(water);
+        this.mongoTemplate.insert(garlicclove);
+        this.mongoTemplate.insert(smallpasta);
+        this.mongoTemplate.insert(mozzarella);
+        this.mongoTemplate.insert(cherrytomato);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -342,6 +428,44 @@ public class DbSeeder implements CommandLineRunner {
         w17.setName(mapleSyrup.getName());
         w17.getActions().add("add");
 
+        Whitelist w18 = new Whitelist();
+        w18.setName(cherrytomato.getName());
+        w18.getActions().add("slice");
+        Whitelist w19 = new Whitelist();
+        w19.setName(basil.getName());
+        w19.getActions().add("chop");
+        w19.getActions().add("mix");
+        Whitelist w20 = new Whitelist();
+        w20.setName(mozzarella.getName());
+        w20.getActions().add("chop");
+        w20.getActions().add("mix");
+        Whitelist w21 = new Whitelist();
+        w21.setName(water.getName());
+        w21.getActions().add("boil");
+        w21.getActions().add("mix");
+        w21.getActions().add("whisk");
+        Whitelist w22 = new Whitelist();
+        w22.setName(garlicclove.getName());
+        w22.getActions().add("chop");
+        Whitelist w23= new Whitelist();
+        w23.setName(smallpasta.getName());
+        w23.getActions().add("boil");//raw, one action only
+
+        Whitelist w24 = new Whitelist();
+        w24.setName(whitewine.getName());
+        w24.getActions().add("pour");
+
+        Whitelist w25 = new Whitelist();
+        w25.setName(lemonjuice.getName());
+        w25.getActions().add("pour");
+
+        Whitelist w26 = new Whitelist();
+        w26.setName(chickenbreast.getName());
+        w26.getActions().add("slice");
+
+
+
+
 
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
@@ -360,6 +484,15 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w15);
         this.mongoTemplate.insert(w16);
         this.mongoTemplate.insert(w17);
+        this.mongoTemplate.insert(w18);
+        this.mongoTemplate.insert(w19);
+        this.mongoTemplate.insert(w20);
+        this.mongoTemplate.insert(w21);
+        this.mongoTemplate.insert(w22);
+        this.mongoTemplate.insert(w23);
+        this.mongoTemplate.insert(w24);
+        this.mongoTemplate.insert(w25);
+        this.mongoTemplate.insert(w26);
 
         /* ----------------- TEST ACTIONS ----------------------*/
         List<String> i=new ArrayList<>();//mix
@@ -589,8 +722,206 @@ public class DbSeeder implements CommandLineRunner {
         System.out.println(user.getUsername());
         recipeService.saveRecipe(frenchToastrecipe, user.getUsername());
         user.getRecipesCreated().add(frenchToastrecipe);
-        userDomainService.saveUser(user);
+        //userDomainService.saveUser(user);
 
+        //CHICKEN PICCATA
+        //INGREDIENTS
+        //1. 2 CHICKEN BREASTS
+        //2. 1/2 CUP FLOUR
+        //3. 1/4 TEASPOON SALT
+        //4. 1 PINCH PEPPER
+        //5. 3 tablespoons grated Parmesan cheese
+        //6. 4 tablespoons extra virgin olive oil
+        //7. 4 tablespoons butter
+        //8. 1/2 CUP WHITE WINE
+        //9. 2 tablespoons lemon juice
+        //10. 1/4 cup brined capers
+        //11. 2 tablespoons chopped parsley
+        //TOOLS
+        //1. PAN
+        //2. KNIFE
+        //3. plate
+
+        Subprocedure sliceBreast = new Subprocedure();
+        sliceBreast.setProcedureName("slice");
+        sliceBreast.setInstructions("Slice 2 chicken breasts");
+        Subprocedure addFlour = new Subprocedure();
+        addFlour.setProcedureName("add");
+        addFlour.setInstructions("Add 1/2 cup of flour to a plate");
+        Subprocedure addCheese = new Subprocedure();
+        addCheese.setProcedureName("add");
+        addCheese.setInstructions("Add 3 tablespoons of Parmesan cheese to the plate");
+        Subprocedure add_salt = new Subprocedure();
+        add_salt.setProcedureName("add");
+        add_salt.setInstructions("Add 1/4 teaspoon of salt to the plate");
+        Subprocedure add_pepper = new Subprocedure();
+        add_pepper.setProcedureName("add");
+        add_pepper.setInstructions("Add 1 pinch of pepper to the plate");
+        Subprocedure mix_all = new Subprocedure();
+        mix_all.setProcedureName("mix");
+        mix_all.setInstructions("Mix together the flour, Parmesan cheese, salt and pepper");
+        Subprocedure dredge = new Subprocedure();
+        dredge.setProcedureName("dredge");
+        dredge.setInstructions("Dredge the breasts thoroughly in the flour mixture");
+        Subprocedure add_evoil = new Subprocedure();
+        add_evoil.setProcedureName("add");
+        add_evoil.setInstructions("Add 4 tablespoons of extra virgin olive oil to a pan");
+        Subprocedure add_butter = new Subprocedure();
+        add_butter.setProcedureName("add");
+        add_butter.setInstructions("Add 2 tablespoons of butter to the pan");
+        Subprocedure add_seasoned_breast = new Subprocedure();
+        add_seasoned_breast.setProcedureName("add");
+        add_seasoned_breast.setInstructions("Add the dredged breasts to the pan");
+        Subprocedure fry_breasts = new Subprocedure();
+        fry_breasts.setProcedureName("fry");
+        fry_breasts.setInstructions("Fry the breasts");
+        Subprocedure add_wine = new Subprocedure();
+        add_wine.setProcedureName("add");
+        add_wine.setInstructions("Add 1/2 cup of wine to the pan");
+        Subprocedure add_juice = new Subprocedure();
+        add_juice.setProcedureName("add");
+        add_juice.setInstructions("Add 2 tablespoons of lemon juice to the pan");
+        Subprocedure fry_breasts2 = new Subprocedure();
+        fry_breasts2.setProcedureName("fry");
+        fry_breasts2.setInstructions("Finish frying the breasts");
+        Subprocedure add_parsley = new Subprocedure();
+        add_parsley.setProcedureName("add");
+        add_parsley.setInstructions("Sprinkle with 2 tablespoons of chopped parsley");
+
+        Recipe chickenbreastrecipe =new Recipe();
+        chickenbreastrecipe.setCreator(user.getUsername());
+        chickenbreastrecipe.setRecipeName("Chicken Piccata");
+        chickenbreastrecipe.getSubprocedureList().add(sliceBreast);
+        chickenbreastrecipe.getSubprocedureList().add(addFlour);
+        chickenbreastrecipe.getSubprocedureList().add(addCheese);
+        chickenbreastrecipe.getSubprocedureList().add(add_salt);
+        chickenbreastrecipe.getSubprocedureList().add(add_pepper);
+        chickenbreastrecipe.getSubprocedureList().add(mix_all);
+        chickenbreastrecipe.getSubprocedureList().add(dredge);
+        chickenbreastrecipe.getSubprocedureList().add(add_evoil);
+        chickenbreastrecipe.getSubprocedureList().add(add_butter);
+        chickenbreastrecipe.getSubprocedureList().add(add_seasoned_breast);
+        chickenbreastrecipe.getSubprocedureList().add(fry_breasts);
+        chickenbreastrecipe.getSubprocedureList().add(add_wine);
+        chickenbreastrecipe.getSubprocedureList().add(add_juice);
+        chickenbreastrecipe.getSubprocedureList().add(fry_breasts2);
+        chickenbreastrecipe.getSubprocedureList().add(add_parsley);
+        chickenbreastrecipe.setIsPublished(true);
+        chickenbreastrecipe.getIngredients().add(chickenbreast);
+        chickenbreastrecipe.getIngredients().add(pepper);
+        chickenbreastrecipe.getIngredients().add(salt);
+        chickenbreastrecipe.getIngredients().add(extravirginoil);
+        chickenbreastrecipe.getIngredients().add(flour);
+        chickenbreastrecipe.getIngredients().add(lemonjuice);
+        chickenbreastrecipe.getIngredients().add(whitewine);
+        chickenbreastrecipe.getIngredients().add(parmesancheese);
+        chickenbreastrecipe.getIngredients().add(butter);
+        chickenbreastrecipe.getIngredients().add(choppedparsley);
+        chickenbreastrecipe.getKitchenTools().add(knife);
+        chickenbreastrecipe.getKitchenTools().add(plate);
+        chickenbreastrecipe.getKitchenTools().add(pan);
+
+        recipeService.saveRecipe(chickenbreastrecipe,user.getUsername());
+        user.getRecipesCreated().add(chickenbreastrecipe);
+        //userDomainService.saveUser(user);
+
+        //Caprese Pasta Salad Recipe
+        //INGREDIENTS
+        //1. 1/2 pound small shaped pasta
+        //2. 1 tablespoon salt
+        //3. 1/3 cup olive oil
+        //4. 3 garlic cloves
+        //5. 1 teaspoon pepper
+        //6. 3 cups cherry tomatoes
+        //7. 8 ounces torn mozzarella
+        //8. 10 large fresh basil leaves
+        //9. water
+
+        //TOOLS
+        //1. pot
+        //2. KNIFE
+        //3. bowl
+        //4. spatula ??? for stirring
+
+        Subprocedure addwater = new Subprocedure();
+        addwater.setProcedureName("add");
+        addwater.setInstructions("Add water to a large pot");
+        Subprocedure boilwater = new Subprocedure();
+        boilwater.setProcedureName("boil");
+        boilwater.setInstructions("Boil the water");
+        Subprocedure addpastasalt = new Subprocedure();
+        addpastasalt.setProcedureName("add");
+        addpastasalt.setInstructions("Add 1 table spoon of salt to the pot");
+        Subprocedure addpasta = new Subprocedure();
+        addpasta.setProcedureName("add");
+        addpasta.setInstructions("Add pasta to the pot");
+        Subprocedure boilpasta = new Subprocedure();
+        boilpasta.setProcedureName("boil");
+        boilpasta.setInstructions("Boil the pasta");
+        Subprocedure chopgarlic = new Subprocedure();
+        chopgarlic.setProcedureName("chop");
+        chopgarlic.setInstructions("Chop 3 garlic cloves");
+        Subprocedure sddtobowl = new Subprocedure();
+        sddtobowl.setProcedureName("add");
+        sddtobowl.setInstructions("Add chopped garlic cloves to a bowl");
+        Subprocedure sddtobowl11 = new Subprocedure();
+        sddtobowl11.setProcedureName("add");
+        sddtobowl11.setInstructions("Add  1 teaspoon of pepper to the same bowl");
+        Subprocedure sddtobowl12 = new Subprocedure();
+        sddtobowl12.setProcedureName("add");
+        sddtobowl12.setInstructions("Add  1/3 cup of olive oil to the same bowl");
+        Subprocedure mixall = new Subprocedure();
+        mixall.setProcedureName("mix");
+        mixall.setInstructions("Mix together the oil, minced garlic, pepper, and salt.");
+        Subprocedure sddtobowl122 = new Subprocedure();
+        sddtobowl122.setProcedureName("add");
+        sddtobowl122.setInstructions("Add  the boiled pasta to the bowl the same bowl");
+        Subprocedure mixall2 = new Subprocedure();
+        mixall2.setProcedureName("mix");
+        mixall2.setInstructions("Mix together the pasta, oil, minced garlic, pepper, and salt.");
+        Subprocedure chopmoz = new Subprocedure();
+        chopmoz.setProcedureName("chop");
+        chopmoz.setInstructions("Chop 8 ounces of mozzarella");
+        Subprocedure addmoz = new Subprocedure();
+        addmoz.setProcedureName("add");
+        addmoz.setInstructions("Add the chopped mozzarella to the pasta");
+        Subprocedure slicetom = new Subprocedure();
+        slicetom.setProcedureName("slice");
+        slicetom.setInstructions("Slice 3 cups of cherry tomatoes");
+        Subprocedure addtom = new Subprocedure();
+        addtom.setProcedureName("add");
+        addtom.setInstructions("Add sliced tomatoes to the pasta");
+        Subprocedure chopb = new Subprocedure();
+        chopb.setProcedureName("chop");
+        chopb.setInstructions("Chop 10 basil leaves");
+        Subprocedure addbas = new Subprocedure();
+        addbas.setProcedureName("add");
+        addbas.setInstructions("Add chopped basil leaves to the pasta");
+
+        Recipe capreserecipe =new Recipe();
+        capreserecipe.setCreator(user.getUsername());
+        capreserecipe.setRecipeName("Caprese Pasta Salad");
+        capreserecipe.getSubprocedureList().add(addwater);
+        capreserecipe.getSubprocedureList().add(addpastasalt);
+        capreserecipe.getSubprocedureList().add(addpasta);
+        capreserecipe.getSubprocedureList().add(boilpasta);
+        capreserecipe.getSubprocedureList().add(chopgarlic);
+        capreserecipe.getSubprocedureList().add(sddtobowl);
+        capreserecipe.getSubprocedureList().add(sddtobowl11);
+        capreserecipe.getSubprocedureList().add(sddtobowl12);
+        capreserecipe.getSubprocedureList().add(mixall);
+        capreserecipe.getSubprocedureList().add(sddtobowl122);
+        capreserecipe.getSubprocedureList().add(mixall2);
+        capreserecipe.getSubprocedureList().add(chopmoz);
+        capreserecipe.getSubprocedureList().add(addmoz);
+        capreserecipe.getSubprocedureList().add(slicetom);
+        capreserecipe.getSubprocedureList().add(addtom);
+        capreserecipe.getSubprocedureList().add(chopb);
+        capreserecipe.getSubprocedureList().add(addbas);
+
+        recipeService.saveRecipe(capreserecipe,user.getUsername());
+        user.getRecipesCreated().add(capreserecipe);
+        userDomainService.saveUser(user);
 
 
         /////////////////////////////////////////////////////////////////////////////
