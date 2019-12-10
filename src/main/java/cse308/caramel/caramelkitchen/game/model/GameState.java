@@ -17,6 +17,7 @@ public class GameState {
     Collection<KitchenTool> kitchenTools;
     Collection<IntermediateIngredient> intermediateIngredients; //This is to make it easier to retrieve if comments are used
     Collection<Boolean> scores;
+    int mistakes;
 
     public GameState() {
         ingredients = new ArrayList<>();

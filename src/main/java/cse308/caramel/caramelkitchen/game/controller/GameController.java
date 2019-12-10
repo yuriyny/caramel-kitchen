@@ -76,7 +76,7 @@ public class GameController {
     @PostMapping(path={"/finish-game"})
     public void finishedGame (@RequestBody Game game,Principal principal){
         gameService.saveGame(game);
-        userDomainService.deleteGameFromInProgress(principal.getName(), game);
+        userDomainService.saveUser(userDomainService.getUserByUsername(principal.getName()));
         userDomainService.saveFinishedGameToUser(principal.getName(), game);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -64,12 +65,6 @@ public class UserDomainService implements UserDetailsService { //removed id beca
         saveUser(user);
     }
 
-    public void deleteGameFromInProgress(String username, Game game) {
-        User user=getUserByUsername(username);
-        user.getGamesInProgress().remove(game);
-        userRepository.save(user);
-    }
-
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findById(username).get();
@@ -88,10 +83,9 @@ public class UserDomainService implements UserDetailsService { //removed id beca
     public void saveFinishedGameToUser(String username, Game game){
         //remove from in progress if exist
         User user=getUserByUsername(username);
-        for(Game g:user.getGamesInProgress()){
-            if (g.getId()==game.getId()){
-                user.getGamesInProgress().remove(g);
-            }
+        List<Game>ga=user.getGamesInProgress().stream().filter(obj->obj.getId().equals(game.getId())).collect(Collectors.toList());
+        for (Game g:ga){
+            user.getGamesInProgress().remove(g);
         }
         //add game to finished
         user.getGamesPlayed().add(game);
