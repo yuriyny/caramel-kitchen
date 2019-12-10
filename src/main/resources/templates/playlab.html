@@ -193,7 +193,8 @@
             "ingredients": itemBoard.getIngredients(),
             "kitchenTools": itemBoard.getTools(),
             "intermediateIngredients": itemBoard.getProcessedItems(),
-            "scores": scores
+            "scores": scores,
+            "mistakes":parseInt(document.getElementById("mistakes"))
         };
         const savedGameResults = await fetch("/save-game", {
                method: "POST",
@@ -214,12 +215,13 @@
             "ingredients": itemBoard.getIngredients(),
             "kitchenTools": itemBoard.getTools(),
             "intermediateIngredients": itemBoard.getProcessedItems(),
-            "scores": scores
+            "scores": scores,
+            "mistakes":parseInt(document.getElementById("mistakes"))
         };
 
         game.gameState = finalGameState;
-        /* TODO: Score generation function */
-        game.score = 100;
+        let x=Math.max(0,(1-parseInt(document.getElementById("mistakes").textContent)/scores.length));
+        game.score = 100*x;
         const savedGameResults = await fetch("/finish-game", {
                method: "POST",
                     body: JSON.stringify(game),
