@@ -42,10 +42,14 @@ class CookingBoard{
             M.toast({html:"You already have that item!", displayLength:1000});
             return;
         }
+        if(document.getElementsByClassName("preparingItem").length > 0){
+            M.toast({html:"Define the current prepared item first!", displayLength:1000});
+            return;
+        }
 
         let record = {};
         Object.assign(record, item);
-        if(tag.length > 0) record["tags"] = [tag];
+        if(tag.length > 0) record["tags"] = tag;
         else record["tags"] = [];
         record["use"] = use;
         record["quantity"] = item.quantity ? item.quantity : 1;
@@ -123,19 +127,21 @@ class CookingBoard{
         this.items[record.id] = record;
 
         console.log(this.items);
-        console.log(this.getIntermediateSteps());
+        // console.log(this.getIntermediateSteps());
     }
 
-    prepareItem(item, tag){
+    async prepareItem(item, tag=[]){
         let record = {};
         Object.assign(record, item);
-        if(tag.length > 0) record["tags"] = [tag];
+        if(tag.length > 0) record["tags"] = tag;
         else record["tags"] = [];
         record["id"] = this.new_identifier;
         this.new_identifier++;
         record["use"] = "processedItem";
         record["quantity"] = 1;
         record["selected"] = false;
+        // record["imageName"] = null;
+        // record["imageFileUrl"] = null;
 
         const wrapper = document.createElement("div");
         if(Array.isArray(this.board_ul)){ wrapper.setAttribute("class", "col s4"); }
@@ -184,8 +190,9 @@ class CookingBoard{
                 if(img_input.files[0]) this.uploadImage(img_input.files[0]);
 
                 record["name"] = e.target.value;
-                this.addItem(record, "processedItem");
                 e.target.parentNode.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode.parentNode);
+                this.addIntermediateStep(record);
+                this.addItem(record, "processedItem");
                 this.updateMenu();
             }
         });
@@ -205,15 +212,18 @@ class CookingBoard{
     }
 
     async uploadImage(file){
-        let data = new FormData()
+        let data = new FormData();
         data.append('file', file);
         const status = await fetch("/upload-image", {
             method: "POST",
             body: data
         })
             .then((response) => response.json())
-            .then((response) => console.log(respose))
+            .then((response) => response.message)
             .catch(e => {console.log("err ", e)});
+
+        let current_intermediate_step = this.intermediate_steps[this.intermediate_steps.length - 1];
+        current_intermediate_step["imageName"] = status;
     }
 
     addTag(itemKey, tag) {
@@ -300,6 +310,11 @@ class CookingBoard{
         li.textContent = action;
 
         li.onclick = (e) => {
+            if(document.getElementsByClassName("preparingItem").length > 0){
+                M.toast({html:"Define the current prepared item first!", displayLength:1000});
+                return;
+            }
+
             if(!this.game_area) {
                 let targets = [];
                 if(this.selectedIds.length > 0){
@@ -312,7 +327,6 @@ class CookingBoard{
                     }
                     if(this.recipe){
                         this.recipe.addToRecipe(action, targets);
-                        this.addIntermediateStep(ingredients, intermediate_ingredients, action);
                     }
                     this.performAction(this.selectedIngredients, e.target.textContent);
                 } else {
@@ -320,10 +334,8 @@ class CookingBoard{
                     let ingredient = this.items[targetId];
                     if(this.recipe){
                         this.recipe.addToRecipe(action, [ingredient]);
-                        this.addIntermediateStep([ingredient], [], action);
                     }
-                    // this.performAction(targetId, e.target.textContent);
-                    this.prepareItem(ingredient, "temp");
+                    this.prepareItem(ingredient);
                 }
 
                 this.updateMenu();
@@ -370,7 +382,7 @@ class CookingBoard{
             newItem.id = this.new_identifier;
             this.new_identifier++;
             // this.addItem(newItem, "processedItem", "mix");
-            this.prepareItem(newItem, action);
+            this.prepareItem(newItem, [action]);
 
             if (this.game_area) {
                 let targets = [];
@@ -391,7 +403,7 @@ class CookingBoard{
                 this.new_identifier++;
                 newItem.selected = false;
                 // this.addItem(newItem, "processedItem", action);
-                this.prepareItem(newItem, action);
+                this.prepareItem(newItem, [action]);
             }
 
             if (this.game_area) {
@@ -547,12 +559,15 @@ class CookingBoard{
     //     return processedItems;
     // }
 
-    addIntermediateStep(ingredients, intermediateIngredients, action){
-        let sub = {};
-        sub["ingredients"] = ingredients;
-        sub["intermediateIngredients"] = intermediateIngredients;
-        sub["action"] = action;
-        this.intermediate_steps.push(sub);
+    // addIntermediateStep(ingredients, intermediateIngredients, action){
+    //     let sub = {};
+    //     sub["ingredients"] = ingredients;
+    //     sub["intermediateIngredients"] = intermediateIngredients;
+    //     sub["action"] = action;
+    //     this.intermediate_steps.push(sub);
+    // }
+    addIntermediateStep(item){
+        this.intermediate_steps.push(item);
     }
 
     getIntermediateSteps(){
