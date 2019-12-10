@@ -220,7 +220,8 @@
         };
 
         game.gameState = finalGameState;
-        game.score = 100*(1-parseInt(document.getElementById("mistakes").textContent)/scores.length);
+        let x=Math.max(0,(1-parseInt(document.getElementById("mistakes").textContent)/scores.length));
+        game.score = 100*x;
         const savedGameResults = await fetch("/finish-game", {
                method: "POST",
                     body: JSON.stringify(game),
