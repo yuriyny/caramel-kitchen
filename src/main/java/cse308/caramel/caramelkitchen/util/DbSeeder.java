@@ -330,17 +330,17 @@ public class DbSeeder implements CommandLineRunner {
         w14.getActions().add("whisk");
 
         Whitelist w15=new Whitelist();
-        w14.setName(veggieOil.getName());
-        w14.getActions().add("add");
+        w15.setName(veggieOil.getName());
+        w15.getActions().add("add");
 
         Whitelist w16=new Whitelist();
-        w14.setName(breadSlice.getName());
-        w14.getActions().add("slice");
-        w14.getActions().add("apply");
+        w16.setName(breadSlice.getName());
+        w16.getActions().add("slice");
+        w16.getActions().add("apply");
 
         Whitelist w17=new Whitelist();
-        w14.setName(mapleSyrup.getName());
-        w14.getActions().add("add");
+        w17.setName(mapleSyrup.getName());
+        w17.getActions().add("add");
 
 
         this.mongoTemplate.insert(w1);
