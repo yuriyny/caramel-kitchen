@@ -2,8 +2,9 @@
  * DOM element[s] relating to recipe persistence
  */
 class Prompt {
-    constructor(recipe_name, recipe, cookingBoard){
+    constructor(recipe_name, recipe_image, recipe, cookingBoard){
         this.recipe_name = recipe_name;
+        this.recipe_image = recipe_image;
         this.recipe = recipe;
         this.cookingBoard = cookingBoard;
     }
@@ -13,7 +14,10 @@ class Prompt {
         data["ingredients"] = this.cookingBoard.getIngredients();
         data["kitchenTools"] = this.cookingBoard.getTools();
         data["recipeName"] = this.recipe_name.value;
+        // data["recipeImage"] = this.recipe_image.files[0];
+        data["intermediateIngredients"] = this.cookingBoard.getIntermediateSteps();
         data["subprocedureList"] = this.recipe.getRecipe();
+
         return data;
     }
 

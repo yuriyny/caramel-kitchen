@@ -92,7 +92,7 @@
                 } else {
                     check = parseFloat(window.getComputedStyle($("#edge" + edge_cnt)[0]).getPropertyValue("height"));
                 }
-                if (check > max_length * 0.8) {
+                if (check > max_length * 0.7) {
                     score++;
                 }
                 $("#edge" + edge_cnt).css("-webkit-animation-play-state", "paused");
@@ -133,7 +133,7 @@
     }
 
     function endGame(){
-        if(score > 3){
+        if(score > 2){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
             itemBoard.updateMenu();

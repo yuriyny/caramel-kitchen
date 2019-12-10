@@ -22,11 +22,14 @@ class CookingBoard{
         this.selectedIds = [];
         this.selectedIngredients = [];
         this.selectedTools = [];
+        this.selectedIntermediateIngredients = [];
 
         this.saved = true;
 
         this.relevent_id = null;
         this.relevent_action = null;
+
+        this.intermediate_steps = [];
     }
 
     /** MENU ADD ITEM---------------------------------*/
@@ -71,11 +74,6 @@ class CookingBoard{
         card_content.setAttribute("class", "card-content center");
 
         const content = document.createElement("p");
-        // if(use === "ingredient"){
-        //     content.textContent = record.quantity + " " + item.name;
-        // } else {
-        //     content.textContent = item.name;
-        // }
         content.textContent = item.name;
 
         const card_menu = document.createElement("div");
@@ -90,9 +88,6 @@ class CookingBoard{
         else if(use === "tool"){}
         else if(use === "processedItem"){
             card.classList.add("processedItem");
-            content.textContent += ": " + tag;
-            record.id = this.new_identifier;
-            this.new_identifier++;
         } else { console.log("item use not defined"); }
 
         const card_select = document.createElement("div");
@@ -128,6 +123,98 @@ class CookingBoard{
         this.items[record.id] = record;
 
         console.log(this.items);
+        console.log(this.getIntermediateSteps());
+    }
+
+    prepareItem(item, tag){
+        let record = {};
+        Object.assign(record, item);
+        if(tag.length > 0) record["tags"] = [tag];
+        else record["tags"] = [];
+        record["id"] = this.new_identifier;
+        this.new_identifier++;
+        record["use"] = "processedItem";
+        record["quantity"] = 1;
+        record["selected"] = false;
+
+        const wrapper = document.createElement("div");
+        if(Array.isArray(this.board_ul)){ wrapper.setAttribute("class", "col s4"); }
+        else { wrapper.setAttribute("class", "col s2"); }
+
+        const card = document.createElement("div");
+        card.setAttribute("class", "card waves-effect waves-teal active-item preparingItem");
+        card.setAttribute("id", record.id);
+
+        const card_img = document.createElement("div");
+        card_img.setAttribute("class", "card-image");
+
+        const img = document.createElement("input");
+        img.setAttribute("type", "image");
+        img.setAttribute("src", "/images/placeholder.png");
+        img.setAttribute("style", "width: 100%");
+        const img_input = document.createElement("input");
+        img_input.setAttribute("type", "file");
+        img_input.setAttribute("id", "image-input");
+        img_input.setAttribute("style", "display: none");
+        img_input.setAttribute("accept", "image/*");
+        img.addEventListener("click", ()=>{
+            $("#image-input").click();
+        });
+        img_input.onchange = () =>{
+            let preview = img;
+            let file = img_input.files[0];
+            let reader = new FileReader();
+            reader.onloadend = function(){
+                preview.src = reader.result;
+                record["imageFileUrl"] = reader.result;
+            };
+            if(file) {reader.readAsDataURL(file);}
+            else { preview.src = "/images/placeholder.png;"}
+        };
+
+        const card_content = document.createElement("div");
+        card_content.setAttribute("class", "card-content center");
+
+        const card_name_input = document.createElement("input");
+        card_name_input.setAttribute("class", "processedItem-name-input browser-default");
+        card_name_input.setAttribute("type", "text");
+        card_name_input.setAttribute("placeholder", "item name");
+        card_name_input.addEventListener("keypress", (e)=>{
+            if(e.key === "Enter"){
+                if(img_input.files[0]) this.uploadImage(img_input.files[0]);
+
+                record["name"] = e.target.value;
+                this.addItem(record, "processedItem");
+                e.target.parentNode.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode.parentNode);
+                this.updateMenu();
+            }
+        });
+        card_content.appendChild(card_name_input);
+
+        card_img.appendChild(img);
+        card_img.appendChild(img_input);
+        card.appendChild(card_img);
+        card.appendChild(card_content);
+        wrapper.appendChild(card);
+
+        if(Array.isArray(this.board_ul)){
+            this.board_ul[2].appendChild(wrapper);
+        } else {
+            this.board_ul.appendChild(wrapper);
+        }
+    }
+
+    async uploadImage(file){
+        let data = new FormData()
+        data.append('file', file);
+        const status = await fetch("/upload-image", {
+            method: "POST",
+            body: data
+        })
+            .then((response) => null)
+            .catch(e => {console.log("err ", e)});
+
+        console.log(status);
     }
 
     addTag(itemKey, tag) {
@@ -151,7 +238,7 @@ class CookingBoard{
             if(this.selectedIds.length > 0){
                 if(!this.selectedIds.includes(id) || this.selectedIngredients.length === 0 || this.selectedTools.length === 0) continue;
 
-                let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": []};
+                let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": this.selectedIntermediateIngredients};
                 const newActions = await fetch("/valid-actions", {
                     method: "POST",
                     body: JSON.stringify(data),
@@ -167,7 +254,7 @@ class CookingBoard{
                     this.addAction(id, action);
                 }
             }
-            else {
+            else if(this.items[id].use === "ingredient"){
                 let actionList = [];
                 let toolList = this.getTools();
                 for (const tool of toolList) {
@@ -217,16 +304,27 @@ class CookingBoard{
             if(!this.game_area) {
                 let targets = [];
                 if(this.selectedIds.length > 0){
+                    let ingredients = [];
+                    let intermediate_ingredients = [];
                     for(const id of this.selectedIds){
                         if(this.items[id].use !== "tool") targets.push(this.items[id]);
+                        if(this.items[id].use === "ingredient") ingredients.push(this.items[id]);
+                        if(this.items[id].use === "processedItem") intermediate_ingredients.push(this.items[id]);
                     }
-                    if(this.recipe){ this.recipe.addToRecipe(action, targets); }
+                    if(this.recipe){
+                        this.recipe.addToRecipe(action, targets);
+                        this.addIntermediateStep(ingredients, intermediate_ingredients, action);
+                    }
                     this.performAction(this.selectedIngredients, e.target.textContent);
                 } else {
                     let targetId = e.target.parentNode.parentNode.parentNode.id;
                     let ingredient = this.items[targetId];
-                    if(this.recipe){ this.recipe.addToRecipe(action, [ingredient]); }
-                    this.performAction(targetId, e.target.textContent);
+                    if(this.recipe){
+                        this.recipe.addToRecipe(action, [ingredient]);
+                        this.addIntermediateStep([ingredient], [], action);
+                    }
+                    // this.performAction(targetId, e.target.textContent);
+                    this.prepareItem(ingredient, "temp");
                 }
 
                 this.updateMenu();
@@ -271,7 +369,9 @@ class CookingBoard{
             let newItem = {};
             newItem.name = "mixed item placeholder";
             newItem.id = this.new_identifier;
-            this.addItem(newItem, "processedItem", "mix");
+            this.new_identifier++;
+            // this.addItem(newItem, "processedItem", "mix");
+            this.prepareItem(newItem, action);
 
             if (this.game_area) {
                 let targets = [];
@@ -289,8 +389,10 @@ class CookingBoard{
                 let newItem = {};
                 Object.assign(newItem, this.items[id]);
                 newItem.id = this.new_identifier;
+                this.new_identifier++;
                 newItem.selected = false;
-                this.addItem(newItem, "processedItem", action);
+                // this.addItem(newItem, "processedItem", action);
+                this.prepareItem(newItem, action);
             }
 
             if (this.game_area) {
@@ -353,7 +455,7 @@ class CookingBoard{
                 span.textContent = "A " + selectedItems[0].name;
                 this.descriptor.appendChild(span);
             }
-            else if(selectedItems[0].use === "ingredient"){
+            else if(selectedItems[0].use === "ingredient" || selectedItems[0].use === "processedItem"){
                 let input = document.createElement("input");
                 input.setAttribute("type", "number");
                 input.setAttribute("class", "item-quantity-input browser-default");
@@ -372,14 +474,14 @@ class CookingBoard{
                 this.descriptor.appendChild(input);
                 this.descriptor.appendChild(span);
             }
-            else if(selectedItems[0].use === "processedItem"){
-                let span = document.createElement("span");
-                span.textContent = "A " + selectedItems[0].name + " that has tags:";
-                for(let tag of selectedItems[0].tags){
-                    span.textContent += " " + tag;
-                }
-                this.descriptor.appendChild(span);
-            }
+            // else if(selectedItems[0].use === "processedItem"){
+            //     let span = document.createElement("span");
+            //     span.textContent = "A " + selectedItems[0].name + " that has tags:";
+            //     for(let tag of selectedItems[0].tags){
+            //         span.textContent += " " + tag;
+            //     }
+            //     this.descriptor.appendChild(span);
+            // }
             let remove = document.createElement("span");
             remove.textContent = "Remove this item?";
             remove.setAttribute("style", "cursor: pointer; color: blue; float: right;");
@@ -432,15 +534,30 @@ class CookingBoard{
         return ingredients;
     }
 
-    getProcessedItems(){
-        const keys = Object.keys(this.items);
-        let processedItems = [];
-        for(const id of keys){
-            if(this.items[id].use === "processedItem"){
-                processedItems.push(this.items[id]);
-            }
-        }
-        return processedItems;
+    // getProcessedItems(){
+    //     const keys = Object.keys(this.items);
+    //     let processedItems = [];
+    //     for(const id of keys){
+    //         if(this.items[id].use === "processedItem"){
+    //             // let temp = {};
+    //             // temp[this.items[id].name] = this.items[id].tags;
+    //             // processedItems.push(temp);
+    //             processedItems.push(this.items[id]);
+    //         }
+    //     }
+    //     return processedItems;
+    // }
+
+    addIntermediateStep(ingredients, intermediateIngredients, action){
+        let sub = {};
+        sub["ingredients"] = ingredients;
+        sub["intermediateIngredients"] = intermediateIngredients;
+        sub["action"] = action;
+        this.intermediate_steps.push(sub);
+    }
+
+    getIntermediateSteps(){
+        return this.intermediate_steps;
     }
 
     setSavedStatus(state){
@@ -459,6 +576,7 @@ class CookingBoard{
         this.selectedIds = [];
         this.selectedIngredients = [];
         this.selectedTools = [];
+        this.selectedIntermediateIngredients = [];
         for(let id in this.items){
             if(this.items[id].selected === true){
                 this.selectedIds.push(id);
@@ -466,6 +584,9 @@ class CookingBoard{
                     this.selectedIngredients.push(this.items[id].name);
                 if(this.items[id].use === "tool")
                     this.selectedTools.push(this.items[id].name);
+                if(this.items[id].use === "processedItems"){
+                    this.selectedIntermediateIngredients.push(this.items[id].name);
+                }
             }
         }
     }

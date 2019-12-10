@@ -107,6 +107,15 @@
                     <input id="recipe-name" type="text">
                     <label for="recipe-name">Recipe name</label>
                 </div>
+                <div class="col s12 file-field input-field">
+                    <div class="btn">
+                        <span>Add Recipe Image</span>
+                        <input name="file" type="file" id="recipe-img-input" accept="image/*">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                </div>
                 <button onclick="prompt.saveRecipe()" class="col s8 offset-s2 btn-large waves-effect waves-orange amber lighten-1" style="margin-top: 20px">Save</button>
                 <button onclick="prompt.publishRecipe()" class="col s12 btn-large waves-effect waves-orange amber lighten-1" style="margin-top: 30px">Publish</button>
             </div>
@@ -150,7 +159,8 @@
     itemSelection.searchAllQuery();
 
     const recipe_name = document.querySelector("#recipe-name");
-    const prompt = new Prompt(recipe_name, recipe, cookingBoard);
+    const recipe_image = document.querySelector("#recipe-img-input");
+    const prompt = new Prompt(recipe_name, recipe_image, recipe, cookingBoard);
 
     $('#nav-mobile a').map( function() {
         $(this).click(function() {

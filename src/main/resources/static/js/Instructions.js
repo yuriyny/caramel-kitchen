@@ -84,9 +84,6 @@ class Instructions{
             txt.appendChild(p2);
         } else {
             for(let j = 0; j < targets.length; j++){
-                console.log("CP!");
-                console.log(targets[j]);
-
                 let quant = document.createElement("input");
                 quant.setAttribute("type", "number");
                 quant.setAttribute("class", "item-quantity-recipe-input browser-default");

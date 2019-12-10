@@ -192,9 +192,9 @@
             "recipeId": game.recipe.id,
             "ingredients": itemBoard.getIngredients(),
             "kitchenTools": itemBoard.getTools(),
-            "intermediateIngredients": itemBoard.getProcessedItems(),
+            "intermediateIngredients": itemBoard.getIntermediateSteps(),
             "scores": scores,
-            "mistakes":parseInt(document.getElementById("mistakes"))
+            "mistakes":parseInt(document.getElementById("mistakes").textContent)
         };
         const savedGameResults = await fetch("/save-game", {
                method: "POST",
@@ -214,7 +214,7 @@
             "recipeId": game.recipe.id,
             "ingredients": itemBoard.getIngredients(),
             "kitchenTools": itemBoard.getTools(),
-            "intermediateIngredients": itemBoard.getProcessedItems(),
+            "intermediateIngredients": itemBoard.getIntermediateSteps(),
             "scores": scores,
             "mistakes":parseInt(document.getElementById("mistakes"))
         };

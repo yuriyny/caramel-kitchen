@@ -342,6 +342,10 @@ nav ul li a{
     background: rgba(225,255,0,0.6);
 }
 
+.preparingItem{
+    background: rgba(225,0,0,0.6);
+}
+
 .comment{
     background: rgba(0,0,225, 0.6);
 }
@@ -401,6 +405,14 @@ nav ul li a{
     border-width: 0 0 1px 0;
     border-color: black;
     background: none;
+}
+
+.processedItem-name-input{
+    width: 90%;
+    outline: none;
+    border: none;
+    background: none;
+    font-style: italic;
 }
 
 .noSelect{
