@@ -1,16 +1,16 @@
 package cse308.caramel.caramelkitchen.request.controller;
 
 import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
+import cse308.caramel.caramelkitchen.request.persistence.Request;
 import cse308.caramel.caramelkitchen.request.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +44,32 @@ public class RequestController{
             modelAndView.addObject("message","Input file is not an image (png, jpeg)");
         }
         return modelAndView;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/requests")
+    public String handleRequests(@RequestBody String type, @RequestBody String name, @RequestBody String description, Principal principal){//if feedback, leave name null
+        requestService.storeRequest(principal.getName(),type,name,description);
+        return "/about";
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/get-requests")
+    public List<Request> getRequests(){
+        return requestService.getAllRequests();
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/get-requests/{type}")//ingredient/tool/action/feedback
+    public List<Request> getRequestsUsingTypes(@PathVariable String type){
+        return requestService.getTypeRequests(type);
+    }
+
+
+    @ResponseBody
+    @GetMapping(value = "/get-user-requests")
+    public List<Request> getUserRequests(Principal principal){
+        return requestService.getUserRequests(principal.getName());
     }
 }
 
