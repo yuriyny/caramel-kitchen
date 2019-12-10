@@ -32,11 +32,12 @@ public class RequestService {
         ingredient.setName(name);
         ingredient.setImageName(file.getOriginalFilename());
         s3Services.uploadMultipartFileObject(file.getOriginalFilename(), file);
-
-//        ingredient.setImageFileUrl(s3Services.getImageUrl(file.getOriginalFilename()));//image will be fetched at recipe creation page
         recipeEditorService.saveIngredient(ingredient);
         return ingredient;
 
+    }
+    public void storeImage(MultipartFile file) throws IOException {
+        s3Services.uploadMultipartFileObject(file.getOriginalFilename(), file);
     }
 
     public void updateIngredientToolActionWhitelist(String ingredientName,

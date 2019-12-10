@@ -45,6 +45,23 @@ public class RequestController{
         }
         return modelAndView;
     }
+    @ResponseBody
+    @PostMapping(value = "/upload-image", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String handleUpload(@RequestParam("file") MultipartFile file) {
+        String fileContentType = file.getContentType();
+        if(contentTypes.contains(fileContentType)){
+            try {
+                requestService.storeImage(file);
+                return "image uploaded successfully";
+            }
+            catch (Exception e){
+                return "Server error when uploading image";
+            }
+        }
+        else {
+            return "Input file is not an image (png, jpeg)";
+        }
+    }
 
     @ResponseBody
     @PostMapping(value = "/requests")

@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.game.service;
 
+import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.model.Rating;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
@@ -33,6 +34,7 @@ public class RecipeService {
         Recipe recipe = recipeRepository.findById(id).orElse(null);
         recipe.setIngredients(recipeEditorService.findImageIngredient((List<Ingredient>)recipe.getIngredients()));
         recipe.setKitchenTools(recipeEditorService.findImageTool((List<KitchenTool>)recipe.getKitchenTools()));
+        recipe.setIntermediateIngredients(recipeEditorService.findImageIntermediateIngredient((List< IntermediateIngredient >)recipe.getIntermediateIngredients()));
         return recipe;
     }
     public Recipe saveRecipe(Recipe recipe, String username){

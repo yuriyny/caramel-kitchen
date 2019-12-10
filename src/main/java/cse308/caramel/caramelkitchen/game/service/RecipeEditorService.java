@@ -78,6 +78,15 @@ public class RecipeEditorService {
         }
         return list;
     }
+    public List<IntermediateIngredient> findImageIntermediateIngredient(List<IntermediateIngredient> list){
+        for (IntermediateIngredient intermediateIngredient : list){
+            if(intermediateIngredient.getImageName()!=null){
+                String URL=s3Services.getImageUrl(intermediateIngredient.getImageName());
+                intermediateIngredient.setImageFileUrl(URL);
+            }
+        }
+        return list;
+    }
 
     public void saveIngredient(Ingredient ingredient){
         ingredientRepository.save(ingredient);
