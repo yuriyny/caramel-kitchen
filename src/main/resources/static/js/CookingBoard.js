@@ -211,10 +211,9 @@ class CookingBoard{
             method: "POST",
             body: data
         })
-            .then((response) => null)
+            .then((response) => response.json())
+            .then((response) => console.log(respose))
             .catch(e => {console.log("err ", e)});
-
-        console.log(status);
     }
 
     addTag(itemKey, tag) {

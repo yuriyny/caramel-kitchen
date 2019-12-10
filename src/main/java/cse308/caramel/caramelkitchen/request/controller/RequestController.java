@@ -1,8 +1,10 @@
 package cse308.caramel.caramelkitchen.request.controller;
 
+import cse308.caramel.caramelkitchen.game.model.BasicJsonResponse;
 import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
 import cse308.caramel.caramelkitchen.request.persistence.Request;
 import cse308.caramel.caramelkitchen.request.service.RequestService;
+import cse308.caramel.caramelkitchen.s3client.services.S3Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -12,13 +14,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class RequestController{
     private static final List<String> contentTypes = Arrays.asList("image/png", "image/jpeg");
     @Autowired
     RequestService requestService;
+    @Autowired
+    S3Services s3Services;
 
     @ResponseBody
     @PostMapping(value = "/request", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,21 +52,25 @@ public class RequestController{
         return modelAndView;
     }
     @ResponseBody
-    @PostMapping(value = "/upload-image", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String handleUpload(@RequestParam("file") MultipartFile file) {
+    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public BasicJsonResponse handleUpload(@RequestParam("file") MultipartFile file, Principal principal) {
+        BasicJsonResponse response = new BasicJsonResponse();
         String fileContentType = file.getContentType();
         if(contentTypes.contains(fileContentType)){
             try {
-                requestService.storeImage(file);
-                return "image uploaded successfully";
+                long unixTime = System.currentTimeMillis() / 1000L;
+                final String imageKey = principal.getName() + "_" + unixTime + file.getOriginalFilename();
+                requestService.storeImage(imageKey, file);
+                response.setMessage(imageKey);
             }
             catch (Exception e){
-                return "Server error when uploading image";
+                response.setMessage("Server error when uploading image");
             }
         }
         else {
-            return "Input file is not an image (png, jpeg)";
+            response.setMessage("Input file is not an image (png, jpeg)");
         }
+        return response;
     }
 
     @ResponseBody

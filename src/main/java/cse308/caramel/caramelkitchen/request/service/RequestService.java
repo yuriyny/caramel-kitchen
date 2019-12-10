@@ -36,8 +36,8 @@ public class RequestService {
         return ingredient;
 
     }
-    public void storeImage(MultipartFile file) throws IOException {
-        s3Services.uploadMultipartFileObject(file.getOriginalFilename(), file);
+    public void storeImage(String objectKey, MultipartFile file) throws IOException {
+        s3Services.uploadMultipartFileObject(objectKey, file);
     }
 
     public void updateIngredientToolActionWhitelist(String ingredientName,
