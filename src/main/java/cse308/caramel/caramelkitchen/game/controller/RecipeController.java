@@ -116,6 +116,8 @@ public class RecipeController {
     @PostMapping(path={"/save-recipe","/create-recipe"})
     public void createRecipe(@RequestBody Recipe recipe,Principal principal) {
         boolean isNewRecipe = recipe.getId() == null;
+        if (recipe.getRecipeImage() != null)
+            recipe.setRecipeImageUrl(recipeEditorService.findRecipeImageUrl(recipe.getRecipeImage()));
         Recipe savedRecipe = recipeService.saveRecipe(recipe,principal.getName());
         if (isNewRecipe) {
             userDomainService.addRecipeToUser(principal.getName(), savedRecipe);

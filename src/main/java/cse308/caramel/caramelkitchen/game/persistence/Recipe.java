@@ -20,6 +20,8 @@ public class Recipe {
     private String recipeName;
     private String creator;//creator/user id
     private String parentId;
+    private String recipeImage;
+    private String recipeImageUrl;
     @DBRef
     private Collection<Ingredient> ingredients;
     @DBRef

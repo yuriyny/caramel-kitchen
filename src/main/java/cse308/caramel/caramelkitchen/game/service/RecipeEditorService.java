@@ -88,6 +88,10 @@ public class RecipeEditorService {
         return list;
     }
 
+    public String findRecipeImageUrl(String recipeImage) {
+        return s3Services.getImageUrl(recipeImage);
+    }
+
     public void saveIngredient(Ingredient ingredient){
         ingredientRepository.save(ingredient);
     }
@@ -149,4 +153,6 @@ public class RecipeEditorService {
         //if you add ingredient to item being cooked, combine in front end (might not handle, just add as comment)
         //if no ingredient, only one intermediate ingredient and action was some cook action, then add stir (might not handle, just add as comment)
     }
+
+
 }

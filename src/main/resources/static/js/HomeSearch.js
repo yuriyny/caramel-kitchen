@@ -97,9 +97,18 @@ class HomeSearch{
         const li = document.createElement("li");
         li.setAttribute("class", "collection-item avatar");
 
-        const icon = document.createElement("i");
-        icon.setAttribute("class", "material-icons circle orange light-3");
-        icon.textContent = "format_list_bulleted";
+        let icon;
+        if (result.recipeImageUrl) {
+            icon = document.createElement("img");
+            icon.setAttribute("class", "circle responsive-img");
+
+            icon.setAttribute("src", result.recipeImageUrl);
+        }
+        else {
+            icon = document.createElement("i");
+            icon.setAttribute("class", "material-icons circle orange light-3");
+            icon.textContent = "format_list_bulleted";
+        }
 
         const title = document.createElement("a");
         title.setAttribute("class", "title");

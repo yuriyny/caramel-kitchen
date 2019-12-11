@@ -7,33 +7,48 @@ class Prompt {
         this.recipe_image = recipe_image;
         this.recipe = recipe;
         this.cookingBoard = cookingBoard;
+		
+		this.data = {};
     }
 
     getRecipeInfo(){
-        let data = {};
-        data["id"] = this.cookingBoard.recipeId;
-        data["ingredients"] = this.cookingBoard.getIngredients();
-        data["kitchenTools"] = this.cookingBoard.getTools();
-        data["recipeName"] = this.recipe_name.value;
-        // data["recipeImage"] = this.recipe_image.files[0];
-        data["intermediateIngredients"] = this.cookingBoard.getIntermediateSteps();
-        data["subprocedureList"] = this.recipe.getRecipe();
+        this.data["id"] = this.cookingBoard.recipeId;
+        this.data["ingredients"] = this.cookingBoard.getIngredients();
+        this.data["kitchenTools"] = this.cookingBoard.getTools();
+        this.data["recipeName"] = this.recipe_name.value;
+        this.data["intermediateIngredients"] = this.cookingBoard.getIntermediateSteps();
+        this.data["subprocedureList"] = this.recipe.getRecipe();
+    }
 
-        return data;
+    async setRecipeImage() {
+        if (this.recipe_image.files.length == 1) {
+            let form_data = new FormData();
+            form_data.append('file', this.recipe_image.files[0]);
+            const imageKey = await fetch("/upload-image", {
+                  method: "POST",
+                  body: form_data
+            })
+                  .then((response) => response.json())
+                  .then((response) => response.message)
+                  .catch(e => {console.log("err ", e)});
+			this.data["recipeImage"] = imageKey;
+
+        }
     }
 
     async saveRecipe(){
+
         if(document.getElementsByClassName("preparingItem").length > 0){
             M.toast({html:"Define the current prepared item first!", displayLength:1000});
             return;
         }
 
-        let data = this.getRecipeInfo();
-        data["isPublished"] = false;
+        this.getRecipeInfo();
+        this.data["isPublished"] = false;
 
         const send = await fetch("/save-recipe", {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify(this.data),
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -43,7 +58,7 @@ class Prompt {
             .catch((e)=>{console.log("err " + e)});
 
         this.cookingBoard.setSavedStatus(true);
-        window.location.href = "/home/save/" + data["recipeName"];
+        window.location.href = "/home/save/" + this.data["recipeName"];
     }
 
     async publishRecipe(){
@@ -52,17 +67,17 @@ class Prompt {
             return;
         }
 
-        let data = this.getRecipeInfo();
-        data["isPublished"] = true;
+        this.getRecipeInfo();
+        this.data["isPublished"] = true;
 
-        if(!data["recipeName"]){
+        if(!this.data["recipeName"]){
             console.log("missing name");
             return;
         }
 
         const send = await fetch("/create-recipe", {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify(this.data),
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -72,6 +87,6 @@ class Prompt {
             .catch(e => {console.log("err " + e)});
 
         // this.cookingBoard.setSavedStatus(true);
-        window.location.href = "/home/" + data["recipeName"];
+        window.location.href = "/home/" + this.data["recipeName"];
     }
 }
