@@ -160,6 +160,10 @@ nav ul li a{
     overflow-y: auto;
     height: 100%;
 } */
+.collapsible-body{
+    border-bottom: 1px solid #ffb54e;
+    border-left: 5px solid #ffb54e;
+}
 
 #recommendations{
     position: absolute;
