@@ -8,11 +8,11 @@
     const title = document.createElement("h1");
     title.setAttribute("style", "text-transform: capitalize");
     title.textContent = itemBoard.relevent_action;
-    console.log(itemBoard.relevent_id);
-    for(let i = 0; i < itemBoard.relevent_id.length; i++) {
-        title.textContent += " " + itemBoard.getNameByID(itemBoard.relevent_id[i]);
-        if(i !== itemBoard.relevent_id.length - 1) title.textContent += ",";
-    }
+    // console.log(itemBoard.relevent_id);
+    // for(let i = 0; i < itemBoard.relevent_id.length; i++) {
+    //     title.textContent += " " + itemBoard.getNameByID(itemBoard.relevent_id[i]);
+    //     if(i !== itemBoard.relevent_id.length - 1) title.textContent += ",";
+    // }
 
     const instructions = document.createElement("h3");
     instructions.textContent = "Press your arrow keys and throw the ingredients around!";

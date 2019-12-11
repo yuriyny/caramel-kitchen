@@ -30,6 +30,8 @@ class CookingBoard{
         this.relevent_action = null;
 
         this.intermediate_steps = [];
+
+        this.available_games = ["boil", "chop", "flatten", "flip", "marinate", "mix", "peel", "sauté", "slice", "spread", "stir"];
     }
 
     /** MENU ADD ITEM---------------------------------*/
@@ -140,6 +142,7 @@ class CookingBoard{
         record["use"] = "processedItem";
         record["quantity"] = 1;
         record["selected"] = false;
+        record["imageFileUrl"] = null;
 
         const wrapper = document.createElement("div");
         if(Array.isArray(this.board_ul)){ wrapper.setAttribute("class", "col s4"); }
@@ -243,7 +246,7 @@ class CookingBoard{
             }
 
             if(this.selectedIds.length > 0){
-                if(!this.selectedIds.includes(id) || this.selectedIngredients.length === 0 || this.selectedTools.length === 0) continue;
+                if(!this.selectedIds.includes(id)) continue;
 
                 let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": this.selectedIntermediateIngredients};
                 const newActions = await fetch("/valid-actions", {
@@ -393,7 +396,7 @@ class CookingBoard{
 
         else {
             if (this.game_area) {
-                this.recipe.confirmStep(action, [this.items[id]], this.items[id].quantity);
+                this.recipe.confirmStep(action, [this.items[id]]);
             }
             // else if (this.items[id].use === "processedItem") {
             //     this.addTag(id, action, []);
@@ -427,14 +430,25 @@ class CookingBoard{
             .catch((e)=>{console.log("err " + e)});
 
         console.log(game);
+        let filePath;
+        let presentationPath;
+        if(!this.available_games.includes(game.id)){
+            filePath = "js/defaultGame.js";
+            presentationPath = "css/defaultGame.css";
+        }
+        else {
+            filePath = game.jsFilePath;
+            presentationPath = game.presentationFilePath;
+        }
+
         let head = document.getElementsByTagName("head")[0];
         let gameScript = document.createElement("script");
         gameScript.type = "text/javascript";
-        gameScript.src = "/" + game.jsFilePath;
+        gameScript.src = "/" + filePath;
         let gameLink = document.createElement("link");
         gameLink.rel = "stylesheet";
         gameLink.type = "text/css";
-        gameLink.href = "/" + game.presentationFilePath;
+        gameLink.href = "/" + presentationPath;
         head.appendChild(gameLink);
         head.appendChild(gameScript);
 

@@ -73,7 +73,7 @@ class Instructions{
 
             let p2 = document.createElement("span");
             p2.textContent = " " + targets[0].name + "[s]";
-            if(targets[0].tags.length > 0){
+            if(targets[0].tags && targets[0].tags.length > 0){
                 p2.textContent += " with tags, ";
                 for(let i = 0; i < targets[0].tags.length ; i++){
                     p2.textContent += targets[0].tags[i];
@@ -110,21 +110,24 @@ class Instructions{
         const remove = document.createElement("i");
         remove.setAttribute("class", "material-icons right hidden-btn");
         remove.textContent = "clear";
-        remove.onclick = () => this.deleteStep(li);
+        remove.onclick = () => {
+            // this.deleteStep(li);
+            console.log("instruction removal feature currently redacted");
+        }
 
         li.appendChild(txt);
         li.appendChild(remove);
 
-        if(this.index === null){
+        // if(this.index === null){
             this.recipe_ul.appendChild(li);
-        } else {
-            let current_selection = this.recipe_ul.children[this.index];
-            current_selection.parentNode.insertBefore(li, current_selection.nextSibling);
-        }
+        // } else {
+        //     let current_selection = this.recipe_ul.children[this.index];
+        //     current_selection.parentNode.insertBefore(li, current_selection.nextSibling);
+        // }
 
-        if(this.index !== null)
-            this.instructions.splice((this.index + 1), 0, {"action":action, "targets":targets});
-        else
+        // if(this.index !== null)
+        //     this.instructions.splice((this.index + 1), 0, {"action":action, "targets":targets});
+        // else
             this.instructions.splice(this.index, 0, {"action":action, "targets":targets});
         this.setSelectedIndex();
 
@@ -172,7 +175,7 @@ class Instructions{
         return recipe;
     }
 
-    confirmStep(action, targets, quantity=1){
+    confirmStep(action, targets){
         for(let i = 0; i < this.recipe_ul.children.length; i++){
             if(this.recipe_ul.children[i].classList.contains("completed")){
                 continue;
@@ -200,7 +203,7 @@ class Instructions{
         for(const item1 of targets1){
             found = false;
             for(const item2 of targets2){
-                if(item1.name === item2.name){
+                if(item1.name === item2.name && item1.quantity === item2.quantity){
                     found = true;
                     break;
                 }
