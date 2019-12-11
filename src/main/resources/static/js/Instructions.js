@@ -2,9 +2,10 @@
  * The DOM element[s] for the recipe instructions.
  */
 class Instructions{
-    constructor(recipe_ul, recipe){
+    constructor(recipe_ul, recipe, intermediate_ingredients){
         this.recipe_ul = recipe_ul;
         this.recipe = recipe;
+        this.intermediate_ingredients = intermediate_ingredients;
 
         this.instructions = [];
         this.index = null;
@@ -178,6 +179,7 @@ class Instructions{
             } else {
                 if(this.recipe[i].procedureName.toUpperCase() === action.toUpperCase() && this.compareTargetIngredients(this.recipe[i].targetIngredients, targets)){
                     this.recipe_ul.children[i].classList.add("completed");
+                    itemBoard.addItem(this.intermediate_ingredients[i], "processedItem", action);
                     scores[i] = true;
                     if (isRecipeCompleted()) $("#finish").removeClass("disabled");
                     return;
