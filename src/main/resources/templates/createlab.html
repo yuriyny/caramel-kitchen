@@ -193,8 +193,12 @@
             /* TODO: Fix ingredient quantities in instructions*/
             if (target){
                 recipe.addToRecipe(action, target);
-                cookingBoard.performAction(ingredients.id, action);
+                // cookingBoard.performAction(ingredients.id, action);
             }
+        }
+        const intermediateIngredients = oldRecipe.intermediateIngredients;
+        for(let i = 0; i < intermediateIngredients.length; i++){
+            cookingBoard.addItem(intermediateIngredients[i], "processedItem");
         }
         cookingBoard.updateMenu();
 

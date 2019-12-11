@@ -94,7 +94,7 @@ class Instructions{
 
                 let p2 = document.createElement("span");
                 p2.textContent = " " + targets[j].name + "[s]";
-                if(targets[j].tags.length > 0){
+                if(targets[0].tags && targets[j].tags.length > 0){
                     p2.textContent += " with tags, ";
                     for(let i = 0; i < targets[j].tags.length ; i++){
                         p2.textContent += targets[j].tags[i];
@@ -128,7 +128,8 @@ class Instructions{
         // if(this.index !== null)
         //     this.instructions.splice((this.index + 1), 0, {"action":action, "targets":targets});
         // else
-            this.instructions.splice(this.index, 0, {"action":action, "targets":targets});
+        //     this.instructions.splice(this.index, 0, {"action":action, "targets":targets});
+        this.instructions.push({"action":action, "targets":targets});
         this.setSelectedIndex();
 
         console.log(this.instructions);

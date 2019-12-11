@@ -143,6 +143,7 @@ class CookingBoard{
         record["quantity"] = 1;
         record["selected"] = false;
         record["imageFileUrl"] = null;
+        record["imageName"] = null;
 
         const wrapper = document.createElement("div");
         if(Array.isArray(this.board_ul)){ wrapper.setAttribute("class", "col s4"); }
@@ -188,7 +189,7 @@ class CookingBoard{
         card_name_input.setAttribute("placeholder", "item name");
         card_name_input.addEventListener("keypress", (e)=>{
             if(e.key === "Enter"){
-                if(img_input.files[0]) this.uploadImage(img_input.files[0]);
+                if(record["imageFileUrl"] !== null && img_input.files[0]) this.uploadImage(img_input.files[0]);
 
                 record["name"] = e.target.value;
                 e.target.parentNode.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode.parentNode);
