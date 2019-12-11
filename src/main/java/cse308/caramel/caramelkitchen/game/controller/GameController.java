@@ -50,7 +50,7 @@ public class GameController {
             userDomainService.saveInProgressGameToUser(principal.getName(),game);
         }
         //return view of recipe
-        ModelAndView modelAndView = new ModelAndView("/playlab");
+        ModelAndView modelAndView = new ModelAndView("playlab");
         modelAndView.addObject("game",game);
         return modelAndView;
     }

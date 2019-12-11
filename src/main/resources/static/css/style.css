@@ -176,9 +176,10 @@ nav ul li a{
 .user-desc{
 }
 #completed-recipes, #inprogress-recipes{
-
     overflow-y: auto;
     height: 20vh;
+    box-shadow: none;
+    border: none;
 }
 #user-recipes{
     overflow-y: auto;
@@ -239,6 +240,18 @@ nav ul li a{
 .card-content{
     height: 40%;
     user-select: none;
+}
+
+.card-image-text{
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
+    font-size: 25px;
+    font-weight: bold;
+    opacity: 0.8;
+    width: 125px;
+    text-align: center;
+    color: #181818;
 }
 
 .card-menu{
@@ -401,6 +414,16 @@ nav ul li a{
     border-color: black;
     background: none;
 }
+
+.processedItem-name-input{
+    width: 90%;
+    outline: none;
+    border: none;
+    background: none;
+    font-style: italic;
+    text-align: center;
+}
+
 
 .noSelect{
     cursor: default !important;
