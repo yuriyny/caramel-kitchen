@@ -242,6 +242,17 @@ nav ul li a{
     user-select: none;
 }
 
+.card-image-text{
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
+    font-size: 25px;
+    font-weight: bold;
+    opacity: 0.8;
+    width: 125px;
+    text-align: center;
+}
+
 .card-menu{
     position: absolute;
     top: 0;
@@ -413,6 +424,7 @@ nav ul li a{
     border: none;
     background: none;
     font-style: italic;
+    text-align: center;
 }
 
 .noSelect{

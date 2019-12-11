@@ -155,15 +155,19 @@ class CookingBoard{
 
         const card_img = document.createElement("div");
         card_img.setAttribute("class", "card-image");
+        card_img.setAttribute("style", "padding: 10px;");
 
+        const notify_text = document.createElement("span");
+        notify_text.setAttribute("class", "card-image-text");
+        notify_text.textContent = "Click here to upload an image!";
         const img = document.createElement("input");
         img.setAttribute("type", "image");
         img.setAttribute("src", "/images/placeholder.png");
-        img.setAttribute("style", "width: 100%");
+        img.setAttribute("style", "width: 100%; position: absolute; top: 0; left: 0");
         const img_input = document.createElement("input");
         img_input.setAttribute("type", "file");
         img_input.setAttribute("id", "image-input");
-        img_input.setAttribute("style", "display: none");
+        img_input.setAttribute("style", "display: none;");
         img_input.setAttribute("accept", "image/*");
         img.addEventListener("click", ()=>{
             $("#image-input").click();
@@ -175,6 +179,9 @@ class CookingBoard{
             reader.onloadend = function(){
                 preview.src = reader.result;
                 record["imageFileUrl"] = reader.result;
+                if(document.getElementsByClassName("card-image-text")){
+                    document.getElementsByClassName("card-image-text")[0].parentNode.removeChild(document.getElementsByClassName("card-image-text")[0]);
+                }
             };
             if(file) {reader.readAsDataURL(file);}
             else { preview.src = "/images/placeholder.png;"}
@@ -186,7 +193,7 @@ class CookingBoard{
         const card_name_input = document.createElement("input");
         card_name_input.setAttribute("class", "processedItem-name-input browser-default");
         card_name_input.setAttribute("type", "text");
-        card_name_input.setAttribute("placeholder", "item name");
+        card_name_input.setAttribute("placeholder", "Enter item name");
         card_name_input.addEventListener("keypress", (e)=>{
             if(e.key === "Enter"){
                 if(record["imageFileUrl"] !== null && img_input.files[0]) this.uploadImage(img_input.files[0]);
@@ -202,6 +209,7 @@ class CookingBoard{
 
         card_img.appendChild(img);
         card_img.appendChild(img_input);
+        card_img.appendChild(notify_text);
         card.appendChild(card_img);
         card.appendChild(card_content);
         wrapper.appendChild(card);
