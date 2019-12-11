@@ -97,16 +97,19 @@ public class DbSeeder implements CommandLineRunner {
 
         KitchenTool teaspoon = new KitchenTool();
         teaspoon.setName("teaspoon");
+        teaspoon.setImageName("teaspoon.png");
         teaspoon.getActions().add("measure");
         teaspoon.setUnitOfMeasure("teaspoon");
 
         KitchenTool tablespoon = new KitchenTool();
         tablespoon.setName("tablespoon");
+        tablespoon.setImageName("tablespoon.png");
         tablespoon.getActions().add("measure");
         tablespoon.setUnitOfMeasure("tablespoon");
 
         KitchenTool measuringCup = new KitchenTool();
         measuringCup.setName("measuring cup");
+        measuringCup.setImageName("measuringcup.png");
         measuringCup.getActions().add("measure");
         measuringCup.setUnitOfMeasure("cup");
 
@@ -119,6 +122,7 @@ public class DbSeeder implements CommandLineRunner {
 
         KitchenTool mixingSpoon = new KitchenTool();
         mixingSpoon.setName("mixing spoon");
+        mixingSpoon.setImageName("mixingspoon.png");
         mixingBowl.getActions().add("mix");
 
         KitchenTool pan = new KitchenTool();
@@ -134,6 +138,7 @@ public class DbSeeder implements CommandLineRunner {
 
         KitchenTool spatula = new KitchenTool();
         spatula.setName("spatula");
+        spatula.setImageName("spatula.png");
         spatula.getActions().add("flip");
         spatula.getActions().add("stir");
 
@@ -249,6 +254,7 @@ public class DbSeeder implements CommandLineRunner {
 
         Ingredient veggieOil=new Ingredient();
         veggieOil.setName("vegetable oil");
+        veggieOil.setImageName("vegetableoil.png");
         veggieOil.setType("oil");
 
 
@@ -463,6 +469,27 @@ public class DbSeeder implements CommandLineRunner {
         w26.setName(chickenbreast.getName());
         w26.getActions().add("slice");
 
+        Whitelist w27 = new Whitelist();
+        w27.setName(choppedparsley.getName());
+        w27.getActions().add("add");
+
+        Whitelist w28 = new Whitelist();
+        w28.setName(extravirginoil.getName());
+        w28.getActions().add("add");
+
+        Whitelist w29 = new Whitelist();
+        w29.setName(flour.getName());
+        w29.getActions().add("add");
+        w29.getActions().add("mix");
+        w29.getActions().add("dredge");
+
+        Whitelist w30 = new Whitelist();
+        w30.setName(parmesancheese.getName());
+        w30.getActions().add("add");
+        w30.getActions().add("mix");
+        w30.getActions().add("cut");
+
+
 
 
 
@@ -493,6 +520,10 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w24);
         this.mongoTemplate.insert(w25);
         this.mongoTemplate.insert(w26);
+        this.mongoTemplate.insert(w27);
+        this.mongoTemplate.insert(w28);
+        this.mongoTemplate.insert(w29);
+        this.mongoTemplate.insert(w30);
 
         /* ----------------- TEST ACTIONS ----------------------*/
         List<String> i=new ArrayList<>();//mix
