@@ -214,7 +214,7 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(value = "/home/{name}")
     public ModelAndView publishRedirect(@PathVariable String name){
-        ModelAndView modelAndView = new ModelAndView("/home");
+        ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("message", "You have successfully published a lab: " + name);
         return modelAndView;
     }
@@ -224,7 +224,7 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(value = "/home/save/{name}")
     public ModelAndView saveRedirect(@PathVariable String name){
-        ModelAndView modelAndView = new ModelAndView("/home");
+        ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("message", "You have successfully saved a lab: " + name);
         return modelAndView;
     }
