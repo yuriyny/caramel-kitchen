@@ -178,6 +178,7 @@ public class DbSeeder implements CommandLineRunner {
         carrot.setName("carrot");
         carrot.setImageName("carrot.png");
         carrot.setType("vegetable");
+//        carrot.setImageFileUrl(s3Services.getImageUrl(carrot.getImageName()));
 
         Ingredient garlic = new Ingredient();
         garlic.setName("garlic");
@@ -607,13 +608,22 @@ public class DbSeeder implements CommandLineRunner {
         t.add(spatula.getName());
         System.out.println(recipeEditorService.retrieveValidToolActions(i,t,new ArrayList<>()));
         /* ----------------- SUBPROCEDURE ----------------------*/
-
+        carrot.setQuantity(1);
         Subprocedure chopCarrot = new Subprocedure();
-        chopCarrot.setProcedureName("chop");
-        chopCarrot.setInstructions("Chop 1 carrot");
-//        chopCarrot.setGame(new GameApplication());
+        chopCarrot.setProcedureName("Chop");
+        chopCarrot.setInstructions("Chop 1 carrot[s]");
+        List<Ingredient>l=new ArrayList<>();
+        l.add(carrot);
+        chopCarrot.setTargetIngredients(l);
 
         /* ----------------- SAMPLE RECIPE ----------------------*/
+
+        IntermediateIngredient choppedCarrot=new IntermediateIngredient();
+        choppedCarrot.setTag("Chop");
+        choppedCarrot.getIngredients().add(carrot);
+        choppedCarrot.setImageName("choppedCarrot.png");
+        choppedCarrot.setName("chopped carrot");
+
         Recipe recipe = new Recipe();
         recipe.setCreator(user.getUsername());
         recipe.setRecipeName("Chopping Carrot Recipe");
@@ -621,9 +631,10 @@ public class DbSeeder implements CommandLineRunner {
         recipe.setIsPublished(true);
         recipe.getIngredients().add(carrot);
         recipe.getKitchenTools().add(knife);
+        recipe.getIntermediateIngredients().add(choppedCarrot);
         recipeService.saveRecipe(recipe, user.getUsername());
         user.getRecipesCreated().add(recipe);
-        //userDomainService.saveUser(user);
+        userDomainService.saveUser(user);
 
 
 //        mongoTemplate.insert(recipe);

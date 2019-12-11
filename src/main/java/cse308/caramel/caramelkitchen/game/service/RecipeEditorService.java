@@ -105,6 +105,7 @@ public class RecipeEditorService {
         List<String>base=new ArrayList<>();
         base.add("spice");
         base.add("liquid");
+
 //        System.out.println("tool size"+toolObj.size());
 //        System.out.println("bowl?"+toolObj.stream().anyMatch(obj->obj.getName().equals("bowl")));
 //        System.out.println("spoon"+tools.stream().anyMatch("mixing spoon"::contains));
@@ -116,6 +117,14 @@ public class RecipeEditorService {
                 List<String> allActions= (List) tool.getActions();
                 return allActions.stream().filter(action->ingredientWL.getActions().contains(action)).collect(Collectors.toList());
         }
+//        //if previously peeled, then can chop/slice or whatever matches with knife
+//        else if(ingredients.size()==0 && intermediates.size()==1 && toolObj.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("knife"))&& intermediates.get(0).getTag().equals("peel")){
+//            Ingredient i=((List<Ingredient>)intermediates.get(0).getIngredients()).get(0);
+//            Whitelist w=whitelistRepository.findById(i.getName()).get();
+//            List<String> s=toolObj.get(0).getActions().stream().filter(action->w.getActions().contains(action)).collect(Collectors.toList());
+//            s.remove("peel");
+//            return s;
+//        }
         //if has liquid or spice ingredient and other ingredient and bowl is available, then marinate
         else if(ingredientObj.size()+intermediates.size()>=1 && toolObj.size()==1 && toolObj.stream().anyMatch(obj->obj.getName().equals("bowl"))){
             //if only liquid/spice, no actions
