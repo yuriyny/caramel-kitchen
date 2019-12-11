@@ -154,6 +154,16 @@ public class DbSeeder implements CommandLineRunner {
         plate.getActions().add("dredge");
         plate.setImageName("plate.png");
 
+        KitchenTool potatomasher = new KitchenTool();
+        potatomasher.setName("potato masher");
+        potatomasher.setImageName("potatomasher.png");
+        potatomasher.getActions().add("mash");
+
+        KitchenTool drainer = new KitchenTool();
+        drainer.setName("drainer");
+        drainer.setImageName("drainer.png");
+        drainer.getActions().add("drain");
+
         this.mongoTemplate.insert(knife);
         this.mongoTemplate.insert(kettle);
         this.mongoTemplate.insert(rollingPin);
@@ -167,6 +177,8 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(spatula);
         this.mongoTemplate.insert(whisk);
         this.mongoTemplate.insert(plate);
+        this.mongoTemplate.insert(potatomasher);
+        this.mongoTemplate.insert(drainer);
 
         /* ----------------- ADD INGREDIENTS ----------------------*/
         Ingredient apple = new Ingredient();
@@ -325,6 +337,11 @@ public class DbSeeder implements CommandLineRunner {
         cherrytomato.setImageName("cherrytomato.png");
         cherrytomato.setType("vegetable");
 
+        Ingredient potato = new Ingredient();
+        potato.setName("potato");
+        potato.setImageName("potato.png");
+        potato.setType("vegetable");
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -355,6 +372,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(smallpasta);
         this.mongoTemplate.insert(mozzarella);
         this.mongoTemplate.insert(cherrytomato);
+        this.mongoTemplate.insert(potato);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -507,6 +525,13 @@ public class DbSeeder implements CommandLineRunner {
         w30.getActions().add("mix");
         w30.getActions().add("cut");
 
+        Whitelist w31 = new Whitelist();
+        w31.setName(potato.getName());
+        w31.getActions().add("add");
+        w31.getActions().add("chop");
+        w31.getActions().add("peel");
+        w31.getActions().add("mash");
+
 
 
 
@@ -542,6 +567,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w28);
         this.mongoTemplate.insert(w29);
         this.mongoTemplate.insert(w30);
+        this.mongoTemplate.insert(w31);
 
         /* ----------------- TEST ACTIONS ----------------------*/
         List<String> i=new ArrayList<>();//mix
@@ -978,9 +1004,105 @@ public class DbSeeder implements CommandLineRunner {
         capreserecipe.getSubprocedureList().add(chopb);
         capreserecipe.getSubprocedureList().add(addbas);
 
+        capreserecipe.setIsPublished(true);
+        capreserecipe.getIngredients().add(smallpasta);
+        capreserecipe.getIngredients().add(salt);
+        capreserecipe.getIngredients().add(extravirginoil);
+        capreserecipe.getIngredients().add(garlicclove);
+        capreserecipe.getIngredients().add(pepper);
+        capreserecipe.getIngredients().add(cherrytomato);
+        capreserecipe.getIngredients().add(mozzarella);
+        capreserecipe.getIngredients().add(basil);
+        capreserecipe.getIngredients().add(water);
+
+
+        capreserecipe.getKitchenTools().add(mixingBowl);
+        capreserecipe.getKitchenTools().add(knife);
+        capreserecipe.getKitchenTools().add(pot);
+
+
+
         recipeService.saveRecipe(capreserecipe,user.getUsername());
         user.getRecipesCreated().add(capreserecipe);
         userDomainService.saveUser(user);
+
+
+        Subprocedure addwater2 = new Subprocedure();
+        addwater2.setProcedureName("add");
+        addwater2.setInstructions("Add water to a large pot");
+        Subprocedure boilwater2 = new Subprocedure();
+        boilwater2.setProcedureName("boil");
+        boilwater2.setInstructions("Boil the water");
+        Subprocedure addpsalt2 = new Subprocedure();
+        addpsalt2.setProcedureName("add");
+        addpsalt2.setInstructions("Add 1 table spoon of salt to the pot");
+        Subprocedure peelpotato = new Subprocedure();
+        peelpotato.setProcedureName("peel");
+        peelpotato.setInstructions("Peel 2 pounds of potatoes");
+        Subprocedure cutpotato = new Subprocedure();
+        cutpotato.setProcedureName("chop");
+        cutpotato.setInstructions("Chop the peeled potatoes");
+        Subprocedure addpotato = new Subprocedure();
+        addpotato.setProcedureName("boil");
+        addpotato.setInstructions("Boil chopped potatoes");
+        Subprocedure drainpotato = new Subprocedure();
+        drainpotato.setProcedureName("drain");
+        drainpotato.setInstructions("Drain boiled potatoes");
+        Subprocedure addpotato2 = new Subprocedure();
+        addpotato2.setProcedureName("add");
+        addpotato2.setInstructions("Put drained potatoes to a bowl");
+        Subprocedure addbtr = new Subprocedure();
+        addbtr.setProcedureName("add");
+        addbtr.setInstructions("Add 2 table spoons of butter to the bowl");
+        Subprocedure addmlk = new Subprocedure();
+        addmlk.setProcedureName("add");
+        addmlk.setInstructions("Add 1 cup of milk to the bowl");
+        Subprocedure mashp = new Subprocedure();
+        mashp.setProcedureName("mash");
+        mashp.setInstructions("Mash the potatoes");
+        Subprocedure addppp = new Subprocedure();
+        addppp.setProcedureName("add");
+        addppp.setInstructions("Add pepper to taste");
+
+        Recipe mashedpotatoes = new Recipe();
+        mashedpotatoes.setCreator(user.getUsername());
+        mashedpotatoes.setRecipeName("Mashed Potatoes");
+        mashedpotatoes.getSubprocedureList().add(addwater2);
+        mashedpotatoes.getSubprocedureList().add(boilwater2);
+        mashedpotatoes.getSubprocedureList().add(addpsalt2);
+        mashedpotatoes.getSubprocedureList().add(peelpotato);
+        mashedpotatoes.getSubprocedureList().add(cutpotato);
+        mashedpotatoes.getSubprocedureList().add(addpotato);
+        mashedpotatoes.getSubprocedureList().add(drainpotato);
+        mashedpotatoes.getSubprocedureList().add(addpotato2);
+        mashedpotatoes.getSubprocedureList().add(addbtr);
+        mashedpotatoes.getSubprocedureList().add(addmlk);
+        mashedpotatoes.getSubprocedureList().add(mashp);
+
+        mashedpotatoes.setIsPublished(true);
+        mashedpotatoes.getIngredients().add(potato);
+        mashedpotatoes.getIngredients().add(salt);
+        mashedpotatoes.getIngredients().add(water);
+        mashedpotatoes.getIngredients().add(butter);
+        mashedpotatoes.getIngredients().add(pepper);
+        mashedpotatoes.getIngredients().add(milk);
+
+
+        mashedpotatoes.getKitchenTools().add(mixingBowl);
+        mashedpotatoes.getKitchenTools().add(knife);
+        mashedpotatoes.getKitchenTools().add(pot);
+        mashedpotatoes.getKitchenTools().add(potatomasher);
+
+        recipeService.saveRecipe(mashedpotatoes,user.getUsername());
+        user.getRecipesCreated().add(mashedpotatoes);
+        userDomainService.saveUser(user);
+
+
+
+
+
+
+
 
 
         /////////////////////////////////////////////////////////////////////////////
