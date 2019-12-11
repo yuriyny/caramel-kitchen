@@ -154,7 +154,8 @@
 
     const user_recipe_ul = document.querySelector("#recipe_ul");
     const user_recipe_steps = [[${game.recipe.subprocedureList}]];
-    const user_recipe = new Instructions(user_recipe_ul, user_recipe_steps);
+    const user_recipe_intermediate_ingredients = [[${game.recipe.intermediateIngredients}]];
+    const user_recipe = new Instructions(user_recipe_ul, user_recipe_steps, user_recipe_intermediate_ingredients);
 
     const item_board = document.querySelector("#item-board");
     const ingredient_area = document.querySelector("#ingredient-area");
