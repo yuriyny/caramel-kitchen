@@ -47,6 +47,7 @@
             <div class="row">
                 <div id="item-descriptor">
 <!--                    <input type="number" class="item-quantity-input browser-default"><span>placeholder lines</span>-->
+                    <span style="opacity: 0.7; font-size: 21px;">Add ingredients and tools on the left. Hover over the added items to see actions and select specific combinations for more actions.</span>
                 </div>
 
                 <div id="cooking-board" class="row">
@@ -78,7 +79,7 @@
                 </div>
                 <div class="col s12 input-field">
                     <input id="recipe_comment" type="text">
-                    <label for="recipe_comment">comment</label>
+                    <label for="recipe_comment">Add a note to the highlighted step</label>
                 </div>
                 <div class="col m12 l6">
                     <a th:href="@{/home}" class="waves-effect waves-orange btn-large orange lighten-2 square-btn"><i
@@ -184,6 +185,7 @@
         }
 
         console.log(oldRecipe);
+        cookingBoard.setIntermediateSteps(oldRecipe.intermediateIngredients);
 
         const subprocedures = oldRecipe.subprocedureList;
         for (let i = 0; i < subprocedures.length; i++) {

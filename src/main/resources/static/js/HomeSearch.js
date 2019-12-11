@@ -116,10 +116,12 @@ class HomeSearch{
         title.textContent = result.recipeName;
 
         const info = document.createElement("p");
+        info.setAttribute("style", "font-size: 19px");
         info.textContent = result.creator;
 
         const rating = document.createElement("p");
         rating.setAttribute("class", "secondary-content");
+        info.setAttribute("style", "font-size: 19px");
         if (!result.rating) {
                    result.rating = "-";
         }
@@ -143,6 +145,7 @@ class HomeSearch{
 
         const title = document.createElement("a");
         title.setAttribute("class", "title");
+        title.setAttribute("style", "font-size:24px");
         title.setAttribute("href", "#");
         title.textContent = result.username;
 

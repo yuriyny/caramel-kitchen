@@ -1,11 +1,24 @@
 
 /*@font-face{}*/
 
+@import url('https://fonts.googleapis.com/css?family=Hi+Melody|Pacifico&display=swap');
+
 *{
     margin: 0;
     padding: 0;
-    font-family: "Century Gothic";
+    font-family: 'Hi Melody', cursive;
     box-sizing: border-box;
+    font-size: 24px;
+}
+
+button, input, a{
+    font-family: 'Hi Melody', cursive !important;
+    font-size: 24px !important;
+}
+
+label, select{
+    font-family: 'Hi Melody', cursive !important;
+    font-size: 19px !important;
 }
 
 body{
@@ -33,8 +46,9 @@ nav ul li a{
     height: 64px;
 }
 
-.input-field, h1, h2{
+.input-field, h1, h2, h3, h4{
     user-select: none;
+    font-family: 'Pacifico', cursive;
 }
 
 ::-webkit-scrollbar {
@@ -86,6 +100,7 @@ nav ul li a{
 
 #login-page{
     min-width: 500px;
+    max-width: 1000px;
     padding: 40px 120px;
     position: relative;
     background: white;
@@ -104,9 +119,8 @@ nav ul li a{
 }
 
 #brief-intro{
-    padding: 50px;
-    height: 550px;
-    line-height: 2em;
+    padding: 50px 20px;
+    height: auto;
     opacity: 0.8;
 }
 
@@ -117,6 +131,18 @@ nav ul li a{
 .aboutus-container{
     margin-top: 100px;
     height: 70vh;
+}
+
+.highlight{
+    display: inline;
+    color: #ffb54e !important;
+}
+
+#about-us{
+    line-height: 66px;
+    color: white;
+    font-size: 54px;
+    font-weight: bold;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/
@@ -227,6 +253,7 @@ nav ul li a{
 .search-result-name{
     overflow-x: auto;
     user-select: none;
+    text-align: right;
 }
 
 .active-item > .card-image{
@@ -280,7 +307,7 @@ nav ul li a{
 
 .card-menu-ul > .menu-option{
     z-index: 1;
-    padding: 5px 0;
+    padding: 0;
     margin-bottom: 8px;
     height: auto;
     display: flex;
@@ -325,13 +352,13 @@ nav ul li a{
     border: 2px solid #f57c00;
     margin: 10px;
     font-size: 1.4em;
-    padding: 8px 15px;
+    padding: 3px 15px;
     border-radius: 10px;
     overflow-x: auto;
 }
 
 #item-descriptor > span{
-    font-size: 1.2em;
+    font-size: 1em;
 }
 
 .item-quantity-input{
@@ -529,6 +556,7 @@ nav ul li a{
 
 #mistakes{
     color:red;
+    font-size: 39px;
 }
 
 @keyframes red-alert{

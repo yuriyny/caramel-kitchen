@@ -54,8 +54,10 @@ class CookingBoard{
         if(tag.length > 0) record["tags"] = tag;
         else record["tags"] = [];
         record["use"] = use;
-        record["quantity"] = item.quantity ? item.quantity : 1;
-        record["selected"] = item.selected ? true : false;
+        if(item.quantity) record["quantity"] = item.quantity;
+        else record["quantity"] = 1;
+        if(item.selected) record["selected"] = item.selected;
+        else record["selected"] = false;
 
         const wrapper = document.createElement("div");
         if(Array.isArray(this.board_ul)){ wrapper.setAttribute("class", "col s4"); }
@@ -162,8 +164,9 @@ class CookingBoard{
         notify_text.textContent = "Click here to upload an image!";
         const img = document.createElement("input");
         img.setAttribute("type", "image");
+        img.setAttribute("id", "prepared-card-image")
         img.setAttribute("src", "/images/placeholder.png");
-        img.setAttribute("style", "width: 100%; position: absolute; top: 0; left: 0");
+        img.setAttribute("style", "width: 100%; position: absolute; top: 0; left: 0; opacity: 0.5");
         const img_input = document.createElement("input");
         img_input.setAttribute("type", "file");
         img_input.setAttribute("id", "image-input");
@@ -181,6 +184,7 @@ class CookingBoard{
                 record["imageFileUrl"] = reader.result;
                 if(document.getElementsByClassName("card-image-text")){
                     document.getElementsByClassName("card-image-text")[0].parentNode.removeChild(document.getElementsByClassName("card-image-text")[0]);
+                    document.getElementById("prepared-card-image").style.opacity = "1";
                 }
             };
             if(file) {reader.readAsDataURL(file);}
@@ -193,7 +197,7 @@ class CookingBoard{
         const card_name_input = document.createElement("input");
         card_name_input.setAttribute("class", "processedItem-name-input browser-default");
         card_name_input.setAttribute("type", "text");
-        card_name_input.setAttribute("placeholder", "Enter item name");
+        card_name_input.setAttribute("placeholder", "Item name here");
         card_name_input.addEventListener("keypress", (e)=>{
             if(e.key === "Enter"){
                 if(record["imageFileUrl"] !== null && img_input.files[0]) this.uploadImage(img_input.files[0]);
@@ -565,33 +569,16 @@ class CookingBoard{
         return ingredients;
     }
 
-    // getProcessedItems(){
-    //     const keys = Object.keys(this.items);
-    //     let processedItems = [];
-    //     for(const id of keys){
-    //         if(this.items[id].use === "processedItem"){
-    //             // let temp = {};
-    //             // temp[this.items[id].name] = this.items[id].tags;
-    //             // processedItems.push(temp);
-    //             processedItems.push(this.items[id]);
-    //         }
-    //     }
-    //     return processedItems;
-    // }
-
-    // addIntermediateStep(ingredients, intermediateIngredients, action){
-    //     let sub = {};
-    //     sub["ingredients"] = ingredients;
-    //     sub["intermediateIngredients"] = intermediateIngredients;
-    //     sub["action"] = action;
-    //     this.intermediate_steps.push(sub);
-    // }
     addIntermediateStep(item){
         this.intermediate_steps.push(item);
     }
 
     getIntermediateSteps(){
         return this.intermediate_steps;
+    }
+
+    setIntermediateSteps(intermediateSteps){
+        this.intermediate_steps = intermediateSteps;
     }
 
     setSavedStatus(state){
