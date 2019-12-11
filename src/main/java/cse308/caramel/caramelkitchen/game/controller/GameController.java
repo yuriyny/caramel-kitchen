@@ -83,4 +83,17 @@ public class GameController {
         response.setMessage(game.getScore().toString());
         return response;
     }
+
+    @ResponseBody
+    @PostMapping(path="/reset")
+    public void resetGame(@RequestBody Game game, Principal principal) {
+        Game gameFound = gameService.getGame(game.getId());
+        gameFound.setGameState(null);
+        gameFound.setScore(null);
+
+        userDomainService.deleteGameFromInProgress(principal.getName(), gameFound);
+        userDomainService.deleteGameFromFinished(principal.getName(), gameFound);
+
+    }
+
 }
