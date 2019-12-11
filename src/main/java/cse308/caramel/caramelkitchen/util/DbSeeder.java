@@ -723,6 +723,7 @@ public class DbSeeder implements CommandLineRunner {
         /* ----------------- Fried Flank Steak RECIPE ----------------------*/
         Recipe steakrecipe = new Recipe();
         steakrecipe.setCreator(user.getUsername());
+        steakrecipe.setRating(2.0);
         steakrecipe.setRecipeName("Fried Flank Steak");
         steakrecipe.getSubprocedureList().add(cutSteak);
         steakrecipe.getSubprocedureList().add(applySalt);
@@ -875,6 +876,7 @@ public class DbSeeder implements CommandLineRunner {
 
         Recipe chickenbreastrecipe =new Recipe();
         chickenbreastrecipe.setCreator(user.getUsername());
+        chickenbreastrecipe.setRating(5.0);
         chickenbreastrecipe.setRecipeName("Chicken Piccata");
         chickenbreastrecipe.getSubprocedureList().add(sliceBreast);
         chickenbreastrecipe.getSubprocedureList().add(addFlour);
@@ -1179,6 +1181,10 @@ public class DbSeeder implements CommandLineRunner {
         //saving completed game with All finished steps
         gameRepository.save(game2);
 
+        Game game3 = new Game();
+        game3.setRecipe(chickenbreastrecipe);
+        game3.setUserRating(5.0);
+        gameRepository.save(game3);
         /* ----------------- TEST REQUEST ----------------------*/
         requestService.storeRequest(user.getUsername(),"feedback",null,"add more actions");
         requestService.storeRequest(user.getUsername(),"feedback",null,"better games");

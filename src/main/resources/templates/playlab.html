@@ -109,7 +109,12 @@
 <!--                </div>-->
 <!--                <div class="col s12 card-panel teal kitchen_sidebar_info"><span class="white-text">Score</span>-->
 <!--                </div>-->
-                <div class="col s12"><h4 class="right">Recipe</h4></div>
+                <div class="col s12">
+                    <div>
+                        <button id="reset" onclick="resetGame()" class="waves-effect waves-light btn-small orange lighten-1"><i class="material-icons right">rotate_left</i>Reset</button>
+                    </div>
+                    <h4 class="right">Recipe</h4>
+                </div>
                 <div id="recipe_section" class="col s12">
                     <ul id="recipe_ul">
 <!--                        <li class="collection-item">-->
@@ -156,6 +161,20 @@
     const user_recipe_steps = [[${game.recipe.subprocedureList}]];
     const user_recipe_intermediate_ingredients = [[${game.recipe.intermediateIngredients}]];
     const user_recipe = new Instructions(user_recipe_ul, user_recipe_steps, user_recipe_intermediate_ingredients);
+
+    const reset_button = document.querySelector("#reset");
+    async function resetGame(){
+        const newGame = await fetch("/reset", {
+               method: "POST",
+               body: JSON.stringify(game),
+               headers: {
+                    "Content-Type": "application/json"
+               }})
+               .then(response => null)
+               .then(data => window.location.reload(true))
+               .catch((e)=>{console.log("err " + e)});
+
+    }
 
     const item_board = document.querySelector("#item-board");
     const ingredient_area = document.querySelector("#ingredient-area");

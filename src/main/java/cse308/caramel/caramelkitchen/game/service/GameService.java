@@ -4,6 +4,7 @@ import cse308.caramel.caramelkitchen.game.model.GameState;
 import cse308.caramel.caramelkitchen.game.model.Rating;
 import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.repository.GameRepository;
+import cse308.caramel.caramelkitchen.game.repository.RecipeRepository;
 import cse308.caramel.caramelkitchen.user.persistence.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class GameService {
     RecipeEditorService recipeEditorService;
     @Autowired
     GameRepository gameRepository;
+    @Autowired
+    RecipeRepository recipeRepository;
+
     public Game getGame(String gameId){
         return gameRepository.findById(gameId).orElse(null);
     }
@@ -65,7 +69,11 @@ public class GameService {
     public Double fetchRecipeRating(String recipeId) {
         Collection<Game> g = gameRepository.findAllGamesPlayedByRecipeId(recipeId).orElse(null);
         if (g != null){
-            return g.stream().map(game -> game.getUserRating()).filter(Objects::nonNull).mapToDouble(rating->rating).average().orElse(0.0);
+            Double recipeRating = g.stream().map(game -> game.getUserRating()).filter(Objects::nonNull).mapToDouble(rating->rating).average().orElse(0.0);
+            Recipe recipe = recipeRepository.findById(recipeId).get();
+            recipe.setRating(recipeRating);
+            recipeRepository.save(recipe);
+            return recipeRating;
         }
         return 0.0;
     }
