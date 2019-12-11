@@ -7,7 +7,7 @@
 
     const title = document.createElement("h1");
     title.setAttribute("style", "text-transform: capitalize");
-    title.textContent = itemBoard.relevent_action + " " + itemBoard.getNameByID(itemBoard.relevent_id);
+    title.textContent = itemBoard.relevent_action;
 
     const instructions = document.createElement("h3");
     instructions.textContent = "Press space when the ingredient is low enough to flip.";
