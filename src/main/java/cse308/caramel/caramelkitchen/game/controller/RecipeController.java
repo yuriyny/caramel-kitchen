@@ -1,9 +1,11 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
+import cse308.caramel.caramelkitchen.game.model.Rating;
 import cse308.caramel.caramelkitchen.game.persistence.Game;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
+import cse308.caramel.caramelkitchen.game.service.GameService;
 import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
 import cse308.caramel.caramelkitchen.search.service.SearchService;
@@ -31,6 +33,8 @@ public class RecipeController {
     RecipeEditorService recipeEditorService;
     @Autowired
     UserDomainService userDomainService;
+    @Autowired
+    GameService gameService;
 
     /**
      * Search recipe
@@ -110,9 +114,14 @@ public class RecipeController {
      */
     @ResponseBody
     @PostMapping(path={"/save-recipe","/create-recipe"})
-    public void createRecipe(@RequestBody Recipe recipe,Principal principal){
-        recipe = recipeService.saveRecipe(recipe,principal.getName());
-        userDomainService.addRecipeToUser(principal.getName(),recipe);
+    public void createRecipe(@RequestBody Recipe recipe,Principal principal) {
+        boolean isNewRecipe = recipe.getId() == null;
+        if (recipe.getRecipeImage() != null)
+            recipe.setRecipeImageUrl(recipeEditorService.findRecipeImageUrl(recipe.getRecipeImage()));
+        Recipe savedRecipe = recipeService.saveRecipe(recipe,principal.getName());
+        if (isNewRecipe) {
+            userDomainService.addRecipeToUser(principal.getName(), savedRecipe);
+        }
     }
     @ResponseBody
     @PostMapping(path={"/delete-recipe"})
@@ -220,16 +229,46 @@ public class RecipeController {
         return modelAndView;
     }
 
-//    @ResponseBody
-//    @PostMapping(value= "/valid-actions")
-//    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, String> pair) {
-//        return recipeEditorService.retrieveValidToolActions(pair.get("ingredient"), pair.get("tool"));
-//    }
-
     @ResponseBody
     @PostMapping(value= "/valid-actions")
     public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, List<?>> pair) {
         return recipeEditorService.retrieveValidToolActions((List<String>) pair.get("ingredient"), (List<String>) pair.get("tool"), (List<IntermediateIngredient>) pair.get("intermediateIngredient"));
+    }
+
+    @ResponseBody
+    @GetMapping(path= "/get-all-types")
+    public List<String> getTypes() {
+        return recipeEditorService.findAllTypes();
+    }
+
+    // Rating routes
+
+    @ResponseBody
+    @GetMapping(value= "/user-rating/{gameId}")
+    public Rating fetchSingleUserRating(@PathVariable String gameId) {
+        Rating r = new Rating();
+        r.setScore(gameService.fetchSingleUserGameRating(gameId));
+        return r;
+    }
+
+    @ResponseBody
+    @GetMapping(value= "/rating/{recipeId}")
+    public Rating fetchAggregateRating(@PathVariable String recipeId) {
+        Rating r = new Rating();
+        r.setScore(gameService.fetchRecipeRating(recipeId));
+        return r;
+    }
+
+    @ResponseBody
+    @PostMapping(value= "/update-recipe-rating")
+    public void saveRating(@RequestBody Rating rating) {
+        gameService.updateUserRecipeRating(rating);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/get-top-recipes")
+    public List<Recipe> handleRequestForTopRecipes() {
+        return recipeService.retrieveListOfTopFiveRecipes();
     }
 
 }

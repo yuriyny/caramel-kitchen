@@ -8,13 +8,19 @@
     const title = document.createElement("h1");
     title.setAttribute("style", "text-transform: capitalize");
     title.textContent = itemBoard.relevent_action;
+    // console.log(itemBoard.relevent_id);
+    // for(let i = 0; i < itemBoard.relevent_id.length; i++) {
+    //     title.textContent += " " + itemBoard.getNameByID(itemBoard.relevent_id[i]);
+    //     if(i !== itemBoard.relevent_id.length - 1) title.textContent += ",";
+    // }
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Mash your arrow keys to stir!";
+    instructions.textContent = "Press your arrow keys and throw the ingredients around!";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
     let timer = null;
+    let dist = 1;
 
     const game_elements = document.createElement("div");
     game_elements.setAttribute("id", "game_elements");
@@ -57,12 +63,6 @@
         leftArrow.setAttribute("class", "material-icons");
         leftArrow.textContent = "keyboard_arrow_left";
 
-        const ingredient_img = document.createElement("img");
-        ingredient_img.setAttribute("id", "ingredient-image");
-        const img = document.getElementsByClassName("game-in-progress")[0].firstChild.firstChild.src;
-        ingredient_img.setAttribute("src", img);
-        ingredient_img.setAttribute("draggable", false);
-
         const rightDiv = document.createElement("div");
         rightDiv.setAttribute("class", "game-comp");
         rightDiv.setAttribute("id", "right-indicator");
@@ -70,12 +70,43 @@
         rightArrow.setAttribute("class", "material-icons");
         rightArrow.textContent = "keyboard_arrow_right";
 
+        const upDiv = document.createElement("div");
+        upDiv.setAttribute("class", "game-comp");
+        upDiv.setAttribute("id", "up-indicator");
+        const upArrow = document.createElement("i");
+        upArrow.setAttribute("class", "material-icons");
+        upArrow.textContent = "keyboard_arrow_up";
+
+        const downDiv = document.createElement("div");
+        downDiv.setAttribute("class", "game-comp");
+        downDiv.setAttribute("id", "down-indicator");
+        const downArrow = document.createElement("i");
+        downArrow.setAttribute("class", "material-icons");
+        downArrow.textContent = "keyboard_arrow_down";
+
+        const items = document.createElement("div");
+        items.setAttribute("id", "items");
+        let selected = document.getElementsByClassName("game-in-progress");
+        for(let item of selected) {
+            const ingredient_img = document.createElement("img");
+            ingredient_img.setAttribute("class", "ingredient-image");
+            const img = item.firstChild.firstChild.src;
+            ingredient_img.setAttribute("src", img);
+            ingredient_img.setAttribute("draggable", false);
+
+            items.appendChild(ingredient_img);
+        }
+
         countdownBar.appendChild(progress);
         leftDiv.appendChild(leftArrow);
         rightDiv.appendChild(rightArrow);
+        upDiv.appendChild(upArrow);
+        downDiv.appendChild(downArrow);
         game.appendChild(leftDiv);
-        game.appendChild(ingredient_img);
+        game.appendChild(items);
         game.appendChild(rightDiv);
+        game.appendChild(upDiv);
+        game.appendChild(downDiv);
 
         game_elements.appendChild(countdownBar);
         game_elements.appendChild(game);
@@ -85,6 +116,17 @@
     }
 
     function playGame(){
+        const ingredients = document.getElementsByClassName("ingredient-image");
+        for(let i = 0; i<ingredients.length; i++){
+            let lshift = Math.floor((Math.random() * 1) + 40);
+            lshift *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+            let tshift = Math.floor((Math.random() * 1) + 40);
+            tshift *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+            ingredients[i].style.left = (50 + lshift) + "%";
+            ingredients[i].style.top = (50 + tshift) + "%";
+        }
+        dist = 1;
+
         document.addEventListener("keydown", shake);
         setTimeout(endGame, 3000);
     }
@@ -92,27 +134,69 @@
     function shake(e){
         const left = document.getElementById("left-indicator");
         const right = document.getElementById("right-indicator");
-        const img = document.getElementById("ingredient-image");
-        const shift = Math.floor((Math.random() * 1) + 2);
+        const up = document.getElementById("up-indicator");
+        const down = document.getElementById("down-indicator");
+        const imgs = document.getElementsByClassName("ingredient-image");
+        let shift;
+        let changeTo;
         if(e.key === "ArrowLeft" && left.classList.contains("glow")){
             score++;
-            img.style.left = (50 - shift) + "%";
+            for(const img of imgs){
+                shift = Math.floor((Math.random() * 1) + 40) * dist;
+                img.style.left = (50 - shift) + "%";
+            }
             left.classList.remove("glow");
-            right.classList.add("glow");
+            changeTo = Math.floor((Math.random() * 3));
+            if(changeTo === 0) right.classList.add("glow");
+            else if(changeTo === 1) up.classList.add("glow");
+            else if(changeTo === 2) down.classList.add("glow");
+            dist *= 0.90;
         }
         else if(e.key === "ArrowRight" && right.classList.contains("glow")){
             score++;
-            img.style.left = (50 + shift) + "%";
+            for(const img of imgs){
+                shift = Math.floor((Math.random() * 1) + 40) * dist;
+                img.style.left = (50 + shift) + "%";
+            }
             right.classList.remove("glow");
-            left.classList.add("glow");
+            changeTo = Math.floor((Math.random() * 3));
+            if(changeTo === 0) left.classList.add("glow");
+            else if(changeTo === 1) up.classList.add("glow");
+            else if(changeTo === 2) down.classList.add("glow");
+            dist *= 0.90;
         }
-        // console.log("score: " + score);
+        else if(e.key === "ArrowUp" && up.classList.contains("glow")){
+            score++;
+            for(const img of imgs){
+                shift = Math.floor((Math.random() * 1) + 40) * dist;
+                img.style.top = (50 - shift) + "%";
+            }
+            up.classList.remove("glow");
+            changeTo = Math.floor((Math.random() * 3));
+            if(changeTo === 0) right.classList.add("glow");
+            else if(changeTo === 1) left.classList.add("glow");
+            else if(changeTo === 2) down.classList.add("glow");
+            dist *= 0.90;
+        }
+        else if(e.key === "ArrowDown" && down.classList.contains("glow")){
+            score++;
+            for(const img of imgs){
+                shift = Math.floor((Math.random() * 1) + 40) * dist;
+                img.style.top = (50 + shift) + "%";
+            }
+            down.classList.remove("glow");
+            changeTo = Math.floor((Math.random() * 3));
+            if(changeTo === 0) right.classList.add("glow");
+            else if(changeTo === 1) up.classList.add("glow");
+            else if(changeTo === 2) left.classList.add("glow");
+            dist *= 0.90;
+        }
     }
 
     function endGame(){
-        if(score > 25){
+        if(score > 10){
             M.toast({html: 'Good job!'});
-            itemBoard.performAction();
+            itemBoard.performAction(itemBoard.relevent_id, itemBoard.relevent_action, true);
             itemBoard.updateMenu();
             exitGame();
         } else {

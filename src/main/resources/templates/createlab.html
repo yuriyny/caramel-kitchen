@@ -23,7 +23,7 @@
     <div class="nav-wrapper amber lighten-4">
         <a href="#" class="brand-logo" tabindex="-1"></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">search</i>Home</p></a></li>
+            <li><a th:href="@{/home}"><p style="display: inline-flex"><i class="material-icons">home</i>Home</p></a></li>
             <li><a th:href="@{/userprofile}"><p style="display: inline-flex"><i class="material-icons">face</i>Profile</p></a></li>
             <li><a th:href="@{/logout}"><p style="display: inline-flex"><i class="material-icons">exit_to_app</i>Logout</p></a></li>
         </ul>
@@ -107,6 +107,15 @@
                     <input id="recipe-name" type="text">
                     <label for="recipe-name">Recipe name</label>
                 </div>
+                <div class="col s12 file-field input-field">
+                    <div class="btn">
+                        <span>Add Recipe Image</span>
+                        <input name="file" type="file" id="recipe-img-input" accept="image/*" onchange="prompt.setRecipeImage()">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                </div>
                 <button onclick="prompt.saveRecipe()" class="col s8 offset-s2 btn-large waves-effect waves-orange amber lighten-1" style="margin-top: 20px">Save</button>
                 <button onclick="prompt.publishRecipe()" class="col s12 btn-large waves-effect waves-orange amber lighten-1" style="margin-top: 30px">Publish</button>
             </div>
@@ -133,7 +142,7 @@
 
     const recipe_ul = document.querySelector("#recipe_ul");
     const comment_input = document.querySelector("#recipe_comment");
-    const recipe = new Instructions(recipe_ul, []);
+    const recipe = new Instructions(recipe_ul, [], []);
     recipe.setCommentInput(comment_input);
 
     // const context_menu = document.querySelector("#menu");
@@ -150,7 +159,8 @@
     itemSelection.searchAllQuery();
 
     const recipe_name = document.querySelector("#recipe-name");
-    const prompt = new Prompt(recipe_name, recipe, cookingBoard);
+    const recipe_image = document.querySelector("#recipe-img-input");
+    const prompt = new Prompt(recipe_name, recipe_image, recipe, cookingBoard);
 
     $('#nav-mobile a').map( function() {
         $(this).click(function() {
@@ -162,7 +172,7 @@
     const oldRecipe = /*[[${recipe}]]*/ null;
 
     if(oldRecipe){
-
+        cookingBoard['recipeId'] = oldRecipe.id;
         const ingredients = oldRecipe.ingredients;
         for (let i = 0; i < ingredients.length; i++) {
             cookingBoard.addItem(ingredients[i], "ingredient");
@@ -183,8 +193,12 @@
             /* TODO: Fix ingredient quantities in instructions*/
             if (target){
                 recipe.addToRecipe(action, target);
-                cookingBoard.performAction(ingredient.id, action);
+                // cookingBoard.performAction(ingredients.id, action);
             }
+        }
+        const intermediateIngredients = oldRecipe.intermediateIngredients;
+        for(let i = 0; i < intermediateIngredients.length; i++){
+            cookingBoard.addItem(intermediateIngredients[i], "processedItem");
         }
         cookingBoard.updateMenu();
 

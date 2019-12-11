@@ -7,7 +7,7 @@
 
     const title = document.createElement("h1");
     title.setAttribute("style", "text-transform: capitalize");
-    title.textContent = itemBoard.relevent_action + " " + itemBoard.getNameByID(itemBoard.relevent_id);
+    title.textContent = itemBoard.relevent_action;
 
     const instructions = document.createElement("h3");
     instructions.textContent = "Click the bars before you peel too much of the edges!";
@@ -92,7 +92,7 @@
                 } else {
                     check = parseFloat(window.getComputedStyle($("#edge" + edge_cnt)[0]).getPropertyValue("height"));
                 }
-                if (check > max_length * 0.8) {
+                if (check > max_length * 0.7) {
                     score++;
                 }
                 $("#edge" + edge_cnt).css("-webkit-animation-play-state", "paused");
@@ -133,7 +133,7 @@
     }
 
     function endGame(){
-        if(score > 3){
+        if(score > 2){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
             itemBoard.updateMenu();

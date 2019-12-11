@@ -64,6 +64,12 @@ class HomeSearch{
                 });
             console.log(recipeResults);
             for (let result of recipeResults) {
+                let recipe_rating_data = await fetch("/rating/" + result.id, {
+                                                                           method: "GET"
+                                                                       })
+                                                                       .then(response => response.json())
+                                                                       .catch((e)=>{console.log("err " + e)});
+                result['rating'] = recipe_rating_data['score'];
                 this.createRecipeResultLi(result);
             }
         }else{
@@ -91,9 +97,18 @@ class HomeSearch{
         const li = document.createElement("li");
         li.setAttribute("class", "collection-item avatar");
 
-        const icon = document.createElement("i");
-        icon.setAttribute("class", "material-icons circle orange light-3");
-        icon.textContent = "format_list_bulleted";
+        let icon;
+        if (result.recipeImageUrl) {
+            icon = document.createElement("img");
+            icon.setAttribute("class", "circle responsive-img");
+
+            icon.setAttribute("src", result.recipeImageUrl);
+        }
+        else {
+            icon = document.createElement("i");
+            icon.setAttribute("class", "material-icons circle orange light-3");
+            icon.textContent = "format_list_bulleted";
+        }
 
         const title = document.createElement("a");
         title.setAttribute("class", "title");
@@ -105,6 +120,9 @@ class HomeSearch{
 
         const rating = document.createElement("p");
         rating.setAttribute("class", "secondary-content");
+        if (!result.rating) {
+                   result.rating = "-";
+        }
         rating.textContent = "Rating: " + result.rating;
 
         li.appendChild(icon);

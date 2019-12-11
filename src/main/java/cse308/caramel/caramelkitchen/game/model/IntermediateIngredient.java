@@ -7,10 +7,13 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 @Getter
 @Setter
 public class IntermediateIngredient extends SubprocedureComponent {
+    private Collection<HashMap<String, List<String>>> ingredientComponents;
     private Collection<Ingredient> ingredients;
     private Collection<IntermediateIngredient> intermediateIngredients;
     private String tag; // actions completed on this current

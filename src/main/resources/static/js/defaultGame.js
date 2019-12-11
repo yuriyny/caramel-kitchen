@@ -10,7 +10,7 @@
     title.textContent = itemBoard.relevent_action;
 
     const instructions = document.createElement("h3");
-    instructions.textContent = "Press space when the ingredient is low enough to flip.";
+    instructions.textContent = "Sorry! We don't have this game ready yet! So just click the ingredient!";
 
     const counter = document.createElement("h1");
     counter.textContent = "countdown";
@@ -50,68 +50,39 @@
         ingredient_img.setAttribute("src", img);
         ingredient_img.setAttribute("draggable", false);
 
-        const trigger_area = document.createElement("img");
-        trigger_area.setAttribute("id", "trigger-area");
-
         game.appendChild(ingredient_img);
-        game.appendChild(trigger_area);
-
         game_elements.appendChild(game);
 
-        score = 0;
         playGame();
     }
 
     function playGame(){
-        document.addEventListener("keydown", flipAgain);
+        const target = document.getElementById("ingredient-image");
+        target.addEventListener("mousedown", function () {
+            if(score > 3){
+                endGame();
+            }
 
-        $("#ingredient-image")[0].addEventListener("animationend", function () {
-            endGame();
+            let random_left = Math.floor((Math.random() * 70));
+            let random_top = Math.floor(Math.random() * 201) - 100;
+            let random_scale = Math.floor(Math.random() * 500) + 20;
+
+            target.style.left = random_left + "%";
+            target.style.top = random_top + "px";
+            target.style.width = random_scale + "px";
+            target.style.height = random_scale + "px";
+            score++;
         });
     }
 
-    function flipAgain(e){
-        if(e.keyCode === 32){
-            const item = $("#ingredient-image");
-            console.log(parseFloat(item.css("bottom")) + " " + score);
-            if(parseFloat(item.css("bottom")) < 0){
-                score++;
-                console.log(score);
-                if(score > 4) endGame();
-            };
-            item[0].style.animation = "none";
-            item[0].offsetHeight;
-            item[0].style.animation = null;
-        }
-    }
-
     function endGame(){
-        if(score > 4){
-            M.toast({html: 'Good job!'});
-            itemBoard.performAction();
-            itemBoard.updateMenu();
-            exitGame();
-        } else {
-            const elem = document.getElementById("mistakes");
-            let val = parseInt(elem.textContent) + 1;
-            elem.textContent = val;
-            const counter = document.getElementById("mistake-counter");
-            counter.classList.remove("mistake-notice");
-            void counter.offsetWidth;
-            counter.classList.add("mistake-notice");
-            M.toast({html: 'You can do better. Try again!'});
-            resetGame();
-        }
-    }
-
-    function resetGame(){
-        while(game_elements.firstChild){ game_elements.removeChild(game_elements.firstChild); }
-        document.removeEventListener("keydown", flipAgain);
-        loadGame();
+        M.toast({html: 'Good job!'});
+        itemBoard.performAction();
+        itemBoard.updateMenu();
+        exitGame();
     }
 
     function customClean(){
-        document.removeEventListener("keydown", flipAgain);
         clearTimeout(timer);
     }
 

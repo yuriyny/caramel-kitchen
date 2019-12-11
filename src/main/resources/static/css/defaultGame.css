@@ -1,0 +1,18 @@
+#game{
+    height: 300px;
+    position: relative;
+    width: 95%;
+    margin: 30px auto;
+}
+
+#ingredient-image{
+    position: absolute;
+    height: 250px;
+    width: 250px;
+    animation: rolling 1s linear infinite;
+}
+
+@keyframes rolling{
+    0% {transform: rotate(0deg)}
+    100% {transform: rotate(360deg)}
+}

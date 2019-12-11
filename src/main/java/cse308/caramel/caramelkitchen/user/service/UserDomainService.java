@@ -65,13 +65,27 @@ public class UserDomainService implements UserDetailsService { //removed id beca
     }
 
     public void deleteGameFromInProgress(String username, Game game) {
-        User user=getUserByUsername(username);
-        user.getGamesInProgress().remove(game);
-        userRepository.save(user);
+        User user = getUserByUsername(username);
+        for(Iterator<Game> it = user.getGamesInProgress().iterator(); it.hasNext(); ){
+            Game g = it.next();
+            if (g.getId().equals(game.getId())){
+                it.remove();
+            }
+        }
+        saveUser(user);
+    }
+    public void deleteGameFromFinished(String username, Game game) {
+        User user = getUserByUsername(username);
+        for(Iterator<Game> it = user.getGamesPlayed().iterator(); it.hasNext(); ){
+            Game g = it.next();
+            if (g.getId().equals(game.getId())){
+                it.remove();
+            }
+        }
+        saveUser(user);
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         User user = userRepository.findById(username).get();
         if(user != null) {
             List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
@@ -81,16 +95,27 @@ public class UserDomainService implements UserDetailsService { //removed id beca
         }
     }
     public void saveInProgressGameToUser(String username, Game game){
-        User user=getUserByUsername(username);
-        user.getGamesInProgress().add(game);
-        userRepository.save(user);
+        User user = getUserByUsername(username);
+        boolean userPlaying = false;
+        for(Iterator<Game> it = user.getGamesInProgress().iterator(); it.hasNext(); ){
+            Game g = it.next();
+            if (g.getId().equals(game.getId())){
+                userPlaying = true;
+            }
+        }
+
+        if (!userPlaying) {
+            user.getGamesInProgress().add(game);
+            userRepository.save(user);
+        }
     }
     public void saveFinishedGameToUser(String username, Game game){
         //remove from in progress if exist
         User user=getUserByUsername(username);
-        for(Game g:user.getGamesInProgress()){
-            if (g.getId()==game.getId()){
-                user.getGamesInProgress().remove(g);
+        for(Iterator<Game> it = user.getGamesInProgress().iterator(); it.hasNext(); ){
+            Game g = it.next();
+            if (g.getId().equals(game.getId())){
+                it.remove();
             }
         }
         //add game to finished

@@ -176,6 +176,7 @@ nav ul li a{
 .user-desc{
 }
 #completed-recipes, #inprogress-recipes{
+
     overflow-y: auto;
     height: 20vh;
     box-shadow: none;
@@ -354,6 +355,10 @@ nav ul li a{
     background: rgba(225,255,0,0.6);
 }
 
+.preparingItem{
+    background: rgba(225,0,0,0.6);
+}
+
 .comment{
     background: rgba(0,0,225, 0.6);
 }
@@ -423,7 +428,6 @@ nav ul li a{
     font-style: italic;
     text-align: center;
 }
-
 
 .noSelect{
     cursor: default !important;

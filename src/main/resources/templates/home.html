@@ -34,29 +34,8 @@
 <div class="container custom-box home-container">
     <div class="row">
         <div class="col s4">
-            <h4>Recommendations</h4>
+            <h4>Recommended</h4>
             <ul id="recommendations" class="collapsible col s12" data-collapsible="accordian">
-                <li class="active">
-                    <div class="collapsible-header">collapsible</div>
-                    <div class="collapsible-body">
-                        <p>Content</p>
-                        <a href="otheruserprofile.html">View Profile</a>
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header">collapsible</div>
-                    <div class="collapsible-body">
-                        <p>Content</p>
-                        <a href="otheruserprofile.html">View Profile</a>
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header">collapsible</div>
-                    <div class="collapsible-body">
-                        <p>Content</p>
-                        <a href="otheruserprofile.html">View Profile</a>
-                    </div>
-                </li>
             </ul>
         </div>
 
@@ -127,6 +106,50 @@
     const generalSearch = new HomeSearch(search_input, search_category, search_ul, search_btn);
     generalSearch.searchQuery();
 
+    const rec_section = document.querySelector("#recommendations");
+
+    async function generateRecommendations() {
+        const data = await fetch("/get-top-recipes", {
+           method: "GET",
+           contentType: "application/json"
+       })
+           .then(response => response.json())
+           .catch((e)=>{console.log("err " + e)});
+
+        return data;
+    }
+    generateRecommendations().then(function(recommendations) {
+        recommendations.forEach(function(recommendation){
+            const li = document.createElement("li");
+
+            const heading_div = document.createElement("div");
+            heading_div.setAttribute("class", "collapsible-header");
+            const heading = document.createElement("h5");
+            heading.textContent = recommendation.recipeName;
+            heading_div.appendChild(heading);
+
+            const body_div = document.createElement("div");
+            body_div.setAttribute("class", "collapsible-body");
+            const creator = document.createElement("p");
+            creator.textContent = "Created by: " + recommendation.creator;
+            const rating = document.createElement("p");
+            if (!recommendation.rating) {
+                recommendation["rating"] = "-";
+            }
+            rating.textContent = "Average rating: " + recommendation.rating;
+            const link = document.createElement("a");
+            link.textContent = "Cook now!";
+            link.href = "/play/" + recommendation.id;
+            body_div.appendChild(creator);
+            body_div.appendChild(rating);
+            body_div.appendChild(link);
+
+            li.appendChild(heading_div);
+            li.appendChild(body_div);
+            rec_section.appendChild(li);
+
+        });
+    });
     const toast = [[${message}]];
     if(toast) M.toast({html: toast, displayLength: 2500});
 
