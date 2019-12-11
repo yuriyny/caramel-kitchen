@@ -150,6 +150,7 @@ public class DbSeeder implements CommandLineRunner {
         KitchenTool plate = new KitchenTool();
         plate.setName("plate");
         plate.getActions().add("put");
+        plate.getActions().add("add");
         plate.getActions().add("dredge");
         plate.setImageName("plate.png");
 
@@ -412,6 +413,7 @@ public class DbSeeder implements CommandLineRunner {
         w12.getActions().add("pour");
         w12.getActions().add("whisk");
         w12.getActions().add("boil");
+        w12.getActions().add("measure");
 
         Whitelist w13 = new Whitelist();
         w13.setName(cinnamon.getName());
@@ -424,6 +426,7 @@ public class DbSeeder implements CommandLineRunner {
         Whitelist w15=new Whitelist();
         w15.setName(veggieOil.getName());
         w15.getActions().add("add");
+        w15.getActions().add("measure");
 
         Whitelist w16=new Whitelist();
         w16.setName(breadSlice.getName());
@@ -433,26 +436,34 @@ public class DbSeeder implements CommandLineRunner {
         Whitelist w17=new Whitelist();
         w17.setName(mapleSyrup.getName());
         w17.getActions().add("add");
+        w17.getActions().add("measure");
+        w17.getActions().add("mix");
 
         Whitelist w18 = new Whitelist();
         w18.setName(cherrytomato.getName());
         w18.getActions().add("slice");
+        w18.getActions().add("add");
         Whitelist w19 = new Whitelist();
         w19.setName(basil.getName());
         w19.getActions().add("chop");
+        w19.getActions().add("add");
         w19.getActions().add("mix");
         Whitelist w20 = new Whitelist();
         w20.setName(mozzarella.getName());
         w20.getActions().add("chop");
+        w20.getActions().add("mix");
+        w20.getActions().add("add");
         w20.getActions().add("mix");
         Whitelist w21 = new Whitelist();
         w21.setName(water.getName());
         w21.getActions().add("boil");
         w21.getActions().add("mix");
         w21.getActions().add("whisk");
+        w21.getActions().add("add");
         Whitelist w22 = new Whitelist();
         w22.setName(garlicclove.getName());
         w22.getActions().add("chop");
+        w22.getActions().add("add");
         Whitelist w23= new Whitelist();
         w23.setName(smallpasta.getName());
         w23.getActions().add("boil");//raw, one action only
@@ -468,14 +479,20 @@ public class DbSeeder implements CommandLineRunner {
         Whitelist w26 = new Whitelist();
         w26.setName(chickenbreast.getName());
         w26.getActions().add("slice");
+        w26.getActions().add("dredge");
+        w26.getActions().add("boil");
+        w26.getActions().add("fry");
+        w26.getActions().add("add");
 
         Whitelist w27 = new Whitelist();
         w27.setName(choppedparsley.getName());
         w27.getActions().add("add");
+        w27.getActions().add("measure");
 
         Whitelist w28 = new Whitelist();
         w28.setName(extravirginoil.getName());
         w28.getActions().add("add");
+        w28.getActions().add("measure");
 
         Whitelist w29 = new Whitelist();
         w29.setName(flour.getName());
