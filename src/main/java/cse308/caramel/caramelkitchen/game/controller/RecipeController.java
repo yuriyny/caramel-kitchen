@@ -241,6 +241,8 @@ public class RecipeController {
         return recipeEditorService.findAllTypes();
     }
 
+    // Rating routes
+
     @ResponseBody
     @GetMapping(value= "/user-rating/{gameId}")
     public Rating fetchSingleUserRating(@PathVariable String gameId) {
@@ -262,6 +264,13 @@ public class RecipeController {
     public void saveRating(@RequestBody Rating rating) {
         gameService.updateUserRecipeRating(rating);
     }
+
+    @ResponseBody
+    @GetMapping(value = "/get-top-recipes")
+    public List<Recipe> handleRequestForTopRecipes() {
+        return recipeService.retrieveListOfTopFiveRecipes();
+    }
+
 }
 
 

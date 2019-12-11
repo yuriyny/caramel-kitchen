@@ -22,6 +22,7 @@ public class Recipe {
     private String parentId;
     private String recipeImage;
     private String recipeImageUrl;
+    private Double rating;
     @DBRef
     private Collection<Ingredient> ingredients;
     @DBRef
