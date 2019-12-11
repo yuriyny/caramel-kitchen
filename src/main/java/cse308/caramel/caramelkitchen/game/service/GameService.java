@@ -72,6 +72,7 @@ public class GameService {
 
     public Double fetchSingleUserGameRating(String gameId) {
         Game g = getGame(gameId);
-        return g.getUserRating();
+        if (g.getUserRating() != null) return g.getUserRating();
+        else return 0.0;
     }
 }

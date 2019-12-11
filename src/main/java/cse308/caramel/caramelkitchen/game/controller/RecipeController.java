@@ -256,7 +256,6 @@ public class RecipeController {
     @PostMapping(value= "/update-recipe-rating")
     public void saveRating(@RequestBody Rating rating) {
         gameService.updateUserRecipeRating(rating);
-        return;
     }
 }
 
