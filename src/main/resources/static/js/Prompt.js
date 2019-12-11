@@ -22,6 +22,11 @@ class Prompt {
     }
 
     async saveRecipe(){
+        if(document.getElementsByClassName("preparingItem").length > 0){
+            M.toast({html:"Define the current prepared item first!", displayLength:1000});
+            return;
+        }
+
         let data = this.getRecipeInfo();
         data["isPublished"] = false;
 
@@ -41,6 +46,11 @@ class Prompt {
     }
 
     async publishRecipe(){
+        if(document.getElementsByClassName("preparingItem").length > 0){
+            M.toast({html:"Define the current prepared item first!", displayLength:1000});
+            return;
+        }
+
         let data = this.getRecipeInfo();
         data["isPublished"] = true;
 
