@@ -229,13 +229,13 @@
                     headers: {
                         "Content-Type": "application/json"
                     }})
-                .then(response => null)
+                .then(response => response.json())
                 .catch((e)=>{console.log("err " + e)});
-
         /* TODO: event listener to send rating to server on input */
 
         let endPromptHtml = `<div class="row">
         <div class="col s12">Submission received!</div>
+        <div class="col s12">Your score is: <p style="color:green">` + savedGameResults.message + `</p></div>
         <div class="col s12">Would you like to leave a rating?
             <input style="color:white" id="recipe-rating" name="recipe-rating" type="number" min="1" max="5">
         </div></div>`;

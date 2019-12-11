@@ -1,5 +1,6 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
+import cse308.caramel.caramelkitchen.game.model.BasicJsonResponse;
 import cse308.caramel.caramelkitchen.game.model.GameApplication;
 import cse308.caramel.caramelkitchen.game.model.GameState;
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
@@ -11,6 +12,7 @@ import cse308.caramel.caramelkitchen.game.service.SubprocedureManager;
 import cse308.caramel.caramelkitchen.user.persistence.User;
 import cse308.caramel.caramelkitchen.user.service.UserDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -73,9 +75,12 @@ public class GameController {
     }
 
     @ResponseBody
-    @PostMapping(path={"/finish-game"})
-    public void finishedGame (@RequestBody Game game,Principal principal){
+    @PostMapping(path={"/finish-game"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public BasicJsonResponse finishedGame (@RequestBody Game game, Principal principal){
+        BasicJsonResponse response = new BasicJsonResponse();
         gameService.saveGame(game);
         userDomainService.saveFinishedGameToUser(principal.getName(), game);
+        response.setMessage(game.getScore().toString());
+        return response;
     }
 }

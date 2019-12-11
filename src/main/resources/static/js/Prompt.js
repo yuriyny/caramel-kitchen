@@ -11,6 +11,7 @@ class Prompt {
 
     getRecipeInfo(){
         let data = {};
+        data["id"] = this.cookingBoard.recipeId;
         data["ingredients"] = this.cookingBoard.getIngredients();
         data["kitchenTools"] = this.cookingBoard.getTools();
         data["recipeName"] = this.recipe_name.value;

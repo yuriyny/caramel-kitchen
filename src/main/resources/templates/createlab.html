@@ -172,7 +172,7 @@
     const oldRecipe = /*[[${recipe}]]*/ null;
 
     if(oldRecipe){
-
+        cookingBoard['recipeId'] = oldRecipe.id;
         const ingredients = oldRecipe.ingredients;
         for (let i = 0; i < ingredients.length; i++) {
             cookingBoard.addItem(ingredients[i], "ingredient");

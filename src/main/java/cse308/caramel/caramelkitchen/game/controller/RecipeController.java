@@ -114,9 +114,12 @@ public class RecipeController {
      */
     @ResponseBody
     @PostMapping(path={"/save-recipe","/create-recipe"})
-    public void createRecipe(@RequestBody Recipe recipe,Principal principal){
-        recipe = recipeService.saveRecipe(recipe,principal.getName());
-        userDomainService.addRecipeToUser(principal.getName(),recipe);
+    public void createRecipe(@RequestBody Recipe recipe,Principal principal) {
+        boolean isNewRecipe = recipe.getId() == null;
+        Recipe savedRecipe = recipeService.saveRecipe(recipe,principal.getName());
+        if (isNewRecipe) {
+            userDomainService.addRecipeToUser(principal.getName(), savedRecipe);
+        }
     }
     @ResponseBody
     @PostMapping(path={"/delete-recipe"})
