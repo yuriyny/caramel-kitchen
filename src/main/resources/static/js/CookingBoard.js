@@ -134,11 +134,15 @@ class CookingBoard{
         // console.log(this.getIntermediateSteps());
     }
 
-    async prepareItem(item, tag=[]){
+    async prepareItem(item, tag,ingredients,intermediateIngredients){
         let record = {};
         Object.assign(record, item);
-        if(tag.length > 0) record["tags"] = tag;
-        else record["tags"] = [];
+        // if(tag.length > 0) record["tag"] = tag[0];
+        // else record["tag"] = [];
+        record["tag"]=tag;
+        record["ingredientComponents"] = [];
+        record['ingredients'] = ingredients;
+        record['intermediateIngredients'] = intermediateIngredients;
         record["id"] = this.new_identifier;
         this.new_identifier++;
         record["use"] = "processedItem";
@@ -247,6 +251,38 @@ class CookingBoard{
 
         this.items[itemKey].tags.push(tag);
     }
+    getProperIntermediateIngredient(intermediate){
+        console.log(intermediate);
+        let listIntermediates=[];
+        for  (let i of intermediate){
+            console.log(i['tag']);
+            let item={};
+            item['tag']=i['tag'];
+            item['name']=i['name'];
+            item['ingredientComponents']=[];
+            item['ingredients']=i['ingredients'];
+            item['intermediateIngredients']=i['intermediateIngredients'];
+            item["imageFileUrl"]=i["imageFileUrl"];
+            item["imageName"]=i["imageName"];
+            listIntermediates.push(item);
+        }
+        return listIntermediates;
+    }
+    sendAsIntermediateIngredient(listOfString){
+        let listIntermediates=[];
+        for  (let i of listOfString){
+            let item={};
+            item['tag']=null;
+            item['name']=i;
+            item['ingredientComponents']=[];
+            item['ingredients']=[];
+            item['intermediateIngredients']=[];
+            item["imageFileUrl"]=null;;
+            item["imageName"]=null;
+            listIntermediates.push(item);
+        }
+        return listIntermediates;
+    }
 
     async updateMenu(){
         let menu_ul;
@@ -260,8 +296,9 @@ class CookingBoard{
 
             if(this.selectedIds.length > 0){
                 if(!this.selectedIds.includes(id)) continue;
-
-                let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": this.selectedIntermediateIngredients};
+                let intermediates=this.getProperIntermediateIngredient(this.selectedIntermediateIngredients);
+                let data = {"ingredient": this.sendAsIntermediateIngredient(this.selectedIngredients), "tool": this.sendAsIntermediateIngredient(this.selectedTools), "intermediateIngredient": this.getProperIntermediateIngredient(this.selectedIntermediateIngredients)};
+                console.log(this.selectedIntermediateIngredients);
                 const newActions = await fetch("/valid-actions", {
                     method: "POST",
                     body: JSON.stringify(data),
@@ -281,7 +318,7 @@ class CookingBoard{
                 let actionList = [];
                 let toolList = this.getTools();
                 for (const tool of toolList) {
-                    let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
+                    let data = {"ingredient": this.sendAsIntermediateIngredient([this.items[id].name]), "tool": this.sendAsIntermediateIngredient([tool.name]), "intermediateIngredient": []};
                     const newActions = await fetch("/valid-actions", {
                         method: "POST",
                         body: JSON.stringify(data),
@@ -349,7 +386,7 @@ class CookingBoard{
                     if(this.recipe){
                         this.recipe.addToRecipe(action, [ingredient]);
                     }
-                    this.prepareItem(ingredient);
+                    this.prepareItem(ingredient,action,[ingredient],[]);
                 }
 
                 this.updateMenu();
@@ -389,7 +426,7 @@ class CookingBoard{
         menu_ul.appendChild(li);
     }
 
-    performAction(id=this.relevent_id, action=this.relevent_action){
+    performAction(id=this.relevent_id, action=this.relevent_action,ingredients,intermediates){
         if(Array.isArray(id)){
             if (this.game_area) {
                 let targets = [];
@@ -403,7 +440,7 @@ class CookingBoard{
                 newItem.name = "mixed item placeholder";
                 newItem.id = this.new_identifier;
                 this.new_identifier++;
-                this.prepareItem(newItem, [action]);
+                this.prepareItem(newItem, action,ingredients,intermediates);//////////////////////////////////////////////
             }
         }
 
@@ -605,8 +642,8 @@ class CookingBoard{
                     this.selectedIngredients.push(this.items[id].name);
                 if(this.items[id].use === "tool")
                     this.selectedTools.push(this.items[id].name);
-                if(this.items[id].use === "processedItems"){
-                    this.selectedIntermediateIngredients.push(this.items[id].name);
+                if(this.items[id].use === "processedItem"){
+                    this.selectedIntermediateIngredients.push(this.items[id]);
                 }
             }
         }

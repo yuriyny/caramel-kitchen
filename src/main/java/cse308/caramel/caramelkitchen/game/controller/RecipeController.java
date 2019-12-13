@@ -1,8 +1,12 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.model.Rating;
 import cse308.caramel.caramelkitchen.game.persistence.Game;
+import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
 import cse308.caramel.caramelkitchen.game.persistence.Recipe;
 import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
 import cse308.caramel.caramelkitchen.game.service.GameService;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -231,8 +236,10 @@ public class RecipeController {
 
     @ResponseBody
     @PostMapping(value= "/valid-actions")
-    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, List<?>> pair) {
-        return recipeEditorService.retrieveValidToolActions((List<String>) pair.get("ingredient"), (List<String>) pair.get("tool"), (List<IntermediateIngredient>) pair.get("intermediateIngredient"));
+    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, List<IntermediateIngredient>> pair) {
+        List<String> i=pair.get("ingredient").stream().map(IntermediateIngredient::getName).collect(Collectors.toList());
+        List<String> t=pair.get("tool").stream().map(IntermediateIngredient::getName).collect(Collectors.toList());
+        return recipeEditorService.retrieveValidToolActions(i, t, pair.get("intermediateIngredient"));
     }
 
     @ResponseBody
