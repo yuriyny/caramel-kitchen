@@ -164,6 +164,11 @@ public class DbSeeder implements CommandLineRunner {
         drainer.setImageName("drainer.png");
         drainer.getActions().add("drain");
 
+        KitchenTool butterKnife = new KitchenTool();
+        butterKnife.setName("butter knife");
+        butterKnife.setImageName("butterKnife.png");
+        butterKnife.getActions().add("spread");
+
         this.mongoTemplate.insert(knife);
         this.mongoTemplate.insert(kettle);
         this.mongoTemplate.insert(rollingPin);
@@ -179,6 +184,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(plate);
         this.mongoTemplate.insert(potatomasher);
         this.mongoTemplate.insert(drainer);
+        this.mongoTemplate.insert(butterKnife);
 
         /* ----------------- ADD INGREDIENTS ----------------------*/
         Ingredient apple = new Ingredient();
@@ -290,7 +296,7 @@ public class DbSeeder implements CommandLineRunner {
         Ingredient extravirginoil = new Ingredient();
         extravirginoil.setName("extra virgin oil");
         extravirginoil.setImageName("extravirginoil.png");
-        extravirginoil.setType("liquid");
+        extravirginoil.setType("oil");
 
         Ingredient parmesancheese = new Ingredient();
         parmesancheese.setName("parmesan cheese");
@@ -342,6 +348,11 @@ public class DbSeeder implements CommandLineRunner {
         potato.setImageName("potato.png");
         potato.setType("vegetable");
 
+        Ingredient creamCheese = new Ingredient();
+        creamCheese.setName("cream cheese");
+        creamCheese.setImageName("creamCheese.png");
+        creamCheese.setType("spread");
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -373,6 +384,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(mozzarella);
         this.mongoTemplate.insert(cherrytomato);
         this.mongoTemplate.insert(potato);
+        this.mongoTemplate.insert(creamCheese);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -450,7 +462,8 @@ public class DbSeeder implements CommandLineRunner {
         Whitelist w16=new Whitelist();
         w16.setName(breadSlice.getName());
         w16.getActions().add("slice");
-        w16.getActions().add("apply");
+        w16.getActions().add("flatten");
+        w16.getActions().add("flip");
 
         Whitelist w17=new Whitelist();
         w17.setName(mapleSyrup.getName());
@@ -532,8 +545,9 @@ public class DbSeeder implements CommandLineRunner {
         w31.getActions().add("peel");
         w31.getActions().add("mash");
 
-
-
+        Whitelist w32 = new Whitelist();
+        w32.setName(creamCheese.getName());
+        w32.getActions().add("spread");
 
 
 
@@ -568,6 +582,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w29);
         this.mongoTemplate.insert(w30);
         this.mongoTemplate.insert(w31);
+        this.mongoTemplate.insert(w32);
 
         /* ----------------- TEST ACTIONS ----------------------*/
         List<String> i=new ArrayList<>();//mix

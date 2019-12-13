@@ -116,10 +116,8 @@ public class RecipeEditorService {
         List<String>base=new ArrayList<>();
         base.add("spice");
         base.add("liquid");
+        List<String> returnList=new ArrayList<>();
 
-//        System.out.println("tool size"+toolObj.size());
-//        System.out.println("bowl?"+toolObj.stream().anyMatch(obj->obj.getName().equals("bowl")));
-//        System.out.println("spoon"+tools.stream().anyMatch("mixing spoon"::contains));
 
         //if size of ingredients ==1 and size of intermediates==0 and size of tools==1 check whitelist
         if(ingredients.size()==1 && intermediates.size()==0 && tools.size()==1){
@@ -127,6 +125,10 @@ public class RecipeEditorService {
                 KitchenTool tool=toolObj.get(0);
                 List<String> allActions= (List) tool.getActions();
                 return allActions.stream().filter(action->ingredientWL.getActions().contains(action)).collect(Collectors.toList());
+        }
+        //if bread, spread, butterknife then spread
+        if(ingredients.size()==2 && tools.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("butter knife")) && ingredientObj.stream().anyMatch(obj->obj.getType().equals("spread")) && ingredientObj.stream().anyMatch(obj->obj.getName().equals("bread slice"))){
+            return new ArrayList<>(Collections.singleton("spread"));
         }
         //if previously peeled, then can chop/slice or whatever matches with knife
         else if(ingredients.size()==0 && intermediates.size()==1 && toolObj.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("knife"))&& intermediates.get(0).getTag().equals("peel")){
@@ -162,11 +164,15 @@ public class RecipeEditorService {
         }
         //if pot and liquid, then boil is an option
         else if(tools.size()==1&& toolObj.stream().anyMatch(tool->tool.getName().equals("pot")) && ingredientObj.stream().anyMatch(obj->obj.getType().equals("liquid"))){
-            return new ArrayList<>(Collections.singleton("boil"));
+            returnList.add("boil");
         }
         //if pan and spatula and exists non liquid and non spice ingredient and oil exists, then saute is an option
         else if(toolObj.stream().anyMatch(tool->tool.getName().equals("pan")) && toolObj.stream().anyMatch(tool->tool.getName().equals("spatula")) && ingredientObj.stream().anyMatch(ingredient -> ingredient.getType().equals("oil")) && !ingredientObj.stream().allMatch(obj->base.contains(obj.getType()))){
-            return new ArrayList<>(Collections.singleton("sauté"));
+            returnList.add("sauté");
+        }
+        if(!returnList.isEmpty()){
+            returnList.add("stir");
+            return returnList;
         }
         return new ArrayList<>();
 
