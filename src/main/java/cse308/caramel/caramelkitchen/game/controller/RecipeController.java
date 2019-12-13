@@ -3,6 +3,7 @@ package cse308.caramel.caramelkitchen.game.controller;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cse308.caramel.caramelkitchen.game.model.IngredientToolIntermediate;
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.model.Rating;
 import cse308.caramel.caramelkitchen.game.persistence.Game;
@@ -237,10 +238,8 @@ public class RecipeController {
 
     @ResponseBody
     @PostMapping(value= "/valid-actions")
-    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, List<IntermediateIngredient>> pair) {
-        List<String> i=pair.get("ingredient").stream().map(IntermediateIngredient::getName).collect(Collectors.toList());
-        List<String> t=pair.get("tool").stream().map(IntermediateIngredient::getName).collect(Collectors.toList());
-        return recipeEditorService.retrieveValidToolActions(i, t, pair.get("intermediateIngredient"));
+    public List<String> getValidToolActionsForIngredient(@RequestBody IngredientToolIntermediate ingredientToolIntermediate) {
+        return recipeEditorService.retrieveValidToolActions(ingredientToolIntermediate.getIngredient(),ingredientToolIntermediate.getTool(),ingredientToolIntermediate.getIntermediateIngredient());
     }
 
     @ResponseBody

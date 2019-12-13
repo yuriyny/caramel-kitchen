@@ -268,21 +268,6 @@ class CookingBoard{
         }
         return listIntermediates;
     }
-    sendAsIntermediateIngredient(listOfString){
-        let listIntermediates=[];
-        for  (let i of listOfString){
-            let item={};
-            item['tag']=null;
-            item['name']=i;
-            item['ingredientComponents']=[];
-            item['ingredients']=[];
-            item['intermediateIngredients']=[];
-            item["imageFileUrl"]=null;;
-            item["imageName"]=null;
-            listIntermediates.push(item);
-        }
-        return listIntermediates;
-    }
 
     async updateMenu(){
         let menu_ul;
@@ -297,7 +282,9 @@ class CookingBoard{
             if(this.selectedIds.length > 0){
                 if(!this.selectedIds.includes(id)) continue;
                 let intermediates=this.getProperIntermediateIngredient(this.selectedIntermediateIngredients);
-                let data = {"ingredient": this.sendAsIntermediateIngredient(this.selectedIngredients), "tool": this.sendAsIntermediateIngredient(this.selectedTools), "intermediateIngredient": this.getProperIntermediateIngredient(this.selectedIntermediateIngredients)};
+                // let data = {"ingredient": this.sendAsIntermediateIngredient(this.selectedIngredients), "tool": this.sendAsIntermediateIngredient(this.selectedTools), "intermediateIngredient": this.getProperIntermediateIngredient(this.selectedIntermediateIngredients)};
+                let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": this.getProperIntermediateIngredient(this.selectedIntermediateIngredients)};
+
                 console.log(this.selectedIntermediateIngredients);
                 const newActions = await fetch("/valid-actions", {
                     method: "POST",
@@ -318,7 +305,10 @@ class CookingBoard{
                 let actionList = [];
                 let toolList = this.getTools();
                 for (const tool of toolList) {
-                    let data = {"ingredient": this.sendAsIntermediateIngredient([this.items[id].name]), "tool": this.sendAsIntermediateIngredient([tool.name]), "intermediateIngredient": []};
+                    console.log(this.items[id].name);
+                    // let data = {"ingredient": this.sendAsIntermediateIngredient([this.items[id].name]), "tool": this.sendAsIntermediateIngredient([tool.name]), "intermediateIngredient": []};
+                    let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
+
                     const newActions = await fetch("/valid-actions", {
                         method: "POST",
                         body: JSON.stringify(data),
