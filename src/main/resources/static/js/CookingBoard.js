@@ -203,7 +203,7 @@ class CookingBoard{
         card_name_input.setAttribute("type", "text");
         card_name_input.setAttribute("placeholder", "Item name here");
         card_name_input.addEventListener("keypress", (e)=>{
-            if(e.key === "Enter"){
+            if(e.key === "Enter" && e.target.value !== ""){
                 if(record["imageFileUrl"] !== null && img_input.files[0]) this.uploadImage(img_input.files[0]);
 
                 record["name"] = e.target.value;
