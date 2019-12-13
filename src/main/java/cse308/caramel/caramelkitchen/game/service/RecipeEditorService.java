@@ -40,11 +40,22 @@ public class RecipeEditorService {
     public List<String> findAllToolActions(String toolName){
         return (List) kitchenToolRepository.findByName(toolName).get().getActions();
     }
+    public List<String> findAllIngredientActions(String ingredient){
+        Ingredient i=ingredientRepository.findByName(ingredient).get();
+        return (List)whitelistRepository.findById(i.getName()).get().getActions();
+    }
+    public List<String> findAllPossibleIngredientActions(){
+        List<Ingredient>ingredient=findAllIngredients();
+        return ingredient.stream()
+                .map(obj->findAllIngredientActions(obj.getName()))
+                .flatMap(List::stream).distinct()
+                .collect(Collectors.toList());
+    }
     public List<String> findAllActions(){
         List<KitchenTool>tools=findAllTools();
         return tools.stream()
                 .map(obj->findAllToolActions(obj.getName()))
-                .flatMap(List::stream)
+                .flatMap(List::stream).distinct()
                 .collect(Collectors.toList());
     }
     public List<String>findAllTypes(){

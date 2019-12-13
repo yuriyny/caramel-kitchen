@@ -209,7 +209,8 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(value = "/actions")
     public List<String> getAllActions() {
-        return recipeEditorService.findAllActions();
+        return recipeEditorService.findAllPossibleIngredientActions();
+//        return recipeEditorService.findAllActions();
     }
 
 
