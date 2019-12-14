@@ -191,17 +191,20 @@ public class DbSeeder implements CommandLineRunner {
         apple.setName("apple");
         apple.setImageName("apple.png");
         apple.setType("fruit");
+        apple.setUploader(user.getUsername());
 
         Ingredient carrot = new Ingredient();
         carrot.setName("carrot");
         carrot.setImageName("carrot.png");
         carrot.setType("vegetable");
+        carrot.setUploader(user.getUsername());
 //        carrot.setImageFileUrl(s3Services.getImageUrl(carrot.getImageName()));
 
         Ingredient garlic = new Ingredient();
         garlic.setName("garlic");
         garlic.setImageName("garlic.png");
         garlic.setType("vegetable");
+        garlic.setUploader(user.getUsername());
 
         Ingredient salt = new Ingredient();
         salt.setName("salt");
@@ -209,6 +212,7 @@ public class DbSeeder implements CommandLineRunner {
         salt.getUnitOfMeasure().add("tablespoon");
         salt.setImageName("salt.png");
         salt.setType("spice");
+        salt.setUploader(user.getUsername());
 
         Ingredient pepper = new Ingredient();
         pepper.setName("pepper");
@@ -216,142 +220,169 @@ public class DbSeeder implements CommandLineRunner {
         pepper.getUnitOfMeasure().add("tablespoon");
         pepper.setImageName("pepper.png");
         pepper.setType("spice");
+        pepper.setUploader(user.getUsername());
 
         Ingredient steak = new Ingredient();
         steak.setName("steak");
         steak.setImageName("steak.png");
         steak.setType("meat");
+        steak.setUploader(user.getUsername());
 
         Ingredient orange = new Ingredient();
         orange.setName("orange");
         orange.setImageName("orange.png");
         orange.setType("fruit");
+        orange.setUploader(user.getUsername());
 
         Ingredient broccoli = new Ingredient();
         broccoli.setName("broccoli");
         broccoli.setImageName("broccoli.png");
         broccoli.setType("vegetable");
+        broccoli.setUploader(user.getUsername());
 
         Ingredient chicken = new Ingredient();
         chicken.setName("chicken");
         chicken.setImageName("chicken.png");
         chicken.setType("meat");
+        chicken.setUploader(user.getUsername());
 
         Ingredient dryMustard = new Ingredient();
         dryMustard.setName("dry mustard");
         dryMustard.setImageName("drymustard.png");
         dryMustard.setType("spice");
+        dryMustard.setUploader(user.getUsername());
 
         Ingredient butter = new Ingredient();
         butter.setName("butter");
         butter.setImageName("butter.png");
         butter.setType("oil");
+        butter.setUploader(user.getUsername());;
 
         Ingredient milk = new Ingredient();
         milk.setName("milk");
         milk.setImageName("milk.png");
         milk.setType("liquid");
+        milk.setUploader(user.getUsername());
 
         Ingredient cinnamon = new Ingredient();
         cinnamon.setName("cinnamon");
         cinnamon.setImageName("cinnamon.png");
         cinnamon.setType("spice");
+        cinnamon.setUploader(user.getUsername());
 
         Ingredient breadSlice = new Ingredient();
         breadSlice.setName("bread slice");
         breadSlice.setImageName("breadslice.png");
         breadSlice.setType("other");
+        breadSlice.setUploader(user.getUsername());
 
         Ingredient mapleSyrup = new Ingredient();
         mapleSyrup.setName("maple syrup");
         mapleSyrup.setImageName("maplesyrup.png");
         mapleSyrup.setType("other");
+        mapleSyrup.setUploader(user.getUsername());
 
         Ingredient egg = new Ingredient();
         egg.setName("egg");
         egg.setImageName("egg.png");
         egg.setType("other");
+        egg.setUploader(user.getUsername());
 
         Ingredient veggieOil=new Ingredient();
         veggieOil.setName("vegetable oil");
         veggieOil.setImageName("vegetableoil.png");
         veggieOil.setType("oil");
-
+        veggieOil.setUploader(user.getUsername());
 
         Ingredient whitewine = new Ingredient();
         whitewine.setName("white wine");
         whitewine.setImageName("whitewine.png");
         whitewine.setType("liquid");
+        whitewine.setUploader(user.getUsername());
 
         Ingredient lemonjuice = new Ingredient();
         lemonjuice.setName("lemon juice");
         lemonjuice.setImageName("lemonjuice.png");
         lemonjuice.setType("liquid");
+        lemonjuice.setUploader(user.getUsername());
 
         Ingredient choppedparsley = new Ingredient();
         choppedparsley.setName("chopped parsley");
         choppedparsley.setImageName("choppedparsley.png");
         choppedparsley.setType("spice");
+        choppedparsley.setUploader(user.getUsername());
 
         Ingredient extravirginoil = new Ingredient();
         extravirginoil.setName("extra virgin oil");
         extravirginoil.setImageName("extravirginoil.png");
         extravirginoil.setType("oil");
+        extravirginoil.setUploader(user.getUsername());
 
         Ingredient parmesancheese = new Ingredient();
         parmesancheese.setName("parmesan cheese");
         parmesancheese.setImageName("parmesancheese.png");
         parmesancheese.setType("dairy");
+        parmesancheese.setUploader(user.getUsername());
 
         Ingredient flour = new Ingredient();
         flour.setName("flour");
         flour.setImageName("flour.png");
         flour.setType("grain");
+        flour.setUploader(user.getUsername());
 
         Ingredient chickenbreast = new Ingredient();
         chickenbreast.setName("chicken breast");
         chickenbreast.setImageName("chickenbreast.png");
         chickenbreast.setType("meat");
+        chickenbreast.setUploader(user.getUsername());
 
         Ingredient basil = new Ingredient();
         basil.setName("basil");
         basil.setImageName("basil.png");
         basil.setType("spice");
+        basil.setUploader(user.getUsername());
 
         Ingredient water = new Ingredient();
         water.setName("water");
         water.setImageName("water.png");
         water.setType("liquid");
+        water.setUploader(user.getUsername());
 
         Ingredient garlicclove = new Ingredient();
         garlicclove.setName("garlic clove");
         garlicclove.setImageName("garlicclove.png");
         garlicclove.setType("spice");
+        garlicclove.setUploader(user.getUsername());
 
         Ingredient smallpasta = new Ingredient();
         smallpasta.setName("small pasta");
         smallpasta.setImageName("smallpasta.png");
         smallpasta.setType("grain");
+        smallpasta.setUploader(user.getUsername());
 
         Ingredient mozzarella = new Ingredient();
         mozzarella.setName("mozzarella");
         mozzarella.setImageName("mozzarella.png");
         mozzarella.setType("dairy");
+        mozzarella.setUploader(user.getUsername());
 
         Ingredient cherrytomato = new Ingredient();
         cherrytomato.setName("cherry tomato");
         cherrytomato.setImageName("cherrytomato.png");
         cherrytomato.setType("vegetable");
+        cherrytomato.setUploader(user.getUsername());
 
         Ingredient potato = new Ingredient();
         potato.setName("potato");
         potato.setImageName("potato.png");
         potato.setType("vegetable");
+        potato.setUploader(user.getUsername());
 
         Ingredient creamCheese = new Ingredient();
         creamCheese.setName("cream cheese");
         creamCheese.setImageName("creamCheese.png");
         creamCheese.setType("spread");
+        creamCheese.setUploader(user.getUsername());
 
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);

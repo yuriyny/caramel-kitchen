@@ -278,6 +278,11 @@ public class RecipeController {
         return recipeService.retrieveListOfTopFiveRecipes();
     }
 
+    @ResponseBody
+    @GetMapping(value = "/get-modifiable-ingredients")
+    public List<Ingredient> getUserModifiableIngredients(Principal principal) {
+        return recipeEditorService.findAllUserCreatedModifiableIngredients(principal.getName());
+    }
 }
 
 

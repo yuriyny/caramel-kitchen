@@ -18,6 +18,7 @@ public class Ingredient extends SubprocedureComponent {
     private List<String> unitOfMeasure;
     private int quantity;
     private String type;//spice, liquid, meat, vegetable, fruit, etc.
+    private String uploader;
     public Ingredient(){
         unitOfMeasure=new ArrayList<>();
     }

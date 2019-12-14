@@ -29,7 +29,9 @@ public class RecipeService {
     public void deleteRecipe(Recipe recipe){
         recipeRepository.delete(recipe);
     }
-
+    public List<Recipe> findAllRecipe(){
+        return (List<Recipe>)recipeRepository.findAll();
+    }
     public List<Recipe> findAllPublishedRecipe(){
         return (List<Recipe>)recipeRepository.findAllPublishedRecipes();
     }

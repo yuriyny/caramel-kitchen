@@ -25,6 +25,27 @@ public class RecipeEditorService {
     IngredientRepository ingredientRepository;
     @Autowired
     S3Services s3Services;
+    @Autowired
+    RecipeService recipeService;
+
+    public List<Ingredient> findAllUserCreatedModifiableIngredients(String username){
+        List<Ingredient>l=findAllIngredients().stream().filter(obj->obj.getUploader().equals(username)).collect(Collectors.toList());
+        return findIfIngredientUsed(l);
+    }
+    public List<Ingredient> findIfIngredientUsed(List<Ingredient> ingredients){
+        List<Recipe>recipes=recipeService.findAllRecipe();
+        List<Ingredient> list= new ArrayList<>();
+        List<Ingredient> returnList= new ArrayList<>();
+        for(Ingredient ingredient:ingredients) {
+            recipes.stream().flatMap(r -> r.getIngredients().stream()).distinct().filter(obj -> obj.getId().equals(ingredient.getId())).collect(Collectors.toCollection(()->list));
+            if(list.isEmpty()){
+                returnList.add(ingredient);
+            }else{
+                list.clear();
+            }
+        }
+        return returnList;
+    }
 
     public List<Ingredient> findAllIngredients(){
         List<Ingredient> returnList=new ArrayList<>();

@@ -27,10 +27,11 @@ public class RequestService {
     @Autowired
     RequestRepository requestRepository;
 
-    public Ingredient storeIngredient(String name, MultipartFile file) throws IOException {
+    public Ingredient storeIngredient(String name, MultipartFile file, String username) throws IOException {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(name);
         ingredient.setImageName(file.getOriginalFilename());
+        ingredient.setUploader(username);
         s3Services.uploadMultipartFileObject(file.getOriginalFilename(), file);
         recipeEditorService.saveIngredient(ingredient);
         return ingredient;

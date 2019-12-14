@@ -33,12 +33,13 @@ public class RequestController{
                                                         // should be able to bind list by sending multiple input values to param 'blacklist'
                                                         // https://stackoverflow.com/questions/4596351/binding-a-list-in-requestparam
                                                         // KitchenTool only required to have 'name' and 'actions'
-                                                        @RequestParam("listed actions") List<String> listedActions) {
+                                                        @RequestParam("listed actions") List<String> listedActions,
+                                                        Principal principal) {
         ModelAndView modelAndView = new ModelAndView("/userprofile");
         String fileContentType = file.getContentType();
         if(contentTypes.contains(fileContentType)){
             try {
-                Ingredient uploadedIngredient = requestService.storeIngredient(name, file);
+                Ingredient uploadedIngredient = requestService.storeIngredient(name, file,principal.getName());
                 requestService.updateIngredientToolActionWhitelist(name, listedActions);
                 modelAndView.addObject("message","ingredient uploaded successfully");
             }
