@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cse308.caramel.caramelkitchen.game.model.IngredientToolIntermediate;
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.model.Rating;
-import cse308.caramel.caramelkitchen.game.persistence.Game;
-import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
-import cse308.caramel.caramelkitchen.game.persistence.Recipe;
-import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
+import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.service.GameService;
 import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
@@ -283,6 +280,13 @@ public class RecipeController {
     public List<Ingredient> getUserModifiableIngredients(Principal principal) {
         return recipeEditorService.findAllUserCreatedModifiableIngredients(principal.getName());
     }
+
+    @ResponseBody
+    @GetMapping(value = "/get-ingredient-whitelist/{id}")
+    public Whitelist getUserModifiableIngredients(@PathVariable String id) {
+        return recipeEditorService.findIngredientWhitelist(id);
+    }
+
 }
 
 

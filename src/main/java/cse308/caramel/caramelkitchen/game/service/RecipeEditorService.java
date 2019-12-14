@@ -28,9 +28,14 @@ public class RecipeEditorService {
     @Autowired
     RecipeService recipeService;
 
+    public Whitelist findIngredientWhitelist(String ingredientId) {
+        return whitelistRepository.findById(ingredientId).get();
+    }
+
     public List<Ingredient> findAllUserCreatedModifiableIngredients(String username){
         List<Ingredient>l=findAllIngredients().stream().filter(obj->obj.getUploader().equals(username)).collect(Collectors.toList());
-        return findIfIngredientUsed(l);
+
+        return findIfIngredientUsed(findImageIngredient(l));
     }
     public List<Ingredient> findIfIngredientUsed(List<Ingredient> ingredients){
         List<Recipe>recipes=recipeService.findAllRecipe();
