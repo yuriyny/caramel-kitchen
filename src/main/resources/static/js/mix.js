@@ -194,7 +194,7 @@
     }
 
     function endGame(){
-        if(score > 10){
+        if(score > 3){
             M.toast({html: 'Good job!'});
             itemBoard.performAction(itemBoard.relevent_id, itemBoard.relevent_action, true);
             itemBoard.updateMenu();
