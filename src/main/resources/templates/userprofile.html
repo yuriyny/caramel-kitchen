@@ -103,7 +103,7 @@
                     <div class="col s12 file-field input-field">
                         <div class="btn">
                             <span>Add Image File</span>
-                            <input name="file" type="file" id="ingredient-img-input" accept="image/*">
+                            <input name="file" type="file" id="ingredient-img-input" accept="image/*" required>
                         </div>
                         <div class="file-path-wrapper">
                             <input class="file-path validate" type="text">
@@ -111,12 +111,12 @@
                     </div>
                     <div class="col s12 input-field">
                         <i id="name-icon" class="material-icons prefix">restaurant_menu</i>
-                        <input name="name" id="ingredient-name" type="text" class="validate">
+                        <input name="name" id="ingredient-name" type="text" class="validate" required>
                         <label id="name-label" for="ingredient-name">Ingredient name</label>
                     </div>
                     <div class="col s12 input-field">
                         <i class="material-icons prefix">subdirectory_arrow_right</i>
-                        <select class="browser-default offset-s1 col s11" name="type" id="ingredient-type">
+                        <select class="browser-default offset-s1 col s11" name="type" id="ingredient-type" required>
                             <option value="">Specify Ingredient Type</option>
                         </select>
                     </div>
@@ -135,6 +135,7 @@
 
                         <a class="col s12" href="javascript:ingredientRequest.addAction()"><i class="material-icons">add</i>Add more actions...</a>
                     </div>
+                    <input id="ingredient-id" name="id" type="hidden" value="">
                     <button type="submit" class="col s6 offset-s3 btn-large waves-effect waves-orange orange lighten-1" style="margin-top: 10px;"><i class="material-icons left">archive</i>Add</button>
                 </form>
             </div>
@@ -154,7 +155,7 @@
                     <div class="col s12 file-field input-field">
                         <div class="btn">
                             <span>Add Image File</span>
-                            <input name="file" type="file" id="tool-img-input" accept="image/*">
+                            <input name="file" type="file" id="tool-img-input" accept="image/*" required>
                         </div>
                         <div class="file-path-wrapper">
                             <input class="file-path validate" type="text">
@@ -162,7 +163,7 @@
                     </div>
                     <div class="col s12 input-field">
                         <i class="material-icons prefix">restaurant</i>
-                        <input name="name" id="tool-name" type="text" class="validate">
+                        <input name="name" id="tool-name" type="text" class="validate" required>
                         <label for="tool-name">Tool name</label>
                     </div>
 
@@ -263,6 +264,7 @@
 
                 $('#name-icon').addClass("active");
                 $('#name-label').addClass("active");
+                $('#ingredient-id').val(user_ingredients[i].id);
                 $('#ingredient-name').val(user_ingredients[i].name);
                 $('#ingredient-type').val(user_ingredients[i].type);
                 const actions_response = await fetch("/get-ingredient-whitelist/" + user_ingredients[i].name, {
