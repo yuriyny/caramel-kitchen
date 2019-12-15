@@ -205,7 +205,7 @@ class CookingBoard{
         card_name_input.addEventListener("keypress", (e)=>{
             if(e.key === "Enter" && e.target.value !== ""){
                 if(record["imageFileUrl"] !== null && img_input.files[0]) this.uploadImage(img_input.files[0]);
-
+                // console.log("prepare ingredients "+ingredients);
                 record["name"] = e.target.value;
                 e.target.parentNode.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode.parentNode);
                 this.addIntermediateStep(record);
@@ -252,10 +252,8 @@ class CookingBoard{
         this.items[itemKey].tags.push(tag);
     }
     getProperIntermediateIngredient(intermediate){
-        console.log(intermediate);
         let listIntermediates=[];
         for  (let i of intermediate){
-            console.log(i['tag']);
             let item={};
             item['tag']=i['tag'];
             item['name']=i['name'];
@@ -281,11 +279,10 @@ class CookingBoard{
 
             if(this.selectedIds.length > 0){
                 if(!this.selectedIds.includes(id)) continue;
-                let intermediates=this.getProperIntermediateIngredient(this.selectedIntermediateIngredients);
-                // let data = {"ingredient": this.sendAsIntermediateIngredient(this.selectedIngredients), "tool": this.sendAsIntermediateIngredient(this.selectedTools), "intermediateIngredient": this.getProperIntermediateIngredient(this.selectedIntermediateIngredients)};
-                let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": this.getProperIntermediateIngredient(this.selectedIntermediateIngredients)};
 
-                console.log(this.selectedIntermediateIngredients);
+                let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": this.getProperIntermediateIngredient(this.selectedIntermediateIngredients)};
+                // console.log(this.selectedIngredients);
+                // console.log(this.selectedIntermediateIngredients);
                 const newActions = await fetch("/valid-actions", {
                     method: "POST",
                     body: JSON.stringify(data),
@@ -306,7 +303,6 @@ class CookingBoard{
                 let toolList = this.getTools();
                 for (const tool of toolList) {
                     console.log(this.items[id].name);
-                    // let data = {"ingredient": this.sendAsIntermediateIngredient([this.items[id].name]), "tool": this.sendAsIntermediateIngredient([tool.name]), "intermediateIngredient": []};
                     let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
 
                     const newActions = await fetch("/valid-actions", {
@@ -369,7 +365,7 @@ class CookingBoard{
                     if(this.recipe){
                         this.recipe.addToRecipe(action, targets);
                     }
-                    this.performAction(this.selectedIngredients, e.target.textContent);
+                    this.performAction(this.selectedIngredients, e.target.textContent,ingredients, intermediate_ingredients);
                 } else {
                     let targetId = e.target.parentNode.parentNode.parentNode.id;
                     let ingredient = this.items[targetId];
@@ -417,6 +413,7 @@ class CookingBoard{
     }
 
     performAction(id=this.relevent_id, action=this.relevent_action,ingredients,intermediates){
+        // console.log("ingredient"+ingredients);
         if(Array.isArray(id)){
             if (this.game_area) {
                 let targets = [];
@@ -447,7 +444,7 @@ class CookingBoard{
                 newItem.id = this.new_identifier;
                 this.new_identifier++;
                 newItem.selected = false;
-                this.prepareItem(newItem, [action]);
+                this.prepareItem(newItem, action,ingredients,intermediates);//this was just changed
             }
         }
 

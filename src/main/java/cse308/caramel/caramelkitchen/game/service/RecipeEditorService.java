@@ -157,7 +157,7 @@ public class RecipeEditorService {
             return new ArrayList<>(Collections.singleton("spread"));
         }
         //if previously peeled, then can chop/slice or whatever matches with knife
-        else if(ingredients.size()==0 && intermediates.size()==1 && toolObj.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("knife"))&& intermediates.get(0).getTag().equals("peel")){
+        else if(ingredients.size()==0 && intermediates.size()==1 && toolObj.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("knife"))&& intermediates.get(0).getTag().equals("peel") && intermediates.get(0).getIngredients().size()==1){
             Ingredient i=((List<Ingredient>)intermediates.get(0).getIngredients()).get(0);
             Whitelist w=whitelistRepository.findById(i.getName()).get();
             List<String> s=toolObj.get(0).getActions().stream().filter(action->w.getActions().contains(action)).collect(Collectors.toList());
