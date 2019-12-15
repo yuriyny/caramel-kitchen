@@ -406,6 +406,36 @@ public class DbSeeder implements CommandLineRunner {
         creamCheese.setType("spread");
         creamCheese.setUploader(user.getUsername());
 
+        Ingredient strawberry = new Ingredient();
+        strawberry.setName("strawberry");
+        strawberry.setImageName("strawberry.png");
+        strawberry.setType("fruit");
+        strawberry.setUploader(user.getUsername());
+
+        Ingredient cherry = new Ingredient();
+        cherry.setName("cherry");
+        cherry.setImageName("cherry.png");
+        cherry.setType("fruit");
+        cherry.setUploader(user.getUsername());
+
+        Ingredient pear = new Ingredient();
+        pear.setName("pear");
+        pear.setImageName("pear.png");
+        pear.setType("fruit");
+        pear.setUploader(user.getUsername());
+
+        Ingredient liver = new Ingredient();
+        liver.setName("liver");
+        liver.setImageName("liver.png");
+        liver.setType("meat");
+        liver.setUploader(user.getUsername());
+
+        Ingredient sugar = new Ingredient();
+        sugar.setName("sugar");
+        sugar.setImageName("sugar.png");
+        sugar.setType("other");
+        sugar.setUploader(user.getUsername());
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -438,6 +468,11 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(cherrytomato);
         this.mongoTemplate.insert(potato);
         this.mongoTemplate.insert(creamCheese);
+        this.mongoTemplate.insert(strawberry);
+        this.mongoTemplate.insert(cherry);
+        this.mongoTemplate.insert(liver);
+        this.mongoTemplate.insert(pear);
+        this.mongoTemplate.insert(sugar);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
