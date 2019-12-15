@@ -107,6 +107,7 @@ class CookingBoard{
             this.items[e.target.parentNode.id].selected = !this.items[e.target.parentNode.id].selected;
             this.setDescriptor();
             this.setSelected();
+            // console.log("here under addItem");
             this.updateMenu();
         };
 
@@ -210,6 +211,7 @@ class CookingBoard{
                 e.target.parentNode.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode.parentNode);
                 this.addIntermediateStep(record);
                 this.addItem(record, "processedItem");
+                // console.log("here under prepare item");
                 this.updateMenu();
             }
         });
@@ -255,6 +257,7 @@ class CookingBoard{
         let listIntermediates=[];
         for  (let i of intermediate){
             let item={};
+            item['id']=i['id'];
             item['tag']=i['tag'];
             item['name']=i['name'];
             item['ingredientComponents']=[];
@@ -270,6 +273,7 @@ class CookingBoard{
     async updateMenu(){
         let menu_ul;
         for(const id in this.items){
+            // console.log("update menu "+this.items[id].name);
             if(this.items[id].use === "tool") continue;
             const card = document.getElementById(id);
             menu_ul = card.childNodes[2].firstChild;
@@ -281,8 +285,9 @@ class CookingBoard{
                 if(!this.selectedIds.includes(id)) continue;
 
                 let data = {"ingredient": this.selectedIngredients, "tool": this.selectedTools, "intermediateIngredient": this.getProperIntermediateIngredient(this.selectedIntermediateIngredients)};
-                // console.log(this.selectedIngredients);
-                // console.log(this.selectedIntermediateIngredients);
+                // console.log("Selected ingredients: "+this.selectedIngredients);
+                // console.log("Selected intermediates: "+this.selectedIntermediateIngredients);
+                // console.log("selected tools: "+this.selectedTools);
                 const newActions = await fetch("/valid-actions", {
                     method: "POST",
                     body: JSON.stringify(data),
@@ -302,7 +307,8 @@ class CookingBoard{
                 let actionList = [];
                 let toolList = this.getTools();
                 for (const tool of toolList) {
-                    console.log(this.items[id].name);
+                    // console.log(this.items[id].name);
+                    // console.log(tool.name);
                     let data = {"ingredient": [this.items[id].name], "tool": [tool.name], "intermediateIngredient": []};
 
                     const newActions = await fetch("/valid-actions", {
@@ -335,6 +341,7 @@ class CookingBoard{
                 menu_ul.appendChild(li);
             }
         }
+        // this.removeSelection();
     }
 
     addAction(id, action){
@@ -374,7 +381,7 @@ class CookingBoard{
                     }
                     this.prepareItem(ingredient,action,[ingredient],[]);
                 }
-
+                // console.log("here under addAction");
                 this.updateMenu();
                 this.saved = false;
             } else {
@@ -412,15 +419,36 @@ class CookingBoard{
         menu_ul.appendChild(li);
     }
 
+    removeSelection(){
+        for(let id in this.items) {
+            if (this.items[id].selected === true) {
+                // console.log("selected: "+this.items[id].name);
+                this.items[id].selected=false;
+            }
+            const card = document.getElementById(id);
+            card.classList.remove("selected");
+        }
+        this.selectedIds=[];
+        this.selectedIngredients=[];
+        this.selectedIntermediateIngredients=[];
+        this.selectedTools=[];
+
+    }
     performAction(id=this.relevent_id, action=this.relevent_action,ingredients,intermediates){
         // console.log("ingredient"+ingredients);
         if(Array.isArray(id)){
             if (this.game_area) {
                 let targets = [];
-                for(let identifier of id){
+                for(let identifier of id){/////////////////////////////////////////////
                     targets.push(this.items[identifier]);
                 }
+                for(var v in intermediates){
+                    v["id"]=this.new_identifier;
+                    this.new_identifier++;
+                    targets.push(v);
+                }
                 this.recipe.confirmStep(action, targets);
+                // this.removeSelection();
             }
             else {
                 let newItem = {};
@@ -434,6 +462,7 @@ class CookingBoard{
         else {
             if (this.game_area) {
                 this.recipe.confirmStep(action, [this.items[id]]);
+                // this.removeSelection();
             }
             // else if (this.items[id].use === "processedItem") {
             //     this.addTag(id, action, []);
@@ -447,7 +476,7 @@ class CookingBoard{
                 this.prepareItem(newItem, action,ingredients,intermediates);//this was just changed
             }
         }
-
+        this.removeSelection();
         this.relevent_id = null;
         this.relevent_action = null;
     }

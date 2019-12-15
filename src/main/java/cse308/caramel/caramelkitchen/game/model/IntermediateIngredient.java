@@ -17,6 +17,7 @@ public class IntermediateIngredient extends SubprocedureComponent {
     private Collection<Ingredient> ingredients;
     private Collection<IntermediateIngredient> intermediateIngredients;
     private String tag; // actions completed on this current
+    private int id;//needed from front end
 
     public IntermediateIngredient(){
         ingredients=new ArrayList<>();

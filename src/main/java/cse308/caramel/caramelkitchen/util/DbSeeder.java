@@ -669,6 +669,7 @@ public class DbSeeder implements CommandLineRunner {
         choppedCarrot.getIngredients().add(carrot);
         choppedCarrot.setImageName("choppedCarrot.png");
         choppedCarrot.setName("chopped carrot");
+        choppedCarrot.setId(23423423);
 
         Recipe recipe = new Recipe();
         recipe.setCreator(user.getUsername());
@@ -727,13 +728,15 @@ public class DbSeeder implements CommandLineRunner {
         peeledCarrot.setTag("peel");
         peeledCarrot.getIngredients().add(carrot);
 //        peeledCarrot.setImageName("peeledCarrot.png");
-        peeledCarrot.setName("peel");
+        peeledCarrot.setName("peel carrot");
+        peeledCarrot.setId(234234);
 
         IntermediateIngredient choppedPeeledCarrot=new IntermediateIngredient();
         choppedPeeledCarrot.setTag("chop");
         choppedPeeledCarrot.getIntermediateIngredients().add(choppedCarrot);
 //        choppedPeeledCarrot.setImageName("choppedPeeledCarrot.png");
-        choppedPeeledCarrot.setName("chop");
+        choppedPeeledCarrot.setName("chopped peeled carrot");
+        choppedPeeledCarrot.setId(56745);
 
         Recipe recipe2 = new Recipe();
         recipe2.setCreator(user2.getUsername());
@@ -749,9 +752,54 @@ public class DbSeeder implements CommandLineRunner {
         user2.getRecipesCreated().add(recipe2);
         userDomainService.saveUser(user2);
 
+        //########### Mix Chopped Apple with Chop Peeled Carrot #############
+        apple.setQuantity(1);
+        Subprocedure sliceApple=new Subprocedure();
+        sliceApple.setProcedureName("slice");
+        sliceApple.getTargetIngredients().add(apple);
+        sliceApple.setInstructions("Slice 1 apple[s]");
 
+        Subprocedure mixChoppedAppleAndChoppedPeeledCarrot=new Subprocedure();
+        mixChoppedAppleAndChoppedPeeledCarrot.setProcedureName("Mix");
+//        mixChoppedAppleAndChoppedPeeledCarrot.getTargetIngredients().add(chopApple); //MAY NEED TO BE CHANGED SO THAT THE INTERMEDIATE INGREDIENTS ARE STORED
+//        mixChoppedAppleAndChoppedPeeledCarrot.getTargetIngredients().add(choppedPeeledCarrot); //MAY NEED TO BE CHANGED SO THAT THE INTERMEDIATE INGREDIENTS ARE STORED
+        mixChoppedAppleAndChoppedPeeledCarrot.setInstructions("Mix 1 peeled carrot[s] and 1 sliced apple[s]");
 
+        IntermediateIngredient slicedApple=new IntermediateIngredient();
+        slicedApple.setTag("slice");
+        slicedApple.getIngredients().add(apple);
+//        slicedApple.setImageName("choppedApple.png");
+        slicedApple.setName("sliced apple");
+        slicedApple.setId(567563);
 
+        IntermediateIngredient mixCarrotSlicedApple=new IntermediateIngredient();
+        mixCarrotSlicedApple.setTag("mix");
+        mixCarrotSlicedApple.getIntermediateIngredients().add(slicedApple);
+        mixCarrotSlicedApple.getIntermediateIngredients().add(choppedPeeledCarrot);
+//        mixCarrotChoppedApple.setImageName("mixChoppedAppleAndCarrot.png");
+        mixCarrotSlicedApple.setName("mixed apple and carrot");
+        mixCarrotSlicedApple.setId(9879);
+
+        Recipe recipe3 = new Recipe();
+        recipe3.setCreator(user3.getUsername());
+        recipe3.setRecipeName("mix chopped apple and chop peeled carrot");
+        recipe3.getSubprocedureList().add(peelCarrot);
+        recipe3.getSubprocedureList().add(chopPeelCarrot);
+        recipe3.getSubprocedureList().add(sliceApple);
+        recipe3.getSubprocedureList().add(mixChoppedAppleAndChoppedPeeledCarrot);
+        recipe3.setIsPublished(true);
+        recipe3.getIngredients().add(carrot);
+        recipe3.getIngredients().add(apple);
+        recipe3.getKitchenTools().add(knife);
+        recipe3.getKitchenTools().add(mixingBowl);
+        recipe3.getKitchenTools().add(mixingSpoon);
+        recipe3.getIntermediateIngredients().add(peeledCarrot);
+        recipe3.getIntermediateIngredients().add(choppedPeeledCarrot);
+        recipe3.getIntermediateIngredients().add(slicedApple);
+        recipe3.getIntermediateIngredients().add(mixCarrotSlicedApple);
+        recipeService.saveRecipe(recipe3, user3.getUsername());
+        user3.getRecipesCreated().add(recipe3);
+        userDomainService.saveUser(user3);
 
         //query test
         /*Collection<Equipment> equipment = new ArrayList<>();
