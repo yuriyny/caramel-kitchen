@@ -4,6 +4,7 @@ package cse308.caramel.caramelkitchen.game.persistence;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Setter
@@ -14,4 +15,7 @@ public class Subprocedure {
     private Collection<Ingredient> targetIngredients;
 //    private String miniGame;
     //private int instructionNumber;//step number
+    public Subprocedure(){
+        targetIngredients=new ArrayList<>();
+    }
 }

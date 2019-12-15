@@ -153,7 +153,7 @@ public class RecipeEditorService {
                 return allActions.stream().filter(action->ingredientWL.getActions().contains(action)).collect(Collectors.toList());
         }
         //if bread, spread, butterknife then spread
-        if(ingredients.size()==2 && tools.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("butter knife")) && ingredientObj.stream().anyMatch(obj->obj.getType().equals("spread")) && ingredientObj.stream().anyMatch(obj->obj.getName().equals("bread slice"))){
+        if(ingredients.size()==2 && tools.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("butter knife")) && (ingredientObj.stream().anyMatch(obj->obj.getType().equals("spread")) || ingredientObj.stream().anyMatch(obj->obj.getName().equals("butter")) )&& ingredientObj.stream().anyMatch(obj->obj.getType().equals("bread"))){
             return new ArrayList<>(Collections.singleton("spread"));
         }
         //if previously peeled, then can chop/slice or whatever matches with knife
