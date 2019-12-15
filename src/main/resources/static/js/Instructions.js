@@ -84,6 +84,11 @@ class Instructions{
             txt.appendChild(quant);
             txt.appendChild(p2);
         } else {
+            targets.sort(function(a, b){
+                if(a.name < b.name) { return -1; }
+                if(a.name > b.name) { return 1; }
+                return 0;
+            });
             for(let j = 0; j < targets.length; j++){
                 let quant = document.createElement("input");
                 quant.setAttribute("type", "number");
