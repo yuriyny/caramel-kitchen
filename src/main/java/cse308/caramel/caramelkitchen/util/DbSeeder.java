@@ -436,6 +436,44 @@ public class DbSeeder implements CommandLineRunner {
         sugar.setType("other");
         sugar.setUploader(user.getUsername());
 
+        Ingredient peanutbutter = new Ingredient();
+        peanutbutter.setName("peanut butter");
+        peanutbutter.setImageName("peanutbutter.png");
+        peanutbutter.setType("spread");
+        peanutbutter.setUploader(user.getUsername());
+
+        Ingredient rice = new Ingredient();
+        rice.setName("rice");
+        rice.setImageName("rice.png");
+        rice.setType("grain");
+        rice.setUploader(user.getUsername());
+
+        Ingredient allseasoning = new Ingredient();
+        allseasoning.setName("all purpose seasoning");
+        allseasoning.setImageName("allpurposeseasoning.png");
+        allseasoning.setType("spice");
+        allseasoning.setUploader(user.getUsername());
+
+        Ingredient cacao = new Ingredient();
+        cacao.setName("cacao");
+        cacao.setImageName("cacao.png");
+        cacao.setType("other");
+        cacao.setUploader(user.getUsername());
+
+        Ingredient mayonnaise = new Ingredient();
+        mayonnaise.setName("mayonnaise");
+        mayonnaise.setImageName("mayonnaise.png");
+        mayonnaise.setType("other");
+        mayonnaise.setUploader(user.getUsername());
+
+        Ingredient pineapple = new Ingredient();
+        pineapple.setName("pineapple");
+        pineapple.setImageName("pineapple.png");
+        pineapple.setType("fruit");
+        pineapple.setUploader(user.getUsername());
+
+
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -473,6 +511,12 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(liver);
         this.mongoTemplate.insert(pear);
         this.mongoTemplate.insert(sugar);
+        this.mongoTemplate.insert(peanutbutter);
+        this.mongoTemplate.insert(rice);
+        this.mongoTemplate.insert(allseasoning);
+        this.mongoTemplate.insert(cacao);
+        this.mongoTemplate.insert(mayonnaise);
+        this.mongoTemplate.insert(pineapple);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
