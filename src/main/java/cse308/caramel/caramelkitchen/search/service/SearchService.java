@@ -39,12 +39,12 @@ public class SearchService {
     }
     public List<Ingredient> getIngredients(String search){
         List<Ingredient>rl= new ArrayList<>(ingredientRepository.findAllIngredientsContainingString(search));
-        rl.sort(Comparator.comparing(Ingredient::getName));
+//        rl.sort(Comparator.comparing(Ingredient::getName));
         return rl;
     }
     public List<KitchenTool> getKitchenTools(String search){
         List<KitchenTool>rl=  new ArrayList<>(kitchenToolRepository.findAllEquipmentContainingString(search));
-        rl.sort(Comparator.comparing(KitchenTool::getName));
+//        rl.sort(Comparator.comparing(KitchenTool::getName));
         return rl;
     }
 }

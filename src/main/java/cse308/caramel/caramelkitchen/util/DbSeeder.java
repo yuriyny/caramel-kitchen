@@ -516,6 +516,7 @@ public class DbSeeder implements CommandLineRunner {
 
 
 
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -719,7 +720,6 @@ public class DbSeeder implements CommandLineRunner {
         Whitelist w43 = new Whitelist();
         w43.setName(pineapple.getName());
         w43.getActions().add("peel");
-        w43.getActions().add("chop");
         w43.getActions().add("slice");
 
         Whitelist w44 = new Whitelist();
@@ -732,7 +732,6 @@ public class DbSeeder implements CommandLineRunner {
         w46.setName(cucumber.getName());
         w46.getActions().add("peel");
         w46.getActions().add("chop");
-        w46.getActions().add("slice");
 
         Whitelist w47 = new Whitelist();
         w47.setName(avocado.getName());
@@ -743,18 +742,15 @@ public class DbSeeder implements CommandLineRunner {
         w48.setName(onion.getName());
         w48.getActions().add("peel");
         w48.getActions().add("chop");
-        w48.getActions().add("slice");
 
         Whitelist w49 = new Whitelist();
         w49.setName(redonion.getName());
         w49.getActions().add("peel");
         w49.getActions().add("chop");
-        w49.getActions().add("slice");
 
         Whitelist w50 = new Whitelist();
         w50.setName(squash.getName());
         w50.getActions().add("chop");
-        w50.getActions().add("slice");
 
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
@@ -1018,6 +1014,11 @@ public class DbSeeder implements CommandLineRunner {
         recipeService.saveRecipe(recipe3, user3.getUsername());
         user3.getRecipesCreated().add(recipe3);
         userDomainService.saveUser(user3);
+
+
+//        g
+
+
 
         //query test
         /*Collection<Equipment> equipment = new ArrayList<>();
