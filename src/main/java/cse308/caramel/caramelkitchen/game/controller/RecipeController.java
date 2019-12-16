@@ -98,15 +98,21 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(value={"/create","/edit/{recipeId}"})
     public ModelAndView getRecipeCreationPage(@PathVariable Optional<String> recipeId) {
-        ModelAndView modelAndView = new ModelAndView("createlab");
-        if(recipeId.isPresent()) {
+        ModelAndView modelAndView;
+        if(!recipeId.isPresent()){
+            modelAndView = new ModelAndView("createlab");
+        }
+        else if( recipeService.findRecipe(recipeId.get())!=null && recipeService.findRecipe(recipeId.get()).getIsPublished()==false) {
             Recipe recipe = recipeService.findRecipe(recipeId.get());
-            if (recipe == null) {
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Recipe not found"
-                );
-            }
+            modelAndView = new ModelAndView("createlab");
             modelAndView.addObject("recipe", recipe);
+        }else if (recipeService.findRecipe(recipeId.get())!=null && recipeService.findRecipe(recipeId.get()).getIsPublished()==true){
+            modelAndView = new ModelAndView("userprofile");
+            modelAndView.addObject("message","You cannot modify published recipes");
+        }else{
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Recipe not found"
+            );
         }
         return modelAndView;
     }
