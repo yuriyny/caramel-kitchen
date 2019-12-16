@@ -33,7 +33,9 @@ public class RecipeService {
         return (List<Recipe>)recipeRepository.findAll();
     }
     public List<Recipe> findAllPublishedRecipe(){
-        return (List<Recipe>)recipeRepository.findAllPublishedRecipes();
+        List<Recipe> rl=(List<Recipe>)recipeRepository.findAllPublishedRecipes();
+        rl.sort(Comparator.comparing(Recipe::getRecipeName));
+        return rl;
     }
     public Recipe findRecipe(String id){//add images along with retrieving recipe
         Recipe recipe = recipeRepository.findById(id).orElse(null);

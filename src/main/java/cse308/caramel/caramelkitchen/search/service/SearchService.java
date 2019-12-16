@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -27,15 +28,23 @@ public class SearchService {
 
     /*TODO: Add query to search for matching user*/
     public List<User> getCreators(String search){
-        return new ArrayList<>(userRepository.findAllCreatorsContainingString(search));
+        List<User>rl= new ArrayList<>(userRepository.findAllCreatorsContainingString(search));
+        rl.sort(Comparator.comparing(User::getUsername));
+        return rl;
     }
     public List<Recipe> getPublishedRecipes(String search){
-        return new ArrayList<>(recipeRepository.findAllRecipesContainingString(search));
+        List<Recipe>rl= new ArrayList<>(recipeRepository.findAllRecipesContainingString(search));
+        rl.sort(Comparator.comparing(Recipe::getRecipeName));
+        return rl;
     }
     public List<Ingredient> getIngredients(String search){
-        return new ArrayList<>(ingredientRepository.findAllIngredientsContainingString(search));
+        List<Ingredient>rl= new ArrayList<>(ingredientRepository.findAllIngredientsContainingString(search));
+        rl.sort(Comparator.comparing(Ingredient::getName));
+        return rl;
     }
     public List<KitchenTool> getKitchenTools(String search){
-        return new ArrayList<>(kitchenToolRepository.findAllEquipmentContainingString(search));
+        List<KitchenTool>rl=  new ArrayList<>(kitchenToolRepository.findAllEquipmentContainingString(search));
+        rl.sort(Comparator.comparing(KitchenTool::getName));
+        return rl;
     }
 }

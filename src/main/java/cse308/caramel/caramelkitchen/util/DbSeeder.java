@@ -825,7 +825,7 @@ public class DbSeeder implements CommandLineRunner {
 
         Recipe recipe1 = new Recipe();
         recipe1.setCreator(user1.getUsername());
-        recipe1.setRecipeName("buttered bread");
+        recipe1.setRecipeName("Buttered bread");
         recipe1.getSubprocedureList().add(butterbread);
         recipe1.setIsPublished(true);
         recipe1.getIngredients().add(butter);
@@ -864,7 +864,7 @@ public class DbSeeder implements CommandLineRunner {
 
         Recipe recipe2 = new Recipe();
         recipe2.setCreator(user2.getUsername());
-        recipe2.setRecipeName("chop peeled carrot");
+        recipe2.setRecipeName("Chop peeled carrot");
         recipe2.getSubprocedureList().add(peelCarrot);
         recipe2.getSubprocedureList().add(chopPeelCarrot);
         recipe2.setIsPublished(true);
@@ -906,7 +906,7 @@ public class DbSeeder implements CommandLineRunner {
 
         Recipe recipe3 = new Recipe();
         recipe3.setCreator(user3.getUsername());
-        recipe3.setRecipeName("mix chopped apple and chop peeled carrot");
+        recipe3.setRecipeName("Mix chopped apple and chop peeled carrot");
         recipe3.getSubprocedureList().add(peelCarrot);
         recipe3.getSubprocedureList().add(chopPeelCarrot);
         recipe3.getSubprocedureList().add(sliceApple);
