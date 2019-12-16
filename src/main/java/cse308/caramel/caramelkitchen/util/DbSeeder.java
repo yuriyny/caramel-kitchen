@@ -472,6 +472,48 @@ public class DbSeeder implements CommandLineRunner {
         pineapple.setType("fruit");
         pineapple.setUploader(user.getUsername());
 
+        Ingredient sourcream = new Ingredient();
+        sourcream.setName("sour cream");
+        sourcream.setImageName("sourcream.png");
+        sourcream.setType("other");
+        sourcream.setUploader(user.getUsername());
+
+        Ingredient mustard = new Ingredient();
+        mustard.setName("mustard");
+        mustard.setImageName("mustard.png");
+        mustard.setType("other");
+        mustard.setUploader(user.getUsername());
+
+        Ingredient cucumber = new Ingredient();
+        cucumber.setName("cucumber");
+        cucumber.setImageName("cucumber.png");
+        cucumber.setType("vegetable");
+        cucumber.setUploader(user.getUsername());
+
+        Ingredient avocado = new Ingredient();
+        avocado.setName("avocado");
+        avocado.setImageName("avocado.png");
+        avocado.setType("vegetable");
+        avocado.setUploader(user.getUsername());
+
+        Ingredient onion = new Ingredient();
+        onion.setName("onion");
+        onion.setImageName("onion.png");
+        onion.setType("vegetable");
+        onion.setUploader(user.getUsername());
+
+        Ingredient redonion = new Ingredient();
+        redonion.setName("red onion");
+        redonion.setImageName("redonion.png");
+        redonion.setType("vegetable");
+        redonion.setUploader(user.getUsername());
+
+        Ingredient squash = new Ingredient();
+        squash.setName("squash");
+        squash.setImageName("squash.png");
+        squash.setType("vegetable");
+        squash.setUploader(user.getUsername());
+
 
 
         this.mongoTemplate.insert(apple);
@@ -517,6 +559,13 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(cacao);
         this.mongoTemplate.insert(mayonnaise);
         this.mongoTemplate.insert(pineapple);
+        this.mongoTemplate.insert(sourcream);
+        this.mongoTemplate.insert(mustard);
+        this.mongoTemplate.insert(cucumber);
+        this.mongoTemplate.insert(avocado);
+        this.mongoTemplate.insert(onion);
+        this.mongoTemplate.insert(redonion);
+        this.mongoTemplate.insert(squash);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -669,6 +718,27 @@ public class DbSeeder implements CommandLineRunner {
         Whitelist w43 = new Whitelist();
         w43.setName(pineapple.getName());
 
+        Whitelist w44 = new Whitelist();
+        w44.setName(sourcream.getName());
+
+        Whitelist w45 = new Whitelist();
+        w45.setName(mustard.getName());
+
+        Whitelist w46 = new Whitelist();
+        w46.setName(cucumber.getName());
+
+        Whitelist w47 = new Whitelist();
+        w47.setName(avocado.getName());
+
+        Whitelist w48 = new Whitelist();
+        w48.setName(onion.getName());
+
+        Whitelist w49 = new Whitelist();
+        w49.setName(redonion.getName());
+
+        Whitelist w50 = new Whitelist();
+        w50.setName(squash.getName());
+
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
         this.mongoTemplate.insert(w3);
@@ -712,6 +782,13 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w41);
         this.mongoTemplate.insert(w42);
         this.mongoTemplate.insert(w43);
+        this.mongoTemplate.insert(w44);
+        this.mongoTemplate.insert(w45);
+        this.mongoTemplate.insert(w46);
+        this.mongoTemplate.insert(w47);
+        this.mongoTemplate.insert(w48);
+        this.mongoTemplate.insert(w49);
+        this.mongoTemplate.insert(w50);
 
 
 //        /* ----------------- TEST ACTIONS ----------------------*/
