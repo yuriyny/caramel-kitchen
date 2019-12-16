@@ -184,10 +184,10 @@ public class RecipeEditorService {
             return new ArrayList<>(Collections.singleton("mix"));
         }
         //if spice is in the ingredient and the other ingredient isn't spice, have option to add spice
-        else if(ingredientObj.size()+intermediates.size()==2 && ingredientObj.stream().anyMatch(obj->obj.getType().equals("spice"))&&!ingredientObj.stream().allMatch(obj->obj.getType().equals("spice"))){
+        /*else if(ingredientObj.size()+intermediates.size()==2 && ingredientObj.stream().anyMatch(obj->obj.getType().equals("spice"))&&!ingredientObj.stream().allMatch(obj->obj.getType().equals("spice"))){
             List<Ingredient> i=ingredientObj.stream().filter(obj->obj.getType().equals("spice")).collect(Collectors.toList());
             return new ArrayList<>(Collections.singleton("add"+i.get(0).getName()));
-        }
+        }*/
         //if pot and liquid, then boil is an option
         else if(tools.size()==1&& toolObj.stream().anyMatch(tool->tool.getName().equals("pot")) && ingredientObj.stream().anyMatch(obj->obj.getType().equals("liquid"))){
             returnList.add("boil");

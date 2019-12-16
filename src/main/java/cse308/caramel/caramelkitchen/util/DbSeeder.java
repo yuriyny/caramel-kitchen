@@ -1,4 +1,4 @@
-package cse308.caramel.caramelkitchen.util;
+//package cse308.caramel.caramelkitchen.util;
 
 import cse308.caramel.caramelkitchen.game.model.GameState;
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
@@ -25,9 +25,9 @@ import java.util.Collections;
 import java.util.List;
 
 
-@Service
-public class DbSeeder implements CommandLineRunner {
-    @Autowired
+//@Service
+//public class DbSeeder implements CommandLineRunner {
+   /* @Autowired
     IngredientRepository ingredientRepository;
     @Autowired
     KitchenToolRepository kitchenToolRepository;
@@ -60,7 +60,7 @@ public class DbSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        /* ----------------- DROP ALL TABLES ----------------------*/
+        *//* ----------------- DROP ALL TABLES ----------------------*//*
         this.mongoTemplate.dropCollection(User.class);
         this.mongoTemplate.dropCollection(Request.class);
         //this.mongoTemplate.dropCollection(Role.class);
@@ -69,7 +69,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.dropCollection(Recipe.class);
         this.mongoTemplate.dropCollection(Whitelist.class);
         this.mongoTemplate.dropCollection(Game.class);
-        /* ----------------- ADD USER ----------------------*/
+        *//* ----------------- ADD USER ----------------------*//*
         User user = new User();
         user.setUsername("user");
         user.setEnabled(true);
@@ -99,7 +99,7 @@ public class DbSeeder implements CommandLineRunner {
         user4.setEnabled(true);
         user4.setPassword("password");
         userDomainService.saveNewUser(user4);
-        /* ----------------- ADD TOOLS ----------------------*/ //current list of actions [chop,peel,slice,boil,flatten]
+        *//* ----------------- ADD TOOLS ----------------------*//* //current list of actions [chop,peel,slice,boil,flatten]
         KitchenTool knife = new KitchenTool();
         knife.setName("knife");
         knife.getActions().add("chop");
@@ -209,7 +209,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(drainer);
         this.mongoTemplate.insert(butterKnife);
 
-        /* ----------------- ADD INGREDIENTS ----------------------*/
+        *//* ----------------- ADD INGREDIENTS ----------------------*//*
         Ingredient apple = new Ingredient();
         apple.setName("apple");
         apple.setImageName("apple.png");
@@ -568,7 +568,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(redonion);
         this.mongoTemplate.insert(squash);
 
-        /* ----------------- ADD TO WHITELIST ----------------------*/
+        *//* ----------------- ADD TO WHITELIST ----------------------*//*
         //[chop,peel,slice,boil,flatten]
 
         Whitelist w1 = new Whitelist();
@@ -801,7 +801,7 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w47);
         this.mongoTemplate.insert(w48);
         this.mongoTemplate.insert(w49);
-        this.mongoTemplate.insert(w50);
+        this.mongoTemplate.insert(w50);*/
 
 
 //        /* ----------------- TEST ACTIONS ----------------------*/
@@ -872,7 +872,7 @@ public class DbSeeder implements CommandLineRunner {
         /* ----------------- SAMPLE RECIPES ----------------------*/
 
         //########### Chop carrot #############
-        carrot.setQuantity(1);
+   /*     carrot.setQuantity(1);
         Subprocedure chopCarrot = new Subprocedure();
         chopCarrot.setProcedureName("Chop");
         chopCarrot.setInstructions("Chop 1 carrot[s]");
@@ -1013,7 +1013,7 @@ public class DbSeeder implements CommandLineRunner {
         recipe3.getIntermediateIngredients().add(mixCarrotSlicedApple);
         recipeService.saveRecipe(recipe3, user3.getUsername());
         user3.getRecipesCreated().add(recipe3);
-        userDomainService.saveUser(user3);
+        userDomainService.saveUser(user3);*/
 
 
 //        g
@@ -1541,7 +1541,7 @@ public class DbSeeder implements CommandLineRunner {
 //        game3.setUserRating(5.0);
 //        gameRepository.save(game3);
         /* ----------------- TEST REQUEST ----------------------*/
-        requestService.storeRequest(user.getUsername(),"feedback",null,"add more actions");
+        /*requestService.storeRequest(user.getUsername(),"feedback",null,"add more actions");
         requestService.storeRequest(user.getUsername(),"feedback",null,"better games");
         requestService.storeRequest(user.getUsername(),"action","mince","use a knife to mince a garlic");
         requestService.storeRequest(user.getUsername(),"action","blend","use blender to blend");
@@ -1549,5 +1549,5 @@ public class DbSeeder implements CommandLineRunner {
         requestService.storeRequest(user.getUsername(),"ingredient","thyme",null);
         requestService.storeRequest(user.getUsername(),"tool","blender","to blend food");
         requestService.storeRequest(user.getUsername(),"tool","oven","to bake");
-    }
-}
+    }*/
+//}

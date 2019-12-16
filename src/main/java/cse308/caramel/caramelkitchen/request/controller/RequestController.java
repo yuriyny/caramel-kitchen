@@ -40,7 +40,7 @@ public class RequestController{
                                                         @RequestParam("listed actions") List<String> listedActions,
                                                         @RequestParam("type") String type,
                                                         Principal principal) {
-        ModelAndView modelAndView = new ModelAndView("/userprofile");
+        ModelAndView modelAndView = new ModelAndView("userprofile");
         String fileContentType = file.getContentType();
         if(contentTypes.contains(fileContentType)){
 
