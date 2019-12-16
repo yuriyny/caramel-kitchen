@@ -406,6 +406,74 @@ public class DbSeeder implements CommandLineRunner {
         creamCheese.setType("spread");
         creamCheese.setUploader(user.getUsername());
 
+        Ingredient strawberry = new Ingredient();
+        strawberry.setName("strawberry");
+        strawberry.setImageName("strawberry.png");
+        strawberry.setType("fruit");
+        strawberry.setUploader(user.getUsername());
+
+        Ingredient cherry = new Ingredient();
+        cherry.setName("cherry");
+        cherry.setImageName("cherry.png");
+        cherry.setType("fruit");
+        cherry.setUploader(user.getUsername());
+
+        Ingredient pear = new Ingredient();
+        pear.setName("pear");
+        pear.setImageName("pear.png");
+        pear.setType("fruit");
+        pear.setUploader(user.getUsername());
+
+        Ingredient liver = new Ingredient();
+        liver.setName("liver");
+        liver.setImageName("liver.png");
+        liver.setType("meat");
+        liver.setUploader(user.getUsername());
+
+        Ingredient sugar = new Ingredient();
+        sugar.setName("sugar");
+        sugar.setImageName("sugar.png");
+        sugar.setType("other");
+        sugar.setUploader(user.getUsername());
+
+        Ingredient peanutbutter = new Ingredient();
+        peanutbutter.setName("peanut butter");
+        peanutbutter.setImageName("peanutbutter.png");
+        peanutbutter.setType("spread");
+        peanutbutter.setUploader(user.getUsername());
+
+        Ingredient rice = new Ingredient();
+        rice.setName("rice");
+        rice.setImageName("rice.png");
+        rice.setType("grain");
+        rice.setUploader(user.getUsername());
+
+        Ingredient allseasoning = new Ingredient();
+        allseasoning.setName("all purpose seasoning");
+        allseasoning.setImageName("allpurposeseasoning.png");
+        allseasoning.setType("spice");
+        allseasoning.setUploader(user.getUsername());
+
+        Ingredient cacao = new Ingredient();
+        cacao.setName("cacao");
+        cacao.setImageName("cacao.png");
+        cacao.setType("other");
+        cacao.setUploader(user.getUsername());
+
+        Ingredient mayonnaise = new Ingredient();
+        mayonnaise.setName("mayonnaise");
+        mayonnaise.setImageName("mayonnaise.png");
+        mayonnaise.setType("other");
+        mayonnaise.setUploader(user.getUsername());
+
+        Ingredient pineapple = new Ingredient();
+        pineapple.setName("pineapple");
+        pineapple.setImageName("pineapple.png");
+        pineapple.setType("fruit");
+        pineapple.setUploader(user.getUsername());
+
+
+
         this.mongoTemplate.insert(apple);
         this.mongoTemplate.insert(carrot);
         this.mongoTemplate.insert(garlic);
@@ -438,6 +506,17 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(cherrytomato);
         this.mongoTemplate.insert(potato);
         this.mongoTemplate.insert(creamCheese);
+        this.mongoTemplate.insert(strawberry);
+        this.mongoTemplate.insert(cherry);
+        this.mongoTemplate.insert(liver);
+        this.mongoTemplate.insert(pear);
+        this.mongoTemplate.insert(sugar);
+        this.mongoTemplate.insert(peanutbutter);
+        this.mongoTemplate.insert(rice);
+        this.mongoTemplate.insert(allseasoning);
+        this.mongoTemplate.insert(cacao);
+        this.mongoTemplate.insert(mayonnaise);
+        this.mongoTemplate.insert(pineapple);
 
         /* ----------------- ADD TO WHITELIST ----------------------*/
         //[chop,peel,slice,boil,flatten]
@@ -555,7 +634,40 @@ public class DbSeeder implements CommandLineRunner {
         Whitelist w32 = new Whitelist();
         w32.setName(creamCheese.getName());
 
+        Whitelist w33 = new Whitelist();
+        w33.setName(strawberry.getName());
+        w33.getActions().add("chop");
 
+        Whitelist w34 = new Whitelist();
+        w34.setName(cherry.getName());
+
+        Whitelist w35 = new Whitelist();
+        w35.setName(liver.getName());
+
+        Whitelist w36 = new Whitelist();
+        w36.setName(pear.getName());
+        w36.getActions().add("slice");
+
+        Whitelist w37 = new Whitelist();
+        w37.setName(sugar.getName());
+
+        Whitelist w38 = new Whitelist();
+        w38.setName(peanutbutter.getName());
+
+        Whitelist w39 = new Whitelist();
+        w39.setName(rice.getName());
+
+        Whitelist w40 = new Whitelist();
+        w40.setName(allseasoning.getName());
+
+        Whitelist w41 = new Whitelist();
+        w41.setName(cacao.getName());
+
+        Whitelist w42 = new Whitelist();
+        w42.setName(mayonnaise.getName());
+
+        Whitelist w43 = new Whitelist();
+        w43.setName(pineapple.getName());
 
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
@@ -589,6 +701,18 @@ public class DbSeeder implements CommandLineRunner {
         this.mongoTemplate.insert(w30);
         this.mongoTemplate.insert(w31);
         this.mongoTemplate.insert(w32);
+        this.mongoTemplate.insert(w33);
+        this.mongoTemplate.insert(w34);
+        this.mongoTemplate.insert(w35);
+        this.mongoTemplate.insert(w36);
+        this.mongoTemplate.insert(w37);
+        this.mongoTemplate.insert(w38);
+        this.mongoTemplate.insert(w39);
+        this.mongoTemplate.insert(w40);
+        this.mongoTemplate.insert(w41);
+        this.mongoTemplate.insert(w42);
+        this.mongoTemplate.insert(w43);
+
 
 //        /* ----------------- TEST ACTIONS ----------------------*/
 //        List<String> i=new ArrayList<>();//mix

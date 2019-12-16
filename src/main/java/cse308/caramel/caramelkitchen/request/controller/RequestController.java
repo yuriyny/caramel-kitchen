@@ -32,7 +32,7 @@ public class RequestController{
 
     @ResponseBody
     @PostMapping(value = "/request", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ModelAndView handleIngredientUpload(@RequestParam("name") String name,
+    public ModelAndView handleIngredientUpload(@RequestParam("id") String id, @RequestParam("name") String name,
                                                         @RequestParam("file") MultipartFile file,
                                                         // should be able to bind list by sending multiple input values to param 'blacklist'
                                                         // https://stackoverflow.com/questions/4596351/binding-a-list-in-requestparam
@@ -45,8 +45,14 @@ public class RequestController{
         if(contentTypes.contains(fileContentType)){
 
             List<Ingredient> ingredients=recipeEditorService.findAllIngredients();
-            if (!ingredients.stream().filter(obj->obj.getName().equals(name)).collect(Collectors.toList()).isEmpty()){
-                modelAndView.addObject("message","This ingredient already exists");
+            if (!ingredients.stream().filter(obj->obj.getId().equals(id)).collect(Collectors.toList()).isEmpty()){
+                try {
+                    requestService.saveModifiedIngredient(id, name, file,type);
+                } catch (Exception e) {
+                    modelAndView.addObject("message", "Server error when uploading image");
+                }
+                requestService.updateIngredientToolActionWhitelist(name, listedActions);
+                modelAndView.addObject("message","Ingredient has been updated");
             }
             else {
                 try {
