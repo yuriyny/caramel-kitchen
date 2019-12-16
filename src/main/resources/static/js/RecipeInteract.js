@@ -52,7 +52,7 @@ class RecipeInteract{
                                                                .catch((e)=>{console.log("err " + e)});
                game['recipe']['rating'] = recipe_rating_data['score'];
                this.addInprogressRecipe(game);
-               this.recipes[recipe.recipeName] = game.recipe;
+               // this.recipes[recipe.recipeName] = game.recipe;
            }
        }
 
@@ -79,7 +79,7 @@ class RecipeInteract{
                                                            .catch((e)=>{console.log("err " + e)});
                game['recipe']['rating'] = recipe_rating_data['score'];
                this.addCompletedRecipe(game);
-               this.recipes[recipe.recipeName] = game.recipe;
+               // this.recipes[recipe.recipeName] = game.recipe;
            }
        }
 

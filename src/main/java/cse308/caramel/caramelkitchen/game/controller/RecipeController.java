@@ -1,10 +1,12 @@
 package cse308.caramel.caramelkitchen.game.controller;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import cse308.caramel.caramelkitchen.game.model.IngredientToolIntermediate;
 import cse308.caramel.caramelkitchen.game.model.IntermediateIngredient;
 import cse308.caramel.caramelkitchen.game.model.Rating;
-import cse308.caramel.caramelkitchen.game.persistence.Game;
-import cse308.caramel.caramelkitchen.game.persistence.Recipe;
-import cse308.caramel.caramelkitchen.game.persistence.SubprocedureComponent;
+import cse308.caramel.caramelkitchen.game.persistence.*;
 import cse308.caramel.caramelkitchen.game.service.GameService;
 import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -95,15 +98,21 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(value={"/create","/edit/{recipeId}"})
     public ModelAndView getRecipeCreationPage(@PathVariable Optional<String> recipeId) {
-        ModelAndView modelAndView = new ModelAndView("createlab");
-        if(recipeId.isPresent()) {
+        ModelAndView modelAndView;
+        if(!recipeId.isPresent()){
+            modelAndView = new ModelAndView("createlab");
+        }
+        else if( recipeService.findRecipe(recipeId.get())!=null && recipeService.findRecipe(recipeId.get()).getIsPublished()==false) {
             Recipe recipe = recipeService.findRecipe(recipeId.get());
-            if (recipe == null) {
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Recipe not found"
-                );
-            }
+            modelAndView = new ModelAndView("createlab");
             modelAndView.addObject("recipe", recipe);
+        }else if (recipeService.findRecipe(recipeId.get())!=null && recipeService.findRecipe(recipeId.get()).getIsPublished()==true){
+            modelAndView = new ModelAndView("userprofile");
+            modelAndView.addObject("message","You cannot modify published recipes");
+        }else{
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Recipe not found"
+            );
         }
         return modelAndView;
     }
@@ -204,7 +213,8 @@ public class RecipeController {
     @ResponseBody
     @GetMapping(value = "/actions")
     public List<String> getAllActions() {
-        return recipeEditorService.findAllActions();
+        return recipeEditorService.findAllPossibleIngredientActions();
+//        return recipeEditorService.findAllActions();
     }
 
 
@@ -231,8 +241,8 @@ public class RecipeController {
 
     @ResponseBody
     @PostMapping(value= "/valid-actions")
-    public List<String> getValidToolActionsForIngredient(@RequestBody Map<String, List<?>> pair) {
-        return recipeEditorService.retrieveValidToolActions((List<String>) pair.get("ingredient"), (List<String>) pair.get("tool"), (List<IntermediateIngredient>) pair.get("intermediateIngredient"));
+    public List<String> getValidToolActionsForIngredient(@RequestBody IngredientToolIntermediate ingredientToolIntermediate) {
+        return recipeEditorService.retrieveValidToolActions(ingredientToolIntermediate.getIngredient(),ingredientToolIntermediate.getTool(),ingredientToolIntermediate.getIntermediateIngredient());
     }
 
     @ResponseBody
@@ -269,6 +279,18 @@ public class RecipeController {
     @GetMapping(value = "/get-top-recipes")
     public List<Recipe> handleRequestForTopRecipes() {
         return recipeService.retrieveListOfTopFiveRecipes();
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/get-modifiable-ingredients")
+    public List<Ingredient> getUserModifiableIngredients(Principal principal) {
+        return recipeEditorService.findAllUserCreatedModifiableIngredients(principal.getName());
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/get-ingredient-whitelist/{id}")
+    public Whitelist getUserModifiableIngredients(@PathVariable String id) {
+        return recipeEditorService.findIngredientWhitelist(id);
     }
 
 }

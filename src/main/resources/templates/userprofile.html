@@ -85,10 +85,16 @@
         <div id="userAddIngredient" class="col s12">
             <div class="col s4">
                 <div id="ingredient-card" class="card">
-                    <div class="card-image"><img src="/images/placeholder.png"></div>
+                    <div class="card-image"><img id="item-image" src="/images/placeholder.png"></div>
                     <div class="card-content">
-                        <p>ingredient name</p>
+                        <p id="item-name">ingredient name</p>
                     </div>
+                </div>
+                <h4>Uploaded ingredients</h4>
+                <div style="max-height: 166px;overflow-y: auto;">
+                    <ul id="created-ingredients" class="collection">
+
+                    </ul>
                 </div>
             </div>
             <div class="col s7 offset-s1">
@@ -97,20 +103,20 @@
                     <div class="col s12 file-field input-field">
                         <div class="btn">
                             <span>Add Image File</span>
-                            <input name="file" type="file" id="ingredient-img-input" accept="image/*">
+                            <input name="file" type="file" id="ingredient-img-input" accept="image/*" required>
                         </div>
                         <div class="file-path-wrapper">
                             <input class="file-path validate" type="text">
                         </div>
                     </div>
                     <div class="col s12 input-field">
-                        <i class="material-icons prefix">restaurant_menu</i>
-                        <input name="name" id="ingredient-name" type="text" class="validate">
-                        <label for="ingredient-name">Ingredient name</label>
+                        <i id="name-icon" class="material-icons prefix">restaurant_menu</i>
+                        <input name="name" id="ingredient-name" type="text" class="validate" required>
+                        <label id="name-label" for="ingredient-name">Ingredient name</label>
                     </div>
                     <div class="col s12 input-field">
                         <i class="material-icons prefix">subdirectory_arrow_right</i>
-                        <select class="browser-default offset-s1 col s11" name="type" id="ingredient-type">
+                        <select class="browser-default offset-s1 col s11" name="type" id="ingredient-type" required>
                             <option value="">Specify Ingredient Type</option>
                         </select>
                     </div>
@@ -129,6 +135,7 @@
 
                         <a class="col s12" href="javascript:ingredientRequest.addAction()"><i class="material-icons">add</i>Add more actions...</a>
                     </div>
+                    <input id="ingredient-id" name="id" type="hidden" value="">
                     <button type="submit" class="col s6 offset-s3 btn-large waves-effect waves-orange orange lighten-1" style="margin-top: 10px;"><i class="material-icons left">archive</i>Add</button>
                 </form>
             </div>
@@ -148,7 +155,7 @@
                     <div class="col s12 file-field input-field">
                         <div class="btn">
                             <span>Add Image File</span>
-                            <input name="file" type="file" id="tool-img-input" accept="image/*">
+                            <input name="file" type="file" id="tool-img-input" accept="image/*" required>
                         </div>
                         <div class="file-path-wrapper">
                             <input class="file-path validate" type="text">
@@ -156,7 +163,7 @@
                     </div>
                     <div class="col s12 input-field">
                         <i class="material-icons prefix">restaurant</i>
-                        <input name="name" id="tool-name" type="text" class="validate">
+                        <input name="name" id="tool-name" type="text" class="validate" required>
                         <label for="tool-name">Tool name</label>
                     </div>
 
@@ -197,6 +204,8 @@
 
         const materialize_tab = document.querySelectorAll(".tabs");
         const tab = M.Tabs.init(materialize_tab);
+
+        setUserIngredients();
     });
 
 
@@ -232,6 +241,61 @@
     const completed_recipe_ul = document.querySelector("#completed-recipes");
     let completedRecipeInteract = new RecipeInteract(completed_recipe_ul);
     completedRecipeInteract.loadCompletedRecipes();
+
+    async function setUserIngredients() {
+        const user_ingredients = await fetch("/get-modifiable-ingredients", {
+            method: "GET",
+            contentType: "text/plain"
+        })
+            .then(response => response.json())
+            .catch((e)=>{console.log("err " + e)});
+
+
+
+
+        for (let i = 0; i < user_ingredients.length; i++) {
+            const li = document.createElement("li");
+            li.classList.add("collection-item");
+            li.onclick = async function(e) {
+                $('#created-ingredients').children().removeClass("active");
+                li.classList.add("active");
+                $('#item-image').attr('src', user_ingredients[i].imageFileUrl);
+                document.querySelector("#item-name").innerText = user_ingredients[i].name;
+
+                $('#name-icon').addClass("active");
+                $('#name-label').addClass("active");
+                $('#ingredient-id').val(user_ingredients[i].id);
+                $('#ingredient-name').val(user_ingredients[i].name);
+                $('#ingredient-type').val(user_ingredients[i].type);
+                const actions_response = await fetch("/get-ingredient-whitelist/" + user_ingredients[i].name, {
+                    method: "GET",
+                    contentType: "text/plain"
+                })
+                    .then(response => response.json())
+                    .catch((e)=>{console.log("err " + e)});
+
+                let actions_list = $('#ingredient-actable-actions').children();
+                if(actions_list.length > 1) {
+                    for (let i = 1; i< actions_list.length; i++) {
+                        actions_list[i].remove();
+                    }
+
+                }
+
+                actions_response.actions.forEach( (e) =>{
+                    let duplicatedNode = document.querySelector('.action-item').cloneNode(true);
+                    $(duplicatedNode.children[1]).val(e);
+                    $('#ingredient-actable-actions').append(duplicatedNode);
+                });
+            };
+            const textNode = document.createElement("p");
+            textNode.innerText = user_ingredients[i].name;
+
+            li.appendChild(textNode);
+            $('#created-ingredients').append(li);
+        }
+
+    }
 
 </script>
 </body>

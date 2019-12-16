@@ -46,7 +46,7 @@ class ItemRequest{
 
     addAction(){
         const li = document.createElement("li");
-        li.setAttribute("class", "col s12 input-field");
+        li.setAttribute("class", "col s12 input-field action-item");
 
         const icon = document.createElement("i");
         icon.setAttribute("class", "material-icons prefix");

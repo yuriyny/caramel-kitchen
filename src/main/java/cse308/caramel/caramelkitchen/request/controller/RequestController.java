@@ -2,6 +2,7 @@ package cse308.caramel.caramelkitchen.request.controller;
 
 import cse308.caramel.caramelkitchen.game.model.BasicJsonResponse;
 import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
+import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.request.persistence.Request;
 import cse308.caramel.caramelkitchen.request.service.RequestService;
 import cse308.caramel.caramelkitchen.s3client.services.S3Services;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class RequestController{
@@ -25,25 +27,41 @@ public class RequestController{
     RequestService requestService;
     @Autowired
     S3Services s3Services;
+    @Autowired
+    RecipeEditorService recipeEditorService;
 
     @ResponseBody
     @PostMapping(value = "/request", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ModelAndView handleIngredientUpload(@RequestParam("name") String name,
+    public ModelAndView handleIngredientUpload(@RequestParam("id") String id, @RequestParam("name") String name,
                                                         @RequestParam("file") MultipartFile file,
                                                         // should be able to bind list by sending multiple input values to param 'blacklist'
                                                         // https://stackoverflow.com/questions/4596351/binding-a-list-in-requestparam
                                                         // KitchenTool only required to have 'name' and 'actions'
-                                                        @RequestParam("listed actions") List<String> listedActions) {
+                                                        @RequestParam("listed actions") List<String> listedActions,
+                                                        @RequestParam("type") String type,
+                                                        Principal principal) {
         ModelAndView modelAndView = new ModelAndView("/userprofile");
         String fileContentType = file.getContentType();
         if(contentTypes.contains(fileContentType)){
-            try {
-                Ingredient uploadedIngredient = requestService.storeIngredient(name, file);
+
+            List<Ingredient> ingredients=recipeEditorService.findAllIngredients();
+            if (!ingredients.stream().filter(obj->obj.getId().equals(id)).collect(Collectors.toList()).isEmpty()){
+                try {
+                    requestService.saveModifiedIngredient(id, name, file,type);
+                } catch (Exception e) {
+                    modelAndView.addObject("message", "Server error when uploading image");
+                }
                 requestService.updateIngredientToolActionWhitelist(name, listedActions);
-                modelAndView.addObject("message","ingredient uploaded successfully");
+                modelAndView.addObject("message","Ingredient has been updated");
             }
-            catch (Exception e){
-                modelAndView.addObject("message","Server error when uploading image");
+            else {
+                try {
+                    Ingredient uploadedIngredient = requestService.storeIngredient(name, file,type, principal.getName());
+                    requestService.updateIngredientToolActionWhitelist(name, listedActions);
+                    modelAndView.addObject("message", "ingredient uploaded successfully");
+                } catch (Exception e) {
+                    modelAndView.addObject("message", "Server error when uploading image");
+                }
             }
         }
         else {

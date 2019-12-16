@@ -40,7 +40,9 @@ public class UserDomainService implements UserDetailsService { //removed id beca
     }
 
     public List<User> getAllCreators(){
-        return (List<User>)userRepository.findAllCreators();
+        List<User> rl=(List<User>)userRepository.findAllCreators();
+        rl.sort(Comparator.comparing(User::getUsername));
+        return rl;
     }
 
     public void saveNewUser(User user) {

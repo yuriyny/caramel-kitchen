@@ -143,6 +143,9 @@ nav ul li a{
     color: white;
     font-size: 54px;
     font-weight: bold;
+    overflow-y: auto;
+    height: 100%;
+    user-select: none;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/

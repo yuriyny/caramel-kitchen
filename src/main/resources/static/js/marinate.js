@@ -121,7 +121,7 @@
     }
 
     function endGame(){
-        if(score > max_score * 0.6){
+        if(score > max_score * 0.4){
             M.toast({html: 'Good job!'});
             itemBoard.performAction();
             itemBoard.updateMenu();

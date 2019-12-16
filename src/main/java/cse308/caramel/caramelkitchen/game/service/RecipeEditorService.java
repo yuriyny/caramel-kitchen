@@ -25,6 +25,32 @@ public class RecipeEditorService {
     IngredientRepository ingredientRepository;
     @Autowired
     S3Services s3Services;
+    @Autowired
+    RecipeService recipeService;
+
+    public Whitelist findIngredientWhitelist(String ingredientId) {
+        return whitelistRepository.findById(ingredientId).get();
+    }
+
+    public List<Ingredient> findAllUserCreatedModifiableIngredients(String username){
+        List<Ingredient>l=findAllIngredients().stream().filter(obj->obj.getUploader().equals(username)).collect(Collectors.toList());
+
+        return findIfIngredientUsed(findImageIngredient(l));
+    }
+    public List<Ingredient> findIfIngredientUsed(List<Ingredient> ingredients){
+        List<Recipe>recipes=recipeService.findAllRecipe();
+        List<Ingredient> list= new ArrayList<>();
+        List<Ingredient> returnList= new ArrayList<>();
+        for(Ingredient ingredient:ingredients) {
+            recipes.stream().flatMap(r -> r.getIngredients().stream()).distinct().filter(obj -> obj.getId().equals(ingredient.getId())).collect(Collectors.toCollection(()->list));
+            if(list.isEmpty()){
+                returnList.add(ingredient);
+            }else{
+                list.clear();
+            }
+        }
+        return returnList;
+    }
 
     public List<Ingredient> findAllIngredients(){
         List<Ingredient> returnList=new ArrayList<>();
@@ -40,11 +66,22 @@ public class RecipeEditorService {
     public List<String> findAllToolActions(String toolName){
         return (List) kitchenToolRepository.findByName(toolName).get().getActions();
     }
+    public List<String> findAllIngredientActions(String ingredient){
+        Ingredient i=ingredientRepository.findByName(ingredient).get();
+        return (List)whitelistRepository.findById(i.getName()).get().getActions();
+    }
+    public List<String> findAllPossibleIngredientActions(){
+        List<Ingredient>ingredient=findAllIngredients();
+        return ingredient.stream()
+                .map(obj->findAllIngredientActions(obj.getName()))
+                .flatMap(List::stream).distinct()
+                .collect(Collectors.toList());
+    }
     public List<String> findAllActions(){
         List<KitchenTool>tools=findAllTools();
         return tools.stream()
                 .map(obj->findAllToolActions(obj.getName()))
-                .flatMap(List::stream)
+                .flatMap(List::stream).distinct()
                 .collect(Collectors.toList());
     }
     public List<String>findAllTypes(){
@@ -105,10 +142,8 @@ public class RecipeEditorService {
         List<String>base=new ArrayList<>();
         base.add("spice");
         base.add("liquid");
+        List<String> returnList=new ArrayList<>();
 
-//        System.out.println("tool size"+toolObj.size());
-//        System.out.println("bowl?"+toolObj.stream().anyMatch(obj->obj.getName().equals("bowl")));
-//        System.out.println("spoon"+tools.stream().anyMatch("mixing spoon"::contains));
 
         //if size of ingredients ==1 and size of intermediates==0 and size of tools==1 check whitelist
         if(ingredients.size()==1 && intermediates.size()==0 && tools.size()==1){
@@ -117,14 +152,18 @@ public class RecipeEditorService {
                 List<String> allActions= (List) tool.getActions();
                 return allActions.stream().filter(action->ingredientWL.getActions().contains(action)).collect(Collectors.toList());
         }
-//        //if previously peeled, then can chop/slice or whatever matches with knife
-//        else if(ingredients.size()==0 && intermediates.size()==1 && toolObj.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("knife"))&& intermediates.get(0).getTag().equals("peel")){
-//            Ingredient i=((List<Ingredient>)intermediates.get(0).getIngredients()).get(0);
-//            Whitelist w=whitelistRepository.findById(i.getName()).get();
-//            List<String> s=toolObj.get(0).getActions().stream().filter(action->w.getActions().contains(action)).collect(Collectors.toList());
-//            s.remove("peel");
-//            return s;
-//        }
+        //if bread, spread, butterknife then spread
+        if(ingredients.size()==2 && tools.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("butter knife")) && (ingredientObj.stream().anyMatch(obj->obj.getType().equals("spread")) || ingredientObj.stream().anyMatch(obj->obj.getName().equals("butter")) )&& ingredientObj.stream().anyMatch(obj->obj.getType().equals("bread"))){
+            return new ArrayList<>(Collections.singleton("spread"));
+        }
+        //if previously peeled, then can chop/slice or whatever matches with knife
+        else if(ingredients.size()==0 && intermediates.size()==1 && toolObj.size()==1 && toolObj.stream().allMatch(obj->obj.getName().equals("knife"))&& intermediates.get(0).getTag().equals("peel") && intermediates.get(0).getIngredients().size()==1){
+            Ingredient i=((List<Ingredient>)intermediates.get(0).getIngredients()).get(0);
+            Whitelist w=whitelistRepository.findById(i.getName()).get();
+            List<String> s=toolObj.get(0).getActions().stream().filter(action->w.getActions().contains(action)).collect(Collectors.toList());
+            s.remove("peel");
+            return s;
+        }
         //if has liquid or spice ingredient and other ingredient and bowl is available, then marinate
         else if(ingredientObj.size()+intermediates.size()>=1 && toolObj.size()==1 && toolObj.stream().anyMatch(obj->obj.getName().equals("bowl"))){
             //if only liquid/spice, no actions
@@ -151,11 +190,15 @@ public class RecipeEditorService {
         }
         //if pot and liquid, then boil is an option
         else if(tools.size()==1&& toolObj.stream().anyMatch(tool->tool.getName().equals("pot")) && ingredientObj.stream().anyMatch(obj->obj.getType().equals("liquid"))){
-            return new ArrayList<>(Collections.singleton("boil"));
+            returnList.add("boil");
         }
         //if pan and spatula and exists non liquid and non spice ingredient and oil exists, then saute is an option
         else if(toolObj.stream().anyMatch(tool->tool.getName().equals("pan")) && toolObj.stream().anyMatch(tool->tool.getName().equals("spatula")) && ingredientObj.stream().anyMatch(ingredient -> ingredient.getType().equals("oil")) && !ingredientObj.stream().allMatch(obj->base.contains(obj.getType()))){
-            return new ArrayList<>(Collections.singleton("sauté"));
+            returnList.add("sauté");
+        }
+        if(!returnList.isEmpty()){
+            returnList.add("stir");
+            return returnList;
         }
         return new ArrayList<>();
 

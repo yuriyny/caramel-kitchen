@@ -3,6 +3,8 @@ package cse308.caramel.caramelkitchen.request.service;
 import cse308.caramel.caramelkitchen.game.persistence.Ingredient;
 import cse308.caramel.caramelkitchen.game.persistence.KitchenTool;
 import cse308.caramel.caramelkitchen.game.persistence.Whitelist;
+import cse308.caramel.caramelkitchen.game.repository.GameRepository;
+import cse308.caramel.caramelkitchen.game.repository.IngredientRepository;
 import cse308.caramel.caramelkitchen.game.repository.WhitelistRepository;
 import cse308.caramel.caramelkitchen.game.service.RecipeEditorService;
 import cse308.caramel.caramelkitchen.game.service.RecipeService;
@@ -26,16 +28,29 @@ public class RequestService {
     RecipeEditorService recipeEditorService;
     @Autowired
     RequestRepository requestRepository;
+    @Autowired
+    IngredientRepository ingredientRepository;
 
-    public Ingredient storeIngredient(String name, MultipartFile file) throws IOException {
+    public Ingredient storeIngredient(String name, MultipartFile file, String type, String username) throws IOException {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(name);
         ingredient.setImageName(file.getOriginalFilename());
+        ingredient.setUploader(username);
+        ingredient.setType(type);
         s3Services.uploadMultipartFileObject(file.getOriginalFilename(), file);
         recipeEditorService.saveIngredient(ingredient);
         return ingredient;
 
     }
+    public void saveModifiedIngredient(String id, String name, MultipartFile file, String type) throws IOException {
+        Ingredient previousIngredient = ingredientRepository.findById(id).get();
+        previousIngredient.setName(name);
+        previousIngredient.setImageName(file.getOriginalFilename());
+        previousIngredient.setType(type);
+        s3Services.uploadMultipartFileObject(file.getOriginalFilename(), file);
+        recipeEditorService.saveIngredient(previousIngredient);
+    }
+
     public void storeImage(String objectKey, MultipartFile file) throws IOException {
         s3Services.uploadMultipartFileObject(objectKey, file);
     }
