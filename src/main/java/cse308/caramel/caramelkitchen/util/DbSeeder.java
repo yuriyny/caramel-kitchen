@@ -649,6 +649,7 @@ public class DbSeeder implements CommandLineRunner {
 
         Whitelist w22 = new Whitelist();
         w22.setName(garlicclove.getName());
+        w22.getActions().add("chop");
 
         Whitelist w23= new Whitelist();
         w23.setName(smallpasta.getName());
@@ -717,6 +718,9 @@ public class DbSeeder implements CommandLineRunner {
 
         Whitelist w43 = new Whitelist();
         w43.setName(pineapple.getName());
+        w43.getActions().add("peel");
+        w43.getActions().add("chop");
+        w43.getActions().add("slice");
 
         Whitelist w44 = new Whitelist();
         w44.setName(sourcream.getName());
@@ -726,18 +730,31 @@ public class DbSeeder implements CommandLineRunner {
 
         Whitelist w46 = new Whitelist();
         w46.setName(cucumber.getName());
+        w46.getActions().add("peel");
+        w46.getActions().add("chop");
+        w46.getActions().add("slice");
 
         Whitelist w47 = new Whitelist();
         w47.setName(avocado.getName());
+        w47.getActions().add("peel");
+        w47.getActions().add("chop");
 
         Whitelist w48 = new Whitelist();
         w48.setName(onion.getName());
+        w48.getActions().add("peel");
+        w48.getActions().add("chop");
+        w48.getActions().add("slice");
 
         Whitelist w49 = new Whitelist();
         w49.setName(redonion.getName());
+        w49.getActions().add("peel");
+        w49.getActions().add("chop");
+        w49.getActions().add("slice");
 
         Whitelist w50 = new Whitelist();
         w50.setName(squash.getName());
+        w50.getActions().add("chop");
+        w50.getActions().add("slice");
 
         this.mongoTemplate.insert(w1);
         this.mongoTemplate.insert(w2);
@@ -897,7 +914,7 @@ public class DbSeeder implements CommandLineRunner {
         butteredBread.setTag("spread");
         butteredBread.getIngredients().add(butter);
         butteredBread.getIngredients().add(breadSlice);
-//        butteredBread.setImageName("butteredBread.png");
+        butteredBread.setImageName("butteredbread.png");
         butteredBread.setName("spread");
 
         Recipe recipe1 = new Recipe();
@@ -928,14 +945,14 @@ public class DbSeeder implements CommandLineRunner {
         IntermediateIngredient peeledCarrot=new IntermediateIngredient();
         peeledCarrot.setTag("peel");
         peeledCarrot.getIngredients().add(carrot);
-//        peeledCarrot.setImageName("peeledCarrot.png");
+        peeledCarrot.setImageName("peeledcarrot.png");
         peeledCarrot.setName("peel carrot");
         peeledCarrot.setId(234234);
 
         IntermediateIngredient choppedPeeledCarrot=new IntermediateIngredient();
         choppedPeeledCarrot.setTag("chop");
         choppedPeeledCarrot.getIntermediateIngredients().add(choppedCarrot);
-//        choppedPeeledCarrot.setImageName("choppedPeeledCarrot.png");
+        choppedPeeledCarrot.setImageName("choppedpeeledcarrot.png");
         choppedPeeledCarrot.setName("chopped peeled carrot");
         choppedPeeledCarrot.setId(56745);
 
@@ -969,7 +986,7 @@ public class DbSeeder implements CommandLineRunner {
         IntermediateIngredient slicedApple=new IntermediateIngredient();
         slicedApple.setTag("slice");
         slicedApple.getIngredients().add(apple);
-//        slicedApple.setImageName("choppedApple.png");
+        slicedApple.setImageName("choppedapple.png");
         slicedApple.setName("sliced apple");
         slicedApple.setId(567563);
 
@@ -977,7 +994,7 @@ public class DbSeeder implements CommandLineRunner {
         mixCarrotSlicedApple.setTag("mix");
         mixCarrotSlicedApple.getIntermediateIngredients().add(slicedApple);
         mixCarrotSlicedApple.getIntermediateIngredients().add(choppedPeeledCarrot);
-//        mixCarrotChoppedApple.setImageName("mixChoppedAppleAndCarrot.png");
+        mixCarrotSlicedApple.setImageName("applecarrotmix.png");
         mixCarrotSlicedApple.setName("mixed apple and carrot");
         mixCarrotSlicedApple.setId(9879);
 
